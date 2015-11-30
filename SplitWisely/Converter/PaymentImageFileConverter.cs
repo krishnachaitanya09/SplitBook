@@ -1,0 +1,44 @@
+﻿using SplitWisely.Model;
+using SplitWisely.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.IsolatedStorage;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media.Imaging;
+
+namespace SplitWisely.Converter
+{
+    /// <summary>
+/// Caches the image that gets downloaded as part of Image control Source property.
+/// </summary>
+    public class PaymentImageFileConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            Uri imageFileUri;
+            bool payment = (bool)value;
+            if (!payment)
+            {
+                imageFileUri = new Uri(@"Assets/Images/expense_general.png", UriKind.Relative);
+            }
+            else
+            {
+                imageFileUri = new Uri(@"Assets/Images/expense_payment.png", UriKind.Relative);
+            }
+            
+            BitmapImage bm = new BitmapImage(imageFileUri);
+            return bm;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
