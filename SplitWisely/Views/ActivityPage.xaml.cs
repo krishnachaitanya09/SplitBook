@@ -46,20 +46,20 @@ namespace SplitWisely.Views
             base.OnNavigatedTo(e);
             Task.Run(async () =>
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    loadExpenses();
-                });
+                await loadExpenses();
             });
         }
 
-        private void loadExpenses()
+        private async Task loadExpenses()
         {
+            List<Expense> allExpenses;
             lock (o)
             {
                 QueryDatabase obj = new QueryDatabase();
-                List<Expense> allExpenses = obj.getAllExpenses(pageNo);
-
+                allExpenses = obj.getAllExpenses(pageNo);
+            }
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
                 if (pageNo == 0)
                     expensesList.Clear();
 
@@ -75,7 +75,7 @@ namespace SplitWisely.Views
                         expensesList.Add(expense);
                     }
                 }
-            }
+            });
         }
 
         private void OnListViewLoaded(object sender, RoutedEventArgs e)
@@ -96,17 +96,14 @@ namespace SplitWisely.Views
         {
             var _scrollViewer = sender as ScrollViewer;
             // If scrollviewer is scrolled down at least 90%
-            if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.8, _scrollViewer.ScrollableHeight - 150))
+            if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.8, _scrollViewer.ScrollableHeight - 200))
             {
                 if (morePages)
                 {
                     pageNo++;
                     Task.Run(async () =>
                     {
-                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                        {
-                            loadExpenses();
-                        });
+                        await loadExpenses();
                     });
                 }
             }

@@ -25,7 +25,7 @@ namespace SplitWisely.Request
         {
             var request = new RestRequest(getExpensesURL);
             request.AddParameter("limit", 0, ParameterType.GetOrPost);
-            //request.AddParameter("updated_after", Helpers.getLastUpdatedTime(), ParameterType.GetOrPost);
+            request.AddParameter("updated_after", Helpers.getLastUpdatedTime(), ParameterType.GetOrPost);
 
             try
             {
