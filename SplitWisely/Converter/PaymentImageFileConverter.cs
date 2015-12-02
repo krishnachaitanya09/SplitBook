@@ -25,11 +25,11 @@ namespace SplitWisely.Converter
             bool payment = (bool)value;
             if (!payment)
             {
-                imageFileUri = new Uri(@"Assets/Images/expense_general.png", UriKind.Relative);
+                imageFileUri = new Uri("ms-appx:///Assets/Images/expense_general.png");
             }
             else
             {
-                imageFileUri = new Uri(@"Assets/Images/expense_payment.png", UriKind.Relative);
+                imageFileUri = new Uri("ms-appx:///Assets/Images/expense_payment.png");
             }
             
             BitmapImage bm = new BitmapImage(imageFileUri);

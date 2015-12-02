@@ -8,6 +8,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource AppBarBackgroundThemeBrush}">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
@@ -18,6 +19,9 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
+        <Popup x:Name="contentDialog" Grid.ColumnSpan="3" Grid.RowSpan="3">
+            <WebView x:Name="LoginBrowser"/>
+        </Popup>
         <StackPanel  Grid.Column="1" Grid.Row="1">
             <TextBlock Text="SPLITWISELY" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Light" FontSize="24" Margin="0,0,0,20"/>
             <Button Content="Authorize" Click="AuthorizeButton_Click" Foreground="White" Background="#FF60BF9F" HorizontalAlignment="Center" VerticalAlignment="Center"/>

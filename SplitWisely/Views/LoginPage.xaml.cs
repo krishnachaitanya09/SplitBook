@@ -23,6 +23,11 @@ using RestSharp.Portable;
 using RestSharp.Portable.HttpClient;
 using System.Collections.Specialized;
 using SplitWisely.Request;
+using SplitWisely.Utilities;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
+using Windows.UI;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -33,18 +38,36 @@ namespace SplitWisely.Views
     /// </summary>
     public sealed partial class LoginPage : Page
     {
+        private OAuthRequest authorize;
         public LoginPage()
         {
             this.InitializeComponent();
+            authorize = new OAuthRequest();
         }
 
-        private async void AuthorizeButton_Click(object sender, RoutedEventArgs e)
+
+        private void AuthorizeButton_Click(object sender, RoutedEventArgs e)
         {
-            OAuthRequest authorize = new OAuthRequest();            
-            if (await authorize.GetRequestToken())
+            authorize.GetRequestToken(RequestTokenReceived);
+        }
+
+        private async void RequestTokenReceived(Uri uri)
+        {
+            string requestToken;
+            if ((requestToken = await SplitwiseAuthenticationBroker.AuthenticateAsync(uri)) != null)
             {
-                this.Frame.Navigate(typeof(MainPage), true);
+                authorize.GetAccessToken(requestToken, AccessTokenReceived);
             }
+
+        }
+
+        private void AccessTokenReceived(string accessToken, string accessTokenSecret)
+        {
+            Helpers.AccessToken = accessToken;
+            Helpers.AccessTokenSecret = accessTokenSecret;
+            App.accessToken = Helpers.AccessToken;
+            App.accessTokenSecret = Helpers.AccessTokenSecret;
+            this.Frame.Navigate(typeof(MainPage), true);
         }
     }
 }

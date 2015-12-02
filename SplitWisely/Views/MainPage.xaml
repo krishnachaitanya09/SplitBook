@@ -9,6 +9,10 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <!-- Adaptive triggers -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -17,7 +21,7 @@
                         <AdaptiveTrigger MinWindowWidth="720" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RootSplitView.DisplayMode" Value="CompactInline"/>
+                        <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay"/>
                         <Setter Target="RootSplitView.IsPaneOpen" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -35,14 +39,13 @@
         <!-- Top-level navigation menu + app content -->
         <SplitView x:Name="RootSplitView"
                    DisplayMode="CompactOverlay"
-                   OpenPaneLength="256"
+                   OpenPaneLength="200"
                    IsTabStop="False"
                    IsPaneOpen="False"
-                   PaneBackground="#FF5D5D5D">
+                   PaneBackground="#FF5D5D5D" Grid.Row="1">
             <SplitView.Pane>
                 <ListView x:Name="NavMenuList"
                           TabIndex="3"
-                          Margin="0,48,0,0"
                           ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}" SelectionChanged="NavMenuList_SelectionChanged">
                     <ListViewItem>
                         <Grid>
@@ -75,14 +78,6 @@
                         </Grid>
                     </ListViewItem>
                 </ListView>
-                <!-- A custom ListView to display the items in the pane.  The automation Name is set in the ContainerContentChanging event. -->
-                <!--<controls:NavMenuListView x:Name="NavMenuList"
-                                          TabIndex="3"
-                                          Margin="0,48,0,0"
-                                          ContainerContentChanging="NavMenuItemContainerContentChanging"
-                                          ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
-                                          ItemTemplate="{StaticResource NavMenuItemTemplate}"
-                                          ItemInvoked="NavMenuList_ItemInvoked" />-->
             </SplitView.Pane>
 
             <!-- OnNavigatingToPage we synchronize the selected item in the nav menu with the current page.
@@ -101,13 +96,13 @@
             </Frame>
         </SplitView>
 
-        <!-- Declared last to have it rendered above everything else, but it needs to be the first item in the tab sequence. -->
-        <ToggleButton x:Name="TogglePaneButton"
+        <StackPanel Background="{StaticResource splitwiseGreen}" Orientation="Horizontal">
+            <ToggleButton x:Name="TogglePaneButton"
                       TabIndex="1"
-                      Style="{StaticResource SplitViewTogglePaneButtonStyle}"
-                      IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
-                      Unchecked="TogglePaneButton_Checked"
+                      Style="{StaticResource SplitViewTogglePaneButtonStyle}" Click="TogglePaneButton_Clicked"
                       AutomationProperties.Name="Menu"
                       ToolTipService.ToolTip="Menu" />
+            <TextBlock x:Name="pageTitle" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        </StackPanel>
     </Grid>
 </Page>

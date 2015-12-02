@@ -20,6 +20,7 @@ namespace SplitWisely.Model
             displayType = DISPLAY_FOR_ALL_USER;
         }*/
 
+        [Unique]
         public int id { get; set; }
         public int group_id { get; set; }
         public string description { get; set; }
@@ -57,7 +58,7 @@ namespace SplitWisely.Model
 
         [Column("updated_by")]
         public int updated_by_user_id { get; set; }
-        [Ignore]
+
         [Column("deleted_by")]
         public int deleted_by_user_id { get; set; }
 

@@ -321,7 +321,7 @@ namespace SplitWisely.Controller
                     return user;
                 }
                 else
-                    return null;
+                    return null;                
             }
         }
 

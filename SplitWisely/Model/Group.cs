@@ -10,6 +10,7 @@ namespace SplitWisely.Model
 {
     public class Group
     {
+        [Unique]
         public int id { get; set; }
         public string name { get; set; }
         public string updated_at { get; set; }

@@ -10,6 +10,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -20,9 +22,9 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SplitWisely.Views
 {
@@ -35,22 +37,19 @@ namespace SplitWisely.Views
         ObservableCollection<User> youOweFriends = new ObservableCollection<User>();
         ObservableCollection<User> owesYouFriends = new ObservableCollection<User>();
         ObservableCollection<User> friendsList = new ObservableCollection<User>();
-        ObservableCollection<Group> groupsList = new ObservableCollection<Group>();
-        ObservableCollection<Expense> expensesList = new ObservableCollection<Expense>();
 
         private double postiveBalance = 0, negativeBalance = 0, totalBalance = 0;
         private NetBalances netBalanceObj = new NetBalances();
 
         BackgroundWorker syncDatabaseBackgroundWorker;
         SyncDatabase databaseSync;
+        private object o = new object();
 
         public FriendsPage()
         {
             this.InitializeComponent();
 
             llsFriends.ItemsSource = balanceFriends;
-
-            populateData();
 
             syncDatabaseBackgroundWorker = new BackgroundWorker();
             syncDatabaseBackgroundWorker.WorkerSupportsCancellation = true;
@@ -59,100 +58,121 @@ namespace SplitWisely.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            Task.Run(async () =>
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    loadFriends();
+                });
+            });
             base.OnNavigatedTo(e);
-            if (e.NavigationMode == NavigationMode.Back)
+            if (App.FirstLoad)
             {
-                return;
-            }
-            else
-            {
-                bool firstUse = (bool)e.Parameter;
-                databaseSync = new SyncDatabase(SyncConpleted);
-                //busyIndicator.Content = "Syncing";
-                //This condition will only be true if the user has launched this page. This paramter (afterLogin) wont be there
-                //if the page has been accessed from the back stack
-                if (firstUse)
+                App.FirstLoad = false;
+                if (e.NavigationMode == NavigationMode.Back)
                 {
-                    databaseSync.isFirstSync(true);
-                    //busyIndicator.Content = "Setting up for first use";
-
-                    //disable the add expense and searchtill first sycn is complete
-                    //btnAddExpense.IsEnabled = false;
-                    //btnSearchExpense.IsEnabled = false;
+                    return;
                 }
-
-                if (syncDatabaseBackgroundWorker.IsBusy != true)
+                else
                 {
-                    //busyIndicator.IsRunning = true;
-                    syncDatabaseBackgroundWorker.RunWorkerAsync();
-                    //btnRefresh.IsEnabled = false;
+                    bool firstUse = (bool)e.Parameter;
+                    databaseSync = new SyncDatabase(SyncConpleted);
+                    //busyIndicator.Content = "Syncing";
+                    //This condition will only be true if the user has launched this page. This paramter (afterLogin) wont be there
+                    //if the page has been accessed from the back stack
+                    if (firstUse)
+                    {
+                        databaseSync.isFirstSync(true);
+                        //busyIndicator.Content = "Setting up for first use";
+
+                        //disable the add expense and searchtill first sycn is complete
+                        //btnAddExpense.IsEnabled = false;
+                        //btnSearchExpense.IsEnabled = false;
+                    }
+
+                    if (syncDatabaseBackgroundWorker.IsBusy != true)
+                    {
+                        //busyIndicator.IsRunning = true;
+                        syncDatabaseBackgroundWorker.RunWorkerAsync();
+                        //btnRefresh.IsEnabled = false;
+                    }
                 }
             }
         }
-
-        private void populateData()
-        {
-            loadFriends();
-            //if (expenseLoadingBackgroundWorker.IsBusy != true)
-            //{
-            //    expenseLoadingBackgroundWorker.RunWorkerAsync();
-            //}
-
-            //if (groupLoadingBackgroundWorker.IsBusy != true)
-            //{
-            //    groupLoadingBackgroundWorker.RunWorkerAsync();
-            //}
-        }
-
 
         private void loadFriends()
         {
-            friendsList.Clear();
-            youOweFriends.Clear();
-            owesYouFriends.Clear();
-            balanceFriends.Clear();
-            postiveBalance = 0;
-            negativeBalance = 0;
-            totalBalance = 0;
-
-            QueryDatabase obj = new QueryDatabase();
-
-            //only show balance below in the user's default currency
-            foreach (var friend in obj.getAllFriends())
+            lock (o)
             {
-                friendsList.Add(friend);
-                Balance_User defaultBalance = Helpers.getDefaultBalance(friend.balance);
-                double balance = System.Convert.ToDouble(defaultBalance.amount, CultureInfo.InvariantCulture);
-                if (balance > 0)
+                friendsList.Clear();
+                youOweFriends.Clear();
+                owesYouFriends.Clear();
+                balanceFriends.Clear();
+                postiveBalance = 0;
+                negativeBalance = 0;
+                totalBalance = 0;
+
+                QueryDatabase obj = new QueryDatabase();
+
+                //only show balance below in the user's default currency
+                foreach (var friend in obj.getAllFriends())
                 {
-                    postiveBalance += balance;
-                    totalBalance += balance;
-                    owesYouFriends.Add(friend);
-                    balanceFriends.Add(friend);
+                    friendsList.Add(friend);
+                    Balance_User defaultBalance = Helpers.getDefaultBalance(friend.balance);
+                    double balance = System.Convert.ToDouble(defaultBalance.amount, CultureInfo.InvariantCulture);
+                    if (balance > 0)
+                    {
+                        postiveBalance += balance;
+                        totalBalance += balance;
+                        owesYouFriends.Add(friend);
+                        balanceFriends.Add(friend);
+                    }
+
+                    if (balance < 0)
+                    {
+                        negativeBalance += balance;
+                        totalBalance += balance;
+                        youOweFriends.Add(friend);
+                        balanceFriends.Add(friend);
+                    }
                 }
 
-                if (balance < 0)
+                if (App.currentUser == null)
                 {
-                    negativeBalance += balance;
-                    totalBalance += balance;
-                    youOweFriends.Add(friend);
-                    balanceFriends.Add(friend);
+
+                    return;
                 }
+
+                //if default currency is not set then dont display the balances. Only the text is enough.
+                if (App.currentUser.default_currency == null)
+                    return;
+                netBalanceObj.setBalances(App.currentUser.default_currency, totalBalance, postiveBalance, negativeBalance);
+                balancePanel.DataContext = netBalanceObj;
+                //more.DataContext = App.currentUser;
             }
-
-            if (App.currentUser == null)
-            {
-
-                return;
-            }
-
-            //if default currency is not set then dont display the balances. Only the text is enough.
-            if (App.currentUser.default_currency == null)
-                return;
-            netBalanceObj.setBalances(App.currentUser.default_currency, totalBalance, postiveBalance, negativeBalance);
-            balancePanel.DataContext = netBalanceObj;
-            //more.DataContext = App.currentUser;
         }
+
+        private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            var profilePic = sender as Image;
+            BitmapImage pic = new BitmapImage(new Uri("ms-appx:///Assets/Images/profilePhoto.png"));
+            profilePic.Source = pic;
+        }
+
+        //private void TotalBalance_Tapped(object sender, TappedRoutedEventArgs e)
+        //{
+        //    llsFriends.ItemsSource = balanceFriends;
+        //}
+
+        //private void YouOwed_Tapped(object sender, TappedRoutedEventArgs e)
+        //{
+        //    llsFriends.ItemsSource = youOweFriends;;
+        //}
+
+        //private void YouAreOwed_Tapped(object sender, TappedRoutedEventArgs e)
+        //{
+        //    llsFriends.ItemsSource = owesYouFriends;
+        //}
 
         private void syncDatabaseBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -167,7 +187,7 @@ namespace SplitWisely.Views
                 {
                     //    busyIndicator.IsRunning = false;
                     //    pageNo = 0;
-                    populateData();
+                    loadFriends();
                     //    hasDataLoaded = true;
 
                     //    btnAddExpense.IsEnabled = true;

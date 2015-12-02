@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite.Net.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace SplitWisely.Model
 {
     public class Comment
     {
+        [Unique]
         public int id { get; set; }
         public string content { get; set; }
         public string comment_type { get; set; }

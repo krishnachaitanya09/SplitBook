@@ -1,0 +1,80 @@
+﻿<Page
+    x:Class="SplitWisely.Views.FriendsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplitWisely.Views"
+    xmlns:app="using:SplitWisely.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <app:BalanceToDescriptionConverter x:Key="BalanceDescriptionConverter"/>
+        <app:BalanceToAmountConverter x:Key="BalanceAmountConverter"/>
+        <app:BalanceToColorConverter x:Key="BalanceColorConverter"/>
+        <app:BalanceToVisibilityConverter x:Key="BalanceVisibilityConverter"/>
+        <app:DateStringToDateConverter x:Key="ExpenseDateConverter"/>
+        <app:GroupDebtConverter x:Key="GroupDebtsConverter"/>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="balancePanel" Background="#FFEEEEEE">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" BorderThickness="0,0,1,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
+                <TextBlock Text="total balance" TextAlignment="Center" Foreground="{StaticResource GreyColorText}"/>
+                <TextBlock x:Name="balanceFriendsText" Text="{Binding NetBalance}" Foreground="{Binding NetBalance, Converter={StaticResource BalanceColorConverter}, ConverterParameter='overall'}" TextAlignment="Center" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" BorderThickness="0,0,1,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
+                <TextBlock Text="you owe" TextAlignment="Center" Foreground="{StaticResource GreyColorText}"/>
+                <TextBlock x:Name="youOweFriendsText" Text="{Binding NegativeBalance}" Foreground="{Binding NegativeBalance, Converter={StaticResource BalanceColorConverter}, ConverterParameter='overall'}" TextAlignment="Center" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" BorderThickness="0,0,0,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
+                <TextBlock Text="you are owed" TextAlignment="Center" Foreground="{StaticResource GreyColorText}"/>
+                <TextBlock x:Name="owesYouFriendsText" Text="{Binding  PositiveBalance}" Foreground="{Binding PositiveBalance, Converter={StaticResource BalanceColorConverter}, ConverterParameter='overall'}" TextAlignment="Center" />
+            </StackPanel>
+        </Grid>
+        <ListView x:Name="llsFriends" Grid.Row="1" Background="{StaticResource FrameBackground}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border MaxWidth="500" BorderThickness="0,0,0,2" Background="White" BorderBrush="{StaticResource splitwiseGreyBG}">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" 
+                                         Source="{Binding PictureUrl}"
+                                           VerticalAlignment="Center" Width="50" Height="50" Margin="0,0,15,0" ImageFailed="ProfilePic_ImageFailed"/>
+
+                            <Grid Grid.Column="1" VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="tbName" TextTrimming="CharacterEllipsis" Foreground="Black" Text="{Binding name}" Grid.Row="0" FontSize="{StaticResource nameSize}"/>
+                                <TextBlock x:Name="tbDescription" Text="{Binding balance, Converter={StaticResource BalanceDescriptionConverter}}" Foreground="{StaticResource settled}" Grid.Row="1" FontSize="{StaticResource descriptionSize}"/>
+                            </Grid>
+                            <TextBlock x:Name="tbAmount" VerticalAlignment="Center" Foreground="{Binding balance, Converter={StaticResource BalanceColorConverter}}" Text="{Binding balance, Converter={StaticResource BalanceAmountConverter}}" Grid.Column="2" FontSize="{StaticResource amountSize}" HorizontalAlignment="Right" Visibility="{Binding balance, Converter={StaticResource BalanceVisibilityConverter}}"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>

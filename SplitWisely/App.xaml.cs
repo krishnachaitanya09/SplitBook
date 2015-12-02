@@ -4,6 +4,7 @@ using SplitWisely.Utilities;
 using SplitWisely.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace SplitWisely
     {
         public static string accessToken, accessTokenSecret;
         public static User currentUser;
+        public static bool FirstLoad = true;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -53,12 +55,12 @@ namespace SplitWisely
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                this.DebugSettings.EnableFrameRateCounter = true;
-            }
-#endif
+//#if DEBUG
+//            if (System.Diagnostics.Debugger.IsAttached)
+//            {
+//                this.DebugSettings.EnableFrameRateCounter = true;
+//            }
+//#endif
             Helpers dbHelper = new Helpers();
             dbHelper.CreateDatabase();
 
