@@ -49,7 +49,7 @@ namespace SplitWisely.Views
         {
             this.InitializeComponent();
 
-            llsFriends.ItemsSource = balanceFriends;
+            llsFriends.ItemsSource = friendsList;
 
             syncDatabaseBackgroundWorker = new BackgroundWorker();
             syncDatabaseBackgroundWorker.WorkerSupportsCancellation = true;
@@ -139,7 +139,6 @@ namespace SplitWisely.Views
 
                 if (App.currentUser == null)
                 {
-
                     return;
                 }
 
@@ -159,20 +158,55 @@ namespace SplitWisely.Views
             profilePic.Source = pic;
         }
 
-        //private void TotalBalance_Tapped(object sender, TappedRoutedEventArgs e)
-        //{
-        //    llsFriends.ItemsSource = balanceFriends;
-        //}
+        private void TotalBalance_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            llsFriends.ItemsSource = balanceFriends;
+            totalBalanceBox.BorderThickness = new Thickness(0, 0, 1, 0);
+            youOweBox.BorderThickness = new Thickness(0, 0, 1, 2);
+            youAreOwedBox.BorderThickness = new Thickness(0, 0, 0, 2);
+            filterText.Text = "Showing friends with balance";
+            filterPanel.Visibility = Visibility.Visible;
+        }
 
-        //private void YouOwed_Tapped(object sender, TappedRoutedEventArgs e)
-        //{
-        //    llsFriends.ItemsSource = youOweFriends;;
-        //}
+        private void YouOwed_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            llsFriends.ItemsSource = youOweFriends;
+            totalBalanceBox.BorderThickness = new Thickness(0, 0, 1, 2);
+            youOweBox.BorderThickness = new Thickness(0, 0, 1, 0);
+            youAreOwedBox.BorderThickness = new Thickness(0, 0, 0, 2);
+            filterText.Text = "Showing friends owe you";
+            filterPanel.Visibility = Visibility.Visible;
+        }
 
-        //private void YouAreOwed_Tapped(object sender, TappedRoutedEventArgs e)
-        //{
-        //    llsFriends.ItemsSource = owesYouFriends;
-        //}
+        private void YouAreOwed_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            llsFriends.ItemsSource = owesYouFriends;
+            totalBalanceBox.BorderThickness = new Thickness(0, 0, 1, 2);
+            youOweBox.BorderThickness = new Thickness(0, 0, 1, 2);
+            youAreOwedBox.BorderThickness = new Thickness(0, 0, 0, 0);
+            filterText.Text = "Showing friends you owe";
+            filterPanel.Visibility = Visibility.Visible;
+        }
+
+        private void FliterDone_Clicked(object sender, RoutedEventArgs e)
+        {
+            llsFriends.ItemsSource = friendsList;
+            totalBalanceBox.BorderThickness = new Thickness(0, 0, 1, 2);
+            youOweBox.BorderThickness = new Thickness(0, 0, 1, 2);
+            youAreOwedBox.BorderThickness = new Thickness(0, 0, 0, 2);
+            filterText.Text = "";
+            filterPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void llsFriends_Tap(object sender, SelectionChangedEventArgs e)
+        {
+            if (llsFriends.SelectedItem == null)
+                return;
+            User selectedUser = llsFriends.SelectedItem as User;            
+            this.Frame.Navigate(typeof(UserDetails), selectedUser);
+            llsFriends.SelectedItem = null;
+        }
+
 
         private void syncDatabaseBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {

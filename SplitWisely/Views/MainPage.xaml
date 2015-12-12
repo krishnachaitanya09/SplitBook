@@ -9,10 +9,6 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
         <!-- Adaptive triggers -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -42,12 +38,12 @@
                    OpenPaneLength="200"
                    IsTabStop="False"
                    IsPaneOpen="False"
-                   PaneBackground="#FF5D5D5D" Grid.Row="1">
+                   PaneBackground="#FF5D5D5D">
             <SplitView.Pane>
                 <ListView x:Name="NavMenuList"
                           TabIndex="3"
                           ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}" SelectionChanged="NavMenuList_SelectionChanged">
-                    <ListViewItem>
+                    <ListViewItem Margin="0,48,0,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="48" />
@@ -77,6 +73,16 @@
                             <TextBlock Grid.Column="1" Text="Activity" Foreground="White"/>
                         </Grid>
                     </ListViewItem>
+                    <ListViewItem>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="&#xE8D7;" FontSize="16"  HorizontalAlignment="Center" ToolTipService.ToolTip="Log out" Foreground="White"/>
+                            <TextBlock Grid.Column="1" Text="Log Out" Foreground="White"/>
+                        </Grid>
+                    </ListViewItem>
                 </ListView>
             </SplitView.Pane>
 
@@ -84,7 +90,7 @@
                  OnNavigatedToPage we move keyboard focus to the first item on the page after it's loaded and update the Back button. -->
             <Frame x:Name="frame"
                    Navigated="OnNavigatedToPage">
-                <Frame.ContentTransitions>
+                <!--<Frame.ContentTransitions>
                     <TransitionCollection>
                         <NavigationThemeTransition>
                             <NavigationThemeTransition.DefaultNavigationTransitionInfo>
@@ -92,17 +98,13 @@
                             </NavigationThemeTransition.DefaultNavigationTransitionInfo>
                         </NavigationThemeTransition>
                     </TransitionCollection>
-                </Frame.ContentTransitions>
+                </Frame.ContentTransitions>-->
             </Frame>
         </SplitView>
-
-        <StackPanel Background="{StaticResource splitwiseGreen}" Orientation="Horizontal">
-            <ToggleButton x:Name="TogglePaneButton"
+        <ToggleButton x:Name="TogglePaneButton" Background="{StaticResource splitwiseGreen}"
                       TabIndex="1"
                       Style="{StaticResource SplitViewTogglePaneButtonStyle}" Click="TogglePaneButton_Clicked"
                       AutomationProperties.Name="Menu"
                       ToolTipService.ToolTip="Menu" />
-            <TextBlock x:Name="pageTitle" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        </StackPanel>
     </Grid>
 </Page>

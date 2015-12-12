@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SplitWisely.Views"
     xmlns:app="using:SplitWisely.Converter"
+    xmlns:control="using:SplitWisely.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -18,7 +19,16 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListBox x:Name="llsGroups" Background="{StaticResource FrameBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <control:PageHeader Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left">
+            <control:PageHeader.HeaderContent>
+                <TextBlock Text="Activity" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </control:PageHeader.HeaderContent>
+        </control:PageHeader>
+        <ListBox x:Name="llsGroups" Grid.Row="1" Background="{StaticResource FrameBackground}">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

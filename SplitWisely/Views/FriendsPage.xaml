@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SplitWisely.Views"
     xmlns:app="using:SplitWisely.Converter"
+    xmlns:control="using:SplitWisely.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -20,29 +21,43 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="balancePanel" Background="#FFEEEEEE">
+        <control:PageHeader Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left">
+            <control:PageHeader.HeaderContent>
+                <TextBlock Text="Friends" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </control:PageHeader.HeaderContent>
+        </control:PageHeader>
+        <Grid x:Name="balancePanel" Grid.Row="1" Background="#FFEEEEEE">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <StackPanel Grid.Column="0" BorderThickness="0,0,1,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
+            <StackPanel x:Name="totalBalanceBox" Tapped="TotalBalance_Tapped" Grid.Column="0" BorderThickness="0,0,1,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
                 <TextBlock Text="total balance" TextAlignment="Center" Foreground="{StaticResource GreyColorText}"/>
                 <TextBlock x:Name="balanceFriendsText" Text="{Binding NetBalance}" Foreground="{Binding NetBalance, Converter={StaticResource BalanceColorConverter}, ConverterParameter='overall'}" TextAlignment="Center" />
             </StackPanel>
-            <StackPanel Grid.Column="1" BorderThickness="0,0,1,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
+            <StackPanel x:Name="youOweBox" Tapped="YouOwed_Tapped" Grid.Column="1" BorderThickness="0,0,1,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
                 <TextBlock Text="you owe" TextAlignment="Center" Foreground="{StaticResource GreyColorText}"/>
                 <TextBlock x:Name="youOweFriendsText" Text="{Binding NegativeBalance}" Foreground="{Binding NegativeBalance, Converter={StaticResource BalanceColorConverter}, ConverterParameter='overall'}" TextAlignment="Center" />
             </StackPanel>
-            <StackPanel Grid.Column="2" BorderThickness="0,0,0,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
+            <StackPanel x:Name="youAreOwedBox" Tapped="YouAreOwed_Tapped" Grid.Column="2" BorderThickness="0,0,0,2" BorderBrush="{StaticResource BorderColor}" Padding="0,10">
                 <TextBlock Text="you are owed" TextAlignment="Center" Foreground="{StaticResource GreyColorText}"/>
                 <TextBlock x:Name="owesYouFriendsText" Text="{Binding  PositiveBalance}" Foreground="{Binding PositiveBalance, Converter={StaticResource BalanceColorConverter}, ConverterParameter='overall'}" TextAlignment="Center" />
             </StackPanel>
+            <RelativePanel x:Name="filterPanel" Visibility="Collapsed" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,10">
+                <TextBlock x:Name="filterText" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                <Button x:Name="FilterDoneButton" Content="Done" Click="FliterDone_Clicked" RelativePanel.RightOf="filterText" Margin="15,0,0,0"/>
+            </RelativePanel>
         </Grid>
-        <ListView x:Name="llsFriends" Grid.Row="1" Background="{StaticResource FrameBackground}">
+        <ListView x:Name="llsFriends" Grid.Row="2" Background="{StaticResource FrameBackground}" SelectionChanged="llsFriends_Tap">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

@@ -3,6 +3,7 @@ using SplitWisely.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -35,15 +36,30 @@ namespace SplitWisely.Views
         private int pageNo = 0;
         private bool morePages = true;
 
+        BackgroundWorker expenseLoadingBackgroundWorker;
+
         public ActivityPage()
         {
             this.InitializeComponent();
             llsExpenses.ItemsSource = expensesList;
+
+            expenseLoadingBackgroundWorker = new BackgroundWorker();
+            expenseLoadingBackgroundWorker.WorkerSupportsCancellation = true;
+            expenseLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(expenseLoadingBackgroundWorker_DoWork);
+            if (expenseLoadingBackgroundWorker.IsBusy != true)
+            {
+                expenseLoadingBackgroundWorker.RunWorkerAsync();
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            
+        }
+
+        private void expenseLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
             Task.Run(async () =>
             {
                 await loadExpenses();
@@ -98,13 +114,10 @@ namespace SplitWisely.Views
             // If scrollviewer is scrolled down at least 90%
             if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.8, _scrollViewer.ScrollableHeight - 200))
             {
-                if (morePages)
+                if (expenseLoadingBackgroundWorker.IsBusy != true && morePages)
                 {
                     pageNo++;
-                    Task.Run(async () =>
-                    {
-                        await loadExpenses();
-                    });
+                    expenseLoadingBackgroundWorker.RunWorkerAsync(false);
                 }
             }
         }
