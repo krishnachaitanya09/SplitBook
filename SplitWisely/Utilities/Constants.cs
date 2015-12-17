@@ -11,7 +11,7 @@ namespace SplitWisely.Utilities
     class Constants
     {
         public static String DATABASE_NAME = "splitwise.sqlite";
-        public static string DB_PATH = Path.Combine(ApplicationData.Current.LocalFolder.Path, DATABASE_NAME+ ";PRAGMA journal_mode=WAL;");
+        public static string DB_PATH = Path.Combine(ApplicationData.Current.LocalFolder.Path, DATABASE_NAME + ";PRAGMA journal_mode=WAL;");
 
         public static String SPLITWISE_API_URL = " https://secure.splitwise.com/api/v3.0/";
         public static String SPLITWISE_AUTHORIZE_URL = "https://secure.splitwise.com/authorize";

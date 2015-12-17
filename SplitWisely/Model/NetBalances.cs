@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SplitWisely.Model
 {
-    class NetBalances : INotifyPropertyChanged
+    public class NetBalances : INotifyPropertyChanged
     {
         private string netBalance;
         private string positiveBalance;

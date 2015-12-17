@@ -73,10 +73,15 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Image Grid.Column="0" 
-                                         Source="{Binding PictureUrl}"
-                                           VerticalAlignment="Center" Width="50" Height="50" Margin="0,0,15,0" ImageFailed="ProfilePic_ImageFailed"/>
-
+                            <Ellipse Margin="0,0,15,0" VerticalAlignment="Center" Grid.Column="0" Width="50" Height="50">
+                                <Ellipse.Fill>
+                                    <ImageBrush>
+                                        <ImageBrush.ImageSource>
+                                            <BitmapImage UriSource="{Binding PictureUrl}" DecodePixelWidth="50" DecodePixelHeight="50"  ImageFailed="ProfilePic_ImageFailed"/>
+                                        </ImageBrush.ImageSource>
+                                    </ImageBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
                             <Grid Grid.Column="1" VerticalAlignment="Center">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>

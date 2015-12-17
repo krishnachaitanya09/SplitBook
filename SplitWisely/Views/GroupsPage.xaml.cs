@@ -28,45 +28,15 @@ namespace SplitWisely.Views
     /// </summary>
     public sealed partial class GroupsPage : Page
     {
-        ObservableCollection<Group> groupsList;
-
-        private object o = new object();
-
         public GroupsPage()
         {
             this.InitializeComponent();
-            groupsList = new ObservableCollection<Group>();
-            llsGroups.ItemsSource = groupsList;
+            llsGroups.ItemsSource = MainPage.groupsList;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Task.Run(() =>
-            {
-                loadGroups();
-            });
-        }
-
-        private async void loadGroups()
-        {
-            List<Group> allGroups;
-            lock (o)
-            {
-                QueryDatabase obj = new QueryDatabase();
-                allGroups = obj.getAllGroups();
-            }
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-             {
-                 groupsList.Clear();
-                 if (allGroups != null)
-                 {
-                     foreach (var group in allGroups)
-                     {
-                         groupsList.Add(group);
-                     }
-                 }
-             });
         }
 
     }

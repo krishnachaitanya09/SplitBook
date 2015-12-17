@@ -1,5 +1,7 @@
 ﻿using SplitWisely.Model;
+using SQLite;
 using SQLite.Net;
+using SQLite.Net.Interop;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

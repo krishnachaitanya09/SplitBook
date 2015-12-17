@@ -14,86 +14,143 @@
         <userDetailConverter:UserDetailsExpensesConverter x:Key="UserDetailsExpensesConverter"/>
         <userDetailConverter:UserDetailsExpenseColorConverter x:Key="UserDetailsExpenseColorConverter"/>
         <app:BalanceToVisibilityConverter x:Key="BalanceVisibilityConverter"/>
+
+        <Style x:Key="ListViewStyle" TargetType="ListView">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="TabNavigation" Value="Once"/>
+            <Setter Property="IsSwipeEnabled" Value="True"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled"/>
+            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="True"/>
+            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
+            <Setter Property="ItemContainerTransitions">
+                <Setter.Value>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition/>
+                        <ContentThemeTransition/>
+                        <ReorderThemeTransition/>
+                        <EntranceThemeTransition IsStaggeringEnabled="False"/>
+                    </TransitionCollection>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListView">
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{StaticResource splitwiseGreen}" Background="{StaticResource splitwiseGreen}">
+                            <ScrollViewer x:Name="ScrollViewer" AutomationProperties.AccessibilityView="Raw" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                                <Grid Background="{StaticResource FrameBackground}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid x:Name="userDetailsPanel" VerticalAlignment="Stretch" Background="{StaticResource splitwiseGreen}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Ellipse Width="80" Height="80">
+                                            <Ellipse.Fill>
+                                                <ImageBrush>
+                                                    <ImageBrush.ImageSource>
+                                                        <BitmapImage ImageFailed="ProfilePic_ImageFailed" DecodePixelHeight="80" DecodePixelWidth="80" UriSource="{Binding PictureUrl}" />
+                                                    </ImageBrush.ImageSource>
+                                                </ImageBrush>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <Grid Grid.Row="1" Margin="12,12,12,0" HorizontalAlignment="Center">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock x:Name="tbName" Text="{Binding name}" TextAlignment="Center" Foreground="White" Grid.Row="0" FontSize="20" />
+                                            <TextBlock x:Name="tbEmail" Text="{Binding email}" TextAlignment="Center" Foreground="White" Grid.Row="1" FontSize="12" />
+                                            <Grid Grid.Row="2">
+                                                <ListView x:Name="balanceList" MinHeight="0" ItemsSource="{Binding balance}" IsMultiSelectCheckBoxEnabled="False" ShowsScrollingPlaceholders="False" SelectionMode="None">
+                                                    <ListView.ItemContainerStyle>
+                                                        <Style TargetType="ListViewItem">
+                                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                            <Setter Property="Padding" Value="0"/>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="ListViewItem">
+                                                                        <ListViewItemPresenter FocusSecondaryBorderBrush="{x:Null}" PointerOverForeground="{x:Null}" PressedBackground="{x:Null}" PlaceholderBackground="{x:Null}" PointerOverBackground="{x:Null}" SelectedPressedBackground="{x:Null}" SelectedForeground="{x:Null}" SelectedPointerOverBackground="{x:Null}" SelectedBackground="{x:Null}" Foreground="{x:Null}"/>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </ListView.ItemContainerStyle>
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Converter={StaticResource UserDetailsExpensesConverter}}" Foreground="White" TextAlignment="Center" FontSize="16"/>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <ItemsPresenter Grid.Row="1" FooterTransitions="{TemplateBinding FooterTransitions}" FooterTemplate="{TemplateBinding FooterTemplate}" Footer="{TemplateBinding Footer}" HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}" Padding="{TemplateBinding Padding}"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <RelativePanel Background="{StaticResource splitwiseGreen}">
-            <control:PageHeader>
-                <control:PageHeader.HeaderContent>
-                    <TextBlock Text="Friends" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                </control:PageHeader.HeaderContent>
-            </control:PageHeader>
+    <RelativePanel Background="{StaticResource splitwiseGreen}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <!--VisualState to be triggered when window width is >=720 effective pixels.-->
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.VerticalAlignment" Value="Top" />
+                        <Setter Target="commandBar.HorizontalAlignment" Value="Right" />
+                        <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                        <Setter Target="commandBar.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="commandBar.VerticalAlignment" Value="Bottom" />
+                        <Setter Target="ContentPanel.(RelativePanel.Above)" Value="commandBar"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <control:PageHeader x:Name="pageHeader" RelativePanel.AlignTopWithPanel="True">
+            <control:PageHeader.HeaderContent>
+                <TextBlock Text="Friends" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </control:PageHeader.HeaderContent>
+        </control:PageHeader>
 
-            <CommandBar x:Name="topbar" Background="{StaticResource splitwiseGreen}" Foreground="White" VerticalAlignment="Top" RelativePanel.AlignRightWithPanel="True" HorizontalContentAlignment="Stretch">
-                <AppBarButton Name="add" Icon="Add" Label="Add" Click="btnAddExpense_Click" Foreground="White"/>
-                <AppBarButton Name="settle" Label="Settle" Click="btnSettle_Click" Foreground="White">
-                    <AppBarButton.Icon>
-                        <BitmapIcon UriSource="ms-appx:///Assets/Icons/settle.png"/>
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton Name="remind" Label="Remind" Click="btnReminder_Click" Icon="Mail" Foreground="White"/>
-            </CommandBar>
-
-        </RelativePanel>
-        
-
-        <Grid Grid.Row="1" Background="{StaticResource splitwiseGreen}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Ellipse Width="80" Height="80">
-                <Ellipse.Fill>
-                    <ImageBrush>
-                        <ImageBrush.ImageSource>
-                            <BitmapImage ImageFailed="ProfilePic_ImageFailed" DecodePixelHeight="80" DecodePixelWidth="80" UriSource="{Binding PictureUrl}" />
-                        </ImageBrush.ImageSource>
-                    </ImageBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-
-            <Grid Grid.Row="1" Margin="12,12,12,0" HorizontalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <TextBlock x:Name="tbName" Text="{Binding name}" TextAlignment="Center" Foreground="White" Grid.Row="0" FontSize="20" />
-                <TextBlock x:Name="tbEmail" Text="{Binding email}" TextAlignment="Center" Foreground="White" Grid.Row="1" FontSize="12" />
-                <Grid Grid.Row="2">
-                    <ListView x:Name="balanceList" MinHeight="0" IsMultiSelectCheckBoxEnabled="False" ShowsScrollingPlaceholders="False" SelectionMode="None">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Padding" Value="0"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ListViewItem">
-                                            <ListViewItemPresenter FocusSecondaryBorderBrush="{x:Null}" PointerOverForeground="{x:Null}" PressedBackground="{x:Null}" PlaceholderBackground="{x:Null}" PointerOverBackground="{x:Null}" SelectedPressedBackground="{x:Null}" SelectedForeground="{x:Null}" SelectedPointerOverBackground="{x:Null}" SelectedBackground="{x:Null}" Foreground="{x:Null}"/>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Converter={StaticResource UserDetailsExpensesConverter}}" Foreground="White" TextAlignment="Center" FontSize="16"/>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </Grid>
-            </Grid>
-        </Grid>
-
-        <Grid x:Name="ContentPanel" Grid.Row="2" Margin="0,5,0,0" Background="White">
-            <ListView Name="llsExpenses" ItemTemplate="{StaticResource expensesTemplate}" Background="{StaticResource FrameBackground}" Loaded="OnListViewLoaded" SelectionChanged="llsExpenses_Tap">
+        <Grid x:Name="ContentPanel" Grid.Row="1" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader">
+            <ListView Name="llsExpenses" ItemTemplate="{StaticResource expensesTemplate}" Loaded="OnListViewLoaded" SelectionChanged="llsExpenses_Tap" Style="{StaticResource ListViewStyle}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -102,5 +159,15 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-    </Grid>
+
+        <CommandBar Grid.RowSpan="2" x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
+            <AppBarButton Name="add" Icon="Add" Label="Add" Click="btnAddExpense_Click" Foreground="White"/>
+            <AppBarButton Name="settle" Label="Settle" Click="btnSettle_Click" Foreground="White">
+                <AppBarButton.Icon>
+                    <BitmapIcon UriSource="ms-appx:///Assets/Icons/settle.png"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Name="remind" Label="Remind" Click="btnReminder_Click" Icon="Mail" Foreground="White"/>
+        </CommandBar>
+    </RelativePanel>
 </Page>

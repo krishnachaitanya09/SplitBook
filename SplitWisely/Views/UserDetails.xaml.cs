@@ -59,10 +59,9 @@ namespace SplitWisely.Views
             {
                 userExpensesBackgroundWorker.RunWorkerAsync();
             }
-            this.DataContext = selectedUser;
             if (selectedUser.balance.Count == 0)
                 selectedUser.balance.Add(new Balance_User() { amount = "0", currency_code = App.currentUser.default_currency, user_id = selectedUser.id });
-            this.balanceList.ItemsSource = selectedUser.balance;
+            this.DataContext = selectedUser;
         }
 
         private void btnAddExpense_Click(object sender, RoutedEventArgs e)
@@ -96,12 +95,12 @@ namespace SplitWisely.Views
             string thanks = "Thanks,\n";
             string userName = App.currentUser.first_name;
             string sentVia = "\n\nSent via,\n";
-            string appName = "Split it! A splitwise client for windows phone\n\n";
+            string appName = "SplitWisely! A splitwise client for Windows 10\n\n";
             string downloadApp = "Download app at: " + appUrl;
 
             EmailMessage emailComposeTask = new EmailMessage();
             emailComposeTask.Subject = "Settle up on Splitwise";
-            emailComposeTask.Body = reminderText + thanks + userName + sentVia + appName + downloadApp;
+            emailComposeTask.Body = reminderText + thanks + userName + sentVia + appName;
             emailComposeTask.To.Add(new EmailRecipient(selectedUser.email));
             await EmailManager.ShowComposeNewEmailAsync(emailComposeTask);
         }
@@ -131,18 +130,14 @@ namespace SplitWisely.Views
 
         private void userExpensesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Task.Run(async () =>
-            {
-                await loadExpenses();
-            });
+            loadExpenses();
         }
 
-        private async Task loadExpenses()
+        private async void loadExpenses()
         {
             //the rest of the work is done in a backgroundworker
             QueryDatabase obj = new QueryDatabase();
             List<Expense> allExpenses = obj.getExpensesForUser(selectedUser.id, pageNo);
-
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (allExpenses == null || allExpenses.Count == 0)
@@ -177,10 +172,24 @@ namespace SplitWisely.Views
             {
                 if (userExpensesBackgroundWorker.IsBusy != true && morePages)
                 {
-                    pageNo++;          
+                    pageNo++;
                     userExpensesBackgroundWorker.RunWorkerAsync(false);
                 }
             }
+            //if (_scrollViewer.VerticalOffset > _scrollViewer.ScrollableHeight * 0.15)
+            //{
+            //    if (userDetailsPanel.Visibility == Visibility.Visible && userDetailsPanel.Opacity == 1)
+            //    {
+            //        userDetailsFadeOut.Begin();
+            //    }
+            //}
+            //else
+            //{
+            //    if (userDetailsPanel.Visibility == Visibility.Collapsed)
+            //    {
+            //        userDetailsFadeIn.Begin();
+            //    }
+            //}
         }
 
         private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)

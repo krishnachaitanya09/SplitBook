@@ -1,27 +1,9 @@
-﻿using SplitWisely.Controller;
-using SplitWisely.Model;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core;
+﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using WinRTXamlToolkit.Controls.Extensions;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SplitWisely.Views
 {
@@ -29,71 +11,18 @@ namespace SplitWisely.Views
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class ActivityPage : Page
-    {
-        ObservableCollection<Expense> expensesList = new ObservableCollection<Expense>();
-        private object o = new object();
-
-        private int pageNo = 0;
-        private bool morePages = true;
-
-        BackgroundWorker expenseLoadingBackgroundWorker;
-
+    {      
         public ActivityPage()
         {
             this.InitializeComponent();
-            llsExpenses.ItemsSource = expensesList;
-
-            expenseLoadingBackgroundWorker = new BackgroundWorker();
-            expenseLoadingBackgroundWorker.WorkerSupportsCancellation = true;
-            expenseLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(expenseLoadingBackgroundWorker_DoWork);
-            if (expenseLoadingBackgroundWorker.IsBusy != true)
-            {
-                expenseLoadingBackgroundWorker.RunWorkerAsync();
-            }
+            llsExpenses.ItemsSource = MainPage.expensesList;         
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            
         }
-
-        private void expenseLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            Task.Run(async () =>
-            {
-                await loadExpenses();
-            });
-        }
-
-        private async Task loadExpenses()
-        {
-            List<Expense> allExpenses;
-            lock (o)
-            {
-                QueryDatabase obj = new QueryDatabase();
-                allExpenses = obj.getAllExpenses(pageNo);
-            }
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                if (pageNo == 0)
-                    expensesList.Clear();
-
-                if (allExpenses == null || allExpenses.Count == 0)
-                    morePages = false;
-                else
-                    morePages = true;
-
-                if (allExpenses != null)
-                {
-                    foreach (var expense in allExpenses)
-                    {
-                        expensesList.Add(expense);
-                    }
-                }
-            });
-        }
-
+       
         private void OnListViewLoaded(object sender, RoutedEventArgs e)
         {
             var listview = sender as ListViewBase;
@@ -112,12 +41,12 @@ namespace SplitWisely.Views
         {
             var _scrollViewer = sender as ScrollViewer;
             // If scrollviewer is scrolled down at least 90%
-            if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.8, _scrollViewer.ScrollableHeight - 200))
+            if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.6, _scrollViewer.ScrollableHeight - 200))
             {
-                if (expenseLoadingBackgroundWorker.IsBusy != true && morePages)
+                if (MainPage.expenseLoadingBackgroundWorker.IsBusy != true && MainPage.morePages)
                 {
-                    pageNo++;
-                    expenseLoadingBackgroundWorker.RunWorkerAsync(false);
+                    MainPage.pageNo++;
+                    MainPage.expenseLoadingBackgroundWorker.RunWorkerAsync(false);
                 }
             }
         }
