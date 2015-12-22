@@ -1,5 +1,6 @@
 ﻿using SQLite;
 using SQLite.Net.Attributes;
+using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +22,7 @@ namespace SplitWisely.Model
         }*/
 
         [Unique]
+        [PrimaryKey]
         public int id { get; set; }
         public int group_id { get; set; }
         public string description { get; set; }
@@ -44,8 +46,8 @@ namespace SplitWisely.Model
         public bool transaction_confirmed { get; set; }
         public string cost { get; set; }
         public string currency_code { get; set; }
-        
-        [Ignore]
+
+        [OneToMany]
         public List<Debt_Expense> repayments { get; set; }
         
         public string date { get; set; }
@@ -54,25 +56,29 @@ namespace SplitWisely.Model
         public string deleted_at { get; set; }
 
         [Column("created_by")]
+        [ForeignKey(typeof(User))]
         public int created_by_user_id { get; set; }
 
         [Column("updated_by")]
+        [ForeignKey(typeof(User))]
         public int updated_by_user_id { get; set; }
 
         [Column("deleted_by")]
+        [ForeignKey(typeof(User))]
         public int deleted_by_user_id { get; set; }
 
-        [Ignore]
+        [OneToOne("created_by_user_id")]
         public User created_by { get; set; }
-        [Ignore]
+        [OneToOne("updated_by_user_id")]
         public User updated_by { get; set; }
-        [Ignore]
+        [OneToOne("deleted_by_user_id")]
         public User deleted_by { get; set; }
         [Ignore]
         public Picture receipt { get; set; }
         [Ignore]
         public Category category { get; set; }
-        [Ignore]
+
+        [OneToMany(CascadeOperations = CascadeOperation.CascadeRead)]
         public List<Expense_Share> users { get; set; }
 
         //The following is used to help the ExpenseShareToAmountConverter
@@ -89,14 +95,16 @@ namespace SplitWisely.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        [ForeignKey(typeof(Expense))]
         public int expense_id { get; set; }
-        
-        [Ignore]
+
+        [OneToOne("user_id", CascadeOperations = CascadeOperation.CascadeRead)]
         public User user { get; set; }
 
         [Ignore]
         public string currency { get; set; }
 
+        [ForeignKey(typeof(User))]
         public int user_id { get; set; }
 
         private string _paidShare;

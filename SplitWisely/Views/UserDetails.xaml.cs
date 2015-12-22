@@ -1,26 +1,16 @@
-﻿using SplitWisely.Controller;
+﻿using SplitWisely.Add_Expense_Pages;
+using SplitWisely.Controller;
 using SplitWisely.Model;
 using SplitWisely.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Email;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WinRTXamlToolkit.Controls.Extensions;
@@ -69,8 +59,8 @@ namespace SplitWisely.Views
             Expense expenseToAdd = new Expense();
             expenseToAdd.specificUserId = selectedUser.id;
 
-            //PhoneApplicationService.Current.State[Constants.ADD_EXPENSE] = expenseToAdd;
-            //NavigationService.Navigate(new Uri("/Add_Expense_Pages/AddExpense.xaml", UriKind.Relative));
+            (Application.Current as App).ADD_EXPENSE = expenseToAdd;
+            this.Frame.Navigate(typeof(AddExpense));
         }
 
         private void btnSettle_Click(object sender, RoutedEventArgs e)
@@ -85,6 +75,7 @@ namespace SplitWisely.Views
             //PhoneApplicationService.Current.State[Constants.PAYMENT_TYPE] = navParams;
             //PhoneApplicationService.Current.State[Constants.PAYMENT_GROUP] = 0;
 
+            //this.Frame.Navigate(typeof(Add_Expense_Pages.AddExpense))
             //NavigationService.Navigate(new Uri("/Add_Expense_Pages/AddPayment.xaml", UriKind.Relative));
         }
 

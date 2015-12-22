@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLiteNetExtensions.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace SplitWisely.Model
     {
         public string currency_code { get; set; }
         public string amount { get; set; }
+        [ForeignKey(typeof(User))]
         public int user_id { get; set; }
     }
 }

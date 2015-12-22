@@ -34,6 +34,12 @@ namespace SplitWisely.Utilities
                         dbConn.CreateTable<Debt_Group>();
                         dbConn.CreateTable<Expense_Share>();
                         dbConn.CreateTable<Group_Members>();
+                        dbConn.CreateTable<AmountSplit>();
+                        dbConn.CreateTable<Category>();
+                        dbConn.CreateTable<Comment>();
+                        dbConn.CreateTable<Currency>();
+                        dbConn.CreateTable<ExpenseType>();
+                        dbConn.CreateTable<Notifications>();
                     }
                 }
             }
@@ -90,7 +96,7 @@ namespace SplitWisely.Utilities
 
         public static string getLastUpdatedTime()
         {
-            return (string)ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME] ?? "0" ;
+            return (string)ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME] ?? "0";
         }
 
         public static void setCurrentUserId(int userId)

@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="SplitWisely.Add_Expense_Pages.AddExpense"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplitWisely.Add_Expense_Pages"
+    xmlns:control="using:SplitWisely.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <RelativePanel Background="{StaticResource FrameBackground}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <!--VisualState to be triggered when window width is >=720 effective pixels.-->
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.VerticalAlignment" Value="Top" />
+                        <Setter Target="commandBar.HorizontalAlignment" Value="Right" />
+                        <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                        <Setter Target="commandBar.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="commandBar.VerticalAlignment" Value="Bottom" />
+                        <Setter Target="ContentPanel.(RelativePanel.Above)" Value="commandBar"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <control:PageHeader x:Name="pageHeader" Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True">
+            <control:PageHeader.HeaderContent>
+                <TextBlock Text="Add Expense" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </control:PageHeader.HeaderContent>
+        </control:PageHeader>
+
+        <Grid Background="Transparent" MaxWidth="500" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader">
+
+            <control:ExpenseUserControl x:Name="expenseControl"/>
+
+            <ProgressRing Background="#CC000000" Foreground="White"
+                                            x:Name="busyIndicator"/>
+        </Grid>
+        <StackPanel Background="#CC000000"
+                    Visibility="Collapsed"
+                    x:Name="DimContainer"/>
+        <CommandBar Grid.RowSpan="2" x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
+            <AppBarButton Name="okay" Icon="Save" Label="okay" Click="btnOkay_Click" Foreground="White"/>
+            <AppBarButton Name="cancel" Icon="Cancel" Label="cancel" Click="btnCancel_Click" Foreground="White"/>
+        </CommandBar>
+    </RelativePanel>
+</Page>

@@ -32,16 +32,13 @@ namespace SplitWisely
         public static string accessToken, accessTokenSecret;
         public static User currentUser;
         public static bool FirstLoad = true;
-
+        public Expense ADD_EXPENSE { get; set; }
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
-            Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
-                Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
-                Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();            
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;

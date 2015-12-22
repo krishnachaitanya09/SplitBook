@@ -39,5 +39,17 @@ namespace SplitWisely.Views
             base.OnNavigatedTo(e);
         }
 
+        private void llsGroups_Tap(object sender, SelectionChangedEventArgs e)
+        {
+            if (llsGroups.SelectedItem == null)
+                return;
+            Group selectedGroup = llsGroups.SelectedItem as Group;
+
+            //PhoneApplicationService.Current.State[Constants.SELECTED_GROUP] = selectedGroup;
+            //NavigationService.Navigate(new Uri("/GroupDetail.xaml", UriKind.Relative));
+
+            llsGroups.SelectedItem = null;
+        }
+
     }
 }

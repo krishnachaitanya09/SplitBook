@@ -83,6 +83,7 @@ namespace SplitWisely.Views
                    // DisplayMode changes.
                    this.CheckTogglePaneButtonSizeChanged();
                });
+
             expenseLoadingBackgroundWorker.WorkerSupportsCancellation = true;
             expenseLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(expenseLoadingBackgroundWorker_DoWork);
             if (expenseLoadingBackgroundWorker.IsBusy != true)
@@ -106,7 +107,7 @@ namespace SplitWisely.Views
 
         private void expenseLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            loadExpenses();
+            //loadExpenses();
         }
 
         private void loadFriends()

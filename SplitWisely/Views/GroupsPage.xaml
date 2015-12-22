@@ -28,7 +28,7 @@
                 <TextBlock Text="Groups" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <ListBox x:Name="llsGroups" Grid.Row="1" Background="{StaticResource FrameBackground}">
+        <ListBox x:Name="llsGroups" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsGroups_Tap">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

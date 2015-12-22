@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLiteNetExtensions.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace SplitWisely.Model
 {
     public class Picture
     {
+        [ForeignKey(typeof(User))]
         public int user_id { get; set; }
         public string small { get; set; }
         public string medium { get; set; }
