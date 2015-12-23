@@ -28,7 +28,6 @@
         <ListView
             Grid.Row="1"
             SelectionMode="None"
-            MinWidth="450"
             Name="llsFriends">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -52,10 +51,9 @@
                         <TextBlock
                                 Grid.Column="1" 
                                 Foreground="Black"
-                                VerticalAlignment="Center"
+                                VerticalAlignment="Center"                                
                                 FontSize="{StaticResource nameSize}" 
-                                Text="{Binding user.name}"/>
-
+                                Text="{Binding user.name}" TextTrimming="CharacterEllipsis"/>
                         <TextBox
                                 PlaceholderText="0.00"
                                 Background="{StaticResource splitwiseGreyBG}"
@@ -64,8 +62,8 @@
                                 Foreground="Black"
                                 KeyDown="tbAmount_KeyDown"
                                 InputScope="Number"
-                                VerticalAlignment="Center"
                                 HorizontalAlignment="Right"
+                                VerticalAlignment="Center"                                
                                 FontSize="{StaticResource amountSize}" 
                                 Text="{Binding paid_share, Mode=TwoWay}"/>
                     </Grid>

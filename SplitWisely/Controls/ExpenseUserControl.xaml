@@ -132,7 +132,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ContentDialog x:Name="contentDialog" Background="Transparent" Grid.RowSpan="5"/>
-        <ContentDialog x:Name="MultiplePayeeDialog" MaxWidth="500" Background="Transparent" Grid.RowSpan="5"/>
+        <ContentDialog x:Name="MultiplePayeeDialog" Background="Transparent" Grid.RowSpan="5"/>
         <Border Grid.Row="0" BorderThickness="0,0,0,2" BorderBrush="{StaticResource splitwiseGreyBG}">
             <StackPanel Orientation="Vertical" Margin="15,10">
                 <TextBlock Foreground="Black" FontSize="{StaticResource nameSize}">

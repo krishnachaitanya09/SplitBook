@@ -25,9 +25,14 @@
 
         <ListView 
             Grid.Row="1"
-            MinWidth="450"
             Name="llsFriends"
             SelectionChanged="llsFriends_SelectionChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="0,0,0,2" BorderBrush="{StaticResource splitwiseGreyBG}">

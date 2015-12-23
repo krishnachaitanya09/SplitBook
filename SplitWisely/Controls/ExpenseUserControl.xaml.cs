@@ -6,23 +6,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 
 namespace SplitWisely.Controls
@@ -222,8 +214,9 @@ namespace SplitWisely.Controls
             if (await canProceed())
             {
                 SelectPayeePopUpControl ChoosePayeePopup = new SelectPayeePopUpControl(expenseShareUsers, _PayeeClose);
-                ChoosePayeePopup.MaxHeight = ActualHeight;
-                ChoosePayeePopup.MaxWidth = ActualWidth;
+                ChoosePayeePopup.MaxWidth = this.ActualWidth;
+                ChoosePayeePopup.MinWidth = this.ActualWidth;
+                ChoosePayeePopup.MaxHeight = this.ActualHeight / 1.3;
                 contentDialog.Content = ChoosePayeePopup;
                 await contentDialog.ShowAsync();
             }
@@ -268,8 +261,9 @@ namespace SplitWisely.Controls
                 cost = tbAmount.Text.Replace(",", ".");
             MultiplePayeeInputPopUpControl MultiplePayeeInputPopup = new MultiplePayeeInputPopUpControl
                                                             (ref expenseShareUsers, _MultiplePayeeInputClose, Convert.ToDecimal(cost));
-            MultiplePayeeInputPopup.MaxHeight = this.ActualHeight;
-            MultiplePayeeInputPopup.MaxWidth = this.ActualWidth;           
+            MultiplePayeeInputPopup.MaxWidth = this.ActualWidth / 1.2;
+            MultiplePayeeInputPopup.MinWidth = this.ActualWidth / 1.2;
+            MultiplePayeeInputPopup.MaxHeight = this.ActualHeight / 1.3;
             MultiplePayeeDialog.Content = MultiplePayeeInputPopup;
             await MultiplePayeeDialog.ShowAsync();
         }
@@ -296,8 +290,9 @@ namespace SplitWisely.Controls
                     else
                         cost = tbAmount.Text.Replace(",", "."); ;
                     UnequallySplit UnequallySplitPopup = new UnequallySplit(expenseShareUsers, Convert.ToDecimal(cost), _UnequallyClose);
-                    UnequallySplitPopup.MaxHeight = this.ActualHeight;
-                    UnequallySplitPopup.MaxWidth = this.ActualWidth;
+                    UnequallySplitPopup.MaxHeight = this.ActualHeight / 1.3;
+                    UnequallySplitPopup.MaxWidth = this.ActualWidth / 1.15;
+                    UnequallySplitPopup.MinWidth = this.ActualWidth / 1.15;
 
                     contentDialog.Content = UnequallySplitPopup;
                     await contentDialog.ShowAsync();
