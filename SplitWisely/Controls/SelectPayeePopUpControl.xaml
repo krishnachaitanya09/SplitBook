@@ -58,9 +58,9 @@
             Tapped="tbMultiplePayers_Tap"
             Foreground="Black" 
             Content="Multiple people" 
-            Grid.Row="2" 
+            Grid.Row="2"             
             HorizontalContentAlignment="Left"
-            Padding="0"
+            Margin="10"
             FontSize="{StaticResource nameSize}" 
             FontFamily="Segoe WP"/>
     </Grid>

@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="480"
+    d:DesignWidth="480">
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
@@ -27,8 +27,15 @@
 
         <ListView
             Grid.Row="1"
+            SelectionMode="None"
             MinWidth="450"
             Name="llsFriends">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="5">
@@ -38,7 +45,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" 
-                                   Source="{Binding user.PictureUrl, Converter={StaticResource JetImageLoaderConverter}}"
+                                   Source="{Binding user.PictureUrl}"
                                    VerticalAlignment="Center" 
                                    Width="50" Height="50" 
                                    Margin="0,0,10,0"/>
@@ -58,6 +65,7 @@
                                 KeyDown="tbAmount_KeyDown"
                                 InputScope="Number"
                                 VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
                                 FontSize="{StaticResource amountSize}" 
                                 Text="{Binding paid_share, Mode=TwoWay}"/>
                     </Grid>
@@ -70,6 +78,7 @@
             TextWrapping="Wrap"
             Grid.Row="2" 
             Foreground="Red"
+            Margin="10,0"
             HorizontalAlignment="Center"
             FontSize="{StaticResource descriptionSize}" />
 
@@ -77,16 +86,17 @@
             x:Name="tbSum"
             Grid.Row="3" 
             Foreground="Black"
+            Margin="10,0"
             HorizontalAlignment="Center"
             FontSize="{StaticResource amountSize}" />
 
         <Button
-            x:Name="Okay"
-           
+            x:Name="Okay"          
             Tapped="Okay_Tap"
             Foreground="Black" 
-            Margin="-12,0,-12,-12"
+            Margin="10"
             Background="LightGray"
+            HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             Content="Okay" 
             Grid.Row="4" 

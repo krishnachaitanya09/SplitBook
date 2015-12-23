@@ -47,11 +47,6 @@ namespace SplitWisely.Controls
 
         string decimalsep = CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
 
-        Action<bool> DimBackground;
-
-        Popup SplitUnequallyPopup;
-        Popup MultiplePayeePopup;
-
         public ExpenseUserControl()
         {
             this.InitializeComponent();
@@ -80,6 +75,7 @@ namespace SplitWisely.Controls
             this.currencyListPicker.ItemsSource = currenciesList;
 
             this.SplitTypeListPicker.ItemsSource = AmountSplit.GetAmountSplitTypes();
+            this.SplitTypeListPicker.SelectedIndex = 0;
 
             if (expense == null)
             {
@@ -209,30 +205,12 @@ namespace SplitWisely.Controls
         private void friendListPicker_Tapped(object sender, TappedRoutedEventArgs e)
         {
 
-            ShowPopup(ref friendListPopup, false);
+            ShowPopup(ref friendListPopup);
         }
 
         private void groupListPicker_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            ShowPopup(ref groupListPopup, false);
-        }
-
-        private void tbAmount_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-
-            //do not allow user to input more than one decimal point
-            if (textBox.Text.Contains(decimalsep))
-                e.Handled = true;
-        }
-
-        private void tbUnequal_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-
-            //do not llow user to input more than one decimal point
-            if (textBox.Text.Contains(decimalsep))
-                e.Handled = true;
+            ShowPopup(ref groupListPopup);
         }
 
         private async void tbPaidBy_Tap(object sender, TappedRoutedEventArgs e)
@@ -290,17 +268,16 @@ namespace SplitWisely.Controls
                 cost = tbAmount.Text.Replace(",", ".");
             MultiplePayeeInputPopUpControl MultiplePayeeInputPopup = new MultiplePayeeInputPopUpControl
                                                             (ref expenseShareUsers, _MultiplePayeeInputClose, Convert.ToDecimal(cost));
-            MultiplePayeeInputPopup.MaxHeight = this.ActualHeight / 1.1;
-            MultiplePayeeInputPopup.MaxWidth = this.ActualWidth / 1.1;
-
-            contentDialog.Content = MultiplePayeeInputPopup;
-            await contentDialog.ShowAsync();
+            MultiplePayeeInputPopup.MaxHeight = this.ActualHeight;
+            MultiplePayeeInputPopup.MaxWidth = this.ActualWidth;           
+            MultiplePayeeDialog.Content = MultiplePayeeInputPopup;
+            await MultiplePayeeDialog.ShowAsync();
         }
 
         //This is called after validation has been done and okay has been pressed.
         private void _MultiplePayeeInputClose()
         {
-            contentDialog.Hide();
+            MultiplePayeeDialog.Hide();
             PaidByUser = null;
             tbPaidBy.Text = "Multiple users";
         }
@@ -319,8 +296,8 @@ namespace SplitWisely.Controls
                     else
                         cost = tbAmount.Text.Replace(",", "."); ;
                     UnequallySplit UnequallySplitPopup = new UnequallySplit(expenseShareUsers, Convert.ToDecimal(cost), _UnequallyClose);
-                    UnequallySplitPopup.MaxHeight = this.ActualHeight / 1.1;
-                    UnequallySplitPopup.MaxWidth = this.ActualWidth / 1.1;
+                    UnequallySplitPopup.MaxHeight = this.ActualHeight;
+                    UnequallySplitPopup.MaxWidth = this.ActualWidth;
 
                     contentDialog.Content = UnequallySplitPopup;
                     await contentDialog.ShowAsync();
@@ -336,17 +313,11 @@ namespace SplitWisely.Controls
             this.expenseShareUsers = users;
         }
 
-        private void ShowPopup(ref Popup popup, bool dim)
+        private void ShowPopup(ref Popup popup)
         {
             popup.IsOpen = true;
-            popup.Closed += Popup_Closed;
-            DimBackground(dim);
         }
 
-        private void Popup_Closed(object sender, object e)
-        {
-            DimBackground(false);
-        }
 
         void FriendListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -358,11 +329,13 @@ namespace SplitWisely.Controls
             {
                 Expense_Share selectedFriend = (Expense_Share)friendList.SelectedItem;
                 this.expenseTypeListPicker.ItemsSource = ExpenseType.GetAllExpenseTypeList(selectedFriend.user.first_name);
+                this.expenseTypeListPicker.SelectedIndex = 0;
                 this.expenseTypeListPicker.Visibility = Visibility.Visible;
             }
             else
             {
                 this.expenseTypeListPicker.ItemsSource = ExpenseType.GetOnlySplitExpenseTypeList();
+                this.expenseTypeListPicker.SelectedIndex = 0;
                 this.expenseTypeListPicker.Visibility = Visibility.Collapsed;
             }
 
@@ -392,11 +365,14 @@ namespace SplitWisely.Controls
 
         void expenseTypeListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ExpenseType type = (ExpenseType)this.expenseTypeListPicker.SelectedItem;
-            if (type.id != ExpenseType.TYPE_SPLIT_BILL)
-                this.paidByContainer.Visibility = Visibility.Collapsed;
-            else
-                this.paidByContainer.Visibility = Visibility.Visible;
+            if (this.expenseTypeListPicker.SelectedItem != null)
+            {
+                ExpenseType type = (ExpenseType)this.expenseTypeListPicker.SelectedItem;
+                if (type.id != ExpenseType.TYPE_SPLIT_BILL)
+                    this.paidByContainer.Visibility = Visibility.Collapsed;
+                else
+                    this.paidByContainer.Visibility = Visibility.Visible;
+            }
         }
 
         private async Task<bool> canProceed()
@@ -636,11 +612,6 @@ namespace SplitWisely.Controls
             }
         }
 
-        public void setDimBackGround(Action<bool> dim)
-        {
-            this.DimBackground = dim;
-        }
-
         public static void FocusedTextBoxUpdateSource()
         {
             var focusedElement = FocusManager.GetFocusedElement();
@@ -670,5 +641,15 @@ namespace SplitWisely.Controls
                 }
             }
         }
-    }    
+
+        private void friendListPicker_Loaded(object sender, RoutedEventArgs e)
+        {
+            friendListPicker.Text = FriendSummary();
+        }
+
+        private void groupListPicker_Loaded(object sender, RoutedEventArgs e)
+        {
+            groupListPicker.Text = GroupSummary();
+        }
+    }
 }

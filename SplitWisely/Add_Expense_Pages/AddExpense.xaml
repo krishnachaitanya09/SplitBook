@@ -21,6 +21,7 @@
                         <Setter Target="commandBar.HorizontalAlignment" Value="Right" />
                         <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
                         <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
+                        <Setter Target="ContentPanel.(RelativePanel.AlignBottomWithPanel)" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -38,23 +39,21 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <control:PageHeader x:Name="pageHeader" Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True">
+        <control:PageHeader x:Name="pageHeader" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True">
             <control:PageHeader.HeaderContent>
                 <TextBlock Text="Add Expense" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-
-        <Grid Background="Transparent" MaxWidth="500" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader">
-
-            <control:ExpenseUserControl x:Name="expenseControl"/>
-
-            <ProgressRing Background="#CC000000" Foreground="White"
+        <ScrollViewer x:Name="ContentPanel" Background="{StaticResource FrameBackground}"
+                      Grid.Row="1" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid Background="Transparent">
+                <control:ExpenseUserControl HorizontalAlignment="Stretch" MaxWidth="500" x:Name="expenseControl"/>
+                <ProgressRing Background="#CC000000" Foreground="White"
                                             x:Name="busyIndicator"/>
-        </Grid>
-        <StackPanel Background="#CC000000"
-                    Visibility="Collapsed"
-                    x:Name="DimContainer"/>
-        <CommandBar Grid.RowSpan="2" x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
+            </Grid>
+        </ScrollViewer>
+        <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
             <AppBarButton Name="okay" Icon="Save" Label="okay" Click="btnOkay_Click" Foreground="White"/>
             <AppBarButton Name="cancel" Icon="Cancel" Label="cancel" Click="btnCancel_Click" Foreground="White"/>
         </CommandBar>

@@ -42,7 +42,6 @@ namespace SplitWisely.Add_Expense_Pages
             addExpenseBackgroundWorker.DoWork += new DoWorkEventHandler(addExpenseBackgroundWorker_DoWork);
 
             this.expenseControl.amountSplit = AmountSplit.EqualSplit;
-            this.expenseControl.setDimBackGround(DimBackGround);
             this.expenseControl.groupList.SelectionChanged += groupListPicker_SelectionChanged;
 
             //This helps to auto-populate if the user is coming from the GroupDetails or UserDetails page
@@ -80,16 +79,19 @@ namespace SplitWisely.Add_Expense_Pages
 
         private async void btnOkay_Click(object sender, RoutedEventArgs e)
         {
+            commandBar.IsEnabled = false;
             bool proceed = await this.expenseControl.setupExpense();
             if (addExpenseBackgroundWorker.IsBusy != true)
             {
-                //busyIndicator.Content = "adding expense";
-                // busyIndicator.IsRunning = true;
+                busyIndicator.IsActive = true;
 
                 if (proceed)
                     addExpenseBackgroundWorker.RunWorkerAsync();
-                //else
-                //busyIndicator.IsRunning = false;
+                else
+                {
+                    busyIndicator.IsActive = false;
+                    commandBar.IsEnabled = true;
+                }
             }
         }
 
@@ -174,7 +176,7 @@ namespace SplitWisely.Add_Expense_Pages
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     (Application.Current as App).ADD_EXPENSE = null;
-                    //busyIndicator.IsRunning = false;
+                    busyIndicator.IsActive = false;
                     this.Frame.Navigate(typeof(FriendsPage));
                 });
             }
@@ -182,7 +184,7 @@ namespace SplitWisely.Add_Expense_Pages
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    //busyIndicator.IsRunning = false;
+                    busyIndicator.IsActive = false;
 
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
@@ -197,21 +199,8 @@ namespace SplitWisely.Add_Expense_Pages
                         };
                         await dialog.ShowAsync();
                     }
+                    commandBar.IsEnabled = true;
                 });
-            }
-        }
-
-        private void DimBackGround(bool dim)
-        {
-            if (dim)
-            {
-                DimContainer.Visibility = Visibility.Visible;
-                //ApplicationBar.IsVisible = false;
-            }
-            else
-            {
-                DimContainer.Visibility = Visibility.Collapsed;
-                //ApplicationBar.IsVisible = true;
             }
         }
     }

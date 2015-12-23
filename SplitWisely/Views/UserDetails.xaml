@@ -160,7 +160,7 @@
             </ListView>
         </Grid>
 
-        <CommandBar Grid.RowSpan="2" x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
+        <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
             <AppBarButton Name="add" Icon="Add" Label="Add" Click="btnAddExpense_Click" Foreground="White"/>
             <AppBarButton Name="settle" Label="Settle" Click="btnSettle_Click" Foreground="White">
                 <AppBarButton.Icon>
