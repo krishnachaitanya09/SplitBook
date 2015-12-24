@@ -52,12 +52,11 @@ namespace SplitWisely.Controller
 
         public List<Expense> getAllExpenses(int pageNo = 0)
         {
-            int offset = EXPENSES_ROWS * pageNo;            
+            int offset = EXPENSES_ROWS * pageNo;
 
             using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
                 //Only retrieve expenses that have not been deleted
-
                 List<Expense> expensesList = dbConn.GetAllWithChildren<Expense>(recursive: true).Where(e => e.deleted_by_user_id == 0).OrderBy(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
 
                 //Get list of repayments for expense.
@@ -83,10 +82,10 @@ namespace SplitWisely.Controller
             //or
             //paid by me and owed by him
             //Only retrieve expenses that have not been deleted
-            
+
             using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
-                List<Expense> expensesList = dbConn.GetAllWithChildren<Expense>(recursive: true).Where(e => e.deleted_by_user_id == 0 && e.group_id == 0 && e.repayments.Any(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId()))).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
+                List<Expense> expensesList = dbConn.GetAllWithChildren<Expense>().Where(e => e.deleted_by_user_id == 0 && e.repayments.Any(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId()))).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
 
                 if (expensesList == null && expensesList.Count == 0)
                     return null;
@@ -109,6 +108,53 @@ namespace SplitWisely.Controller
                 return expensesList;
             }
         }
+
+        //public List<Expense> getExpensesForUser(int userId, int pageNo = 0)
+        //{
+        //    int offset = EXPENSES_ROWS * pageNo;
+
+        //    //the expenses for for a user is a combination of expenses paid by him and owe by me
+        //    //or
+        //    //paid by me and owed by him
+        //    //Only retrieve expenses that have not been deleted
+
+        //    object[] param = { Helpers.getCurrentUserId(), userId, userId, Helpers.getCurrentUserId(), offset, EXPENSES_ROWS };
+        //    using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+        //    {
+        //        List<Expense> expensesList = dbConn.Query<Expense>("SELECT expense.id, expense.group_id, expense.description, expense.details, expense.payment, expense.transaction_confirmed, expense.creation_method, expense.cost, expense.currency_code, expense.date, expense.created_by, expense.created_at, expense.updated_by, expense.updated_at, expense.deleted_at, expense.deleted_by FROM expense INNER JOIN debt_expense ON expense.id = debt_expense.expense_id WHERE expense.deleted_by=0 AND expense.group_id = 0 AND  ((debt_expense.\"from\" = ? AND debt_expense.\"to\" = ?) OR (debt_expense.\"from\" = ? AND debt_expense.\"to\" = ?)) ORDER BY datetime(date) DESC LIMIT ?,?", param).ToList<Expense>();
+
+        //        if (expensesList == null && expensesList.Count == 0)
+        //            return null;
+
+        //        //Get list of repayments for expense.
+        //        //Get the created by, updated by and deleted by user
+        //        //Get the expense share per user. Within each expense user, fill in the user details.
+        //        for (var x = 0; x < expensesList.Count; x++)
+        //        {
+        //            //display amount details specific to user
+        //            expensesList[x].displayType = Expense.DISPLAY_FOR_SPECIFIC_USER;
+        //            expensesList[x].specificUserId = userId;
+
+        //            expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
+        //            expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+
+        //            if (expensesList[x].updated_by_user_id != 0)
+        //                expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
+
+        //            if (expensesList[x].deleted_by_user_id != 0)
+        //                expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id);
+
+        //            expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code);
+
+        //            for (var y = 0; y < expensesList[x].users.Count; y++)
+        //            {
+        //                expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id);
+        //            }
+        //        }
+
+        //        return expensesList;
+        //    }
+        //}
 
         public List<Group> getAllGroups()
         {

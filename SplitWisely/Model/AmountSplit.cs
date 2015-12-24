@@ -1,6 +1,4 @@
-﻿using SQLite;
-using SQLite.Net.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +14,6 @@ namespace SplitWisely.Model
         public const int TYPE_SPLIT_EQUALLY = 0;
         public const int TYPE_SPLIT_UNEQUALLY = 1;
 
-        [Unique]
         public int id { get; set; }
         public String typeString { get; set; }
 

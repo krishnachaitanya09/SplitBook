@@ -8,6 +8,7 @@ namespace SplitWisely.Model
 {
     public class Notifications
     {
+        public int id { get; set; }
         public bool added_as_friend { get; set; }
         public bool added_to_group { get; set; }
         public bool expense_added { get; set; }

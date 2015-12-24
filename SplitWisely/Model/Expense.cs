@@ -1,9 +1,8 @@
-﻿using SQLite;
-using SQLite.Net.Attributes;
-using SQLiteNetExtensions.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,8 +20,7 @@ namespace SplitWisely.Model
             displayType = DISPLAY_FOR_ALL_USER;
         }*/
 
-        [Unique]
-        [PrimaryKey]
+        [Key]
         public int id { get; set; }
         public int group_id { get; set; }
         public string description { get; set; }
@@ -47,47 +45,38 @@ namespace SplitWisely.Model
         public string cost { get; set; }
         public string currency_code { get; set; }
 
-        [OneToMany]
         public List<Debt_Expense> repayments { get; set; }
-        
+
         public string date { get; set; }
         public string created_at { get; set; }
         public string updated_at { get; set; }
         public string deleted_at { get; set; }
 
-        [Column("created_by")]
-        [ForeignKey(typeof(User))]
         public int created_by_user_id { get; set; }
 
-        [Column("updated_by")]
-        [ForeignKey(typeof(User))]
         public int updated_by_user_id { get; set; }
 
-        [Column("deleted_by")]
-        [ForeignKey(typeof(User))]
         public int deleted_by_user_id { get; set; }
-
-        [OneToOne("created_by_user_id")]
+        [ForeignKey("created_by_user_id")]
         public User created_by { get; set; }
-        [OneToOne("updated_by_user_id")]
+        [ForeignKey("updated_by_user_id")]
         public User updated_by { get; set; }
-        [OneToOne("deleted_by_user_id")]
+        [ForeignKey("deleted_by_user_id")]
         public User deleted_by { get; set; }
-        [Ignore]
+        [NotMapped]
         public Picture receipt { get; set; }
-        [Ignore]
+        [NotMapped]
         public Category category { get; set; }
 
-        [OneToMany(CascadeOperations = CascadeOperation.CascadeRead)]
-        public List<Expense_Share> users { get; set; }
+        public virtual List<Expense_Share> users { get; set; }
 
         //The following is used to help the ExpenseShareToAmountConverter
         //to determine if the amount is to be displayed as totaly for all users or as specific to one user
         //Eg: You booked a flight to KL to 7 ppl and paid for 490.
         //In all expenses, it will be shown as you lent 420 but in specific user it will be you lent 70
-        [Ignore]
+        [NotMapped]
         public int specificUserId { get; set; }
-        [Ignore]
+        [NotMapped]
         public int displayType { get; set; }
     }
 
@@ -95,17 +84,17 @@ namespace SplitWisely.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [ForeignKey(typeof(Expense))]
+        [Key]
+        public int id { get; set; }
         public int expense_id { get; set; }
-
-        [OneToOne("user_id", CascadeOperations = CascadeOperation.CascadeRead)]
+        [ForeignKey("expense_id")]
+        public Expense expense { get; set; }
+        public int user_id { get; set; }
+        [ForeignKey("user_id")]
         public User user { get; set; }
 
-        [Ignore]
+        [NotMapped]
         public string currency { get; set; }
-
-        [ForeignKey(typeof(User))]
-        public int user_id { get; set; }
 
         private string _paidShare;
         public string paid_share
@@ -137,13 +126,13 @@ namespace SplitWisely.Model
 
 
         //to help with spliting expense unequally
-        [Ignore]
+        [NotMapped]
         public string percentage { get; set; }
-        [Ignore]
+        [NotMapped]
         public string share { get; set; }
 
         //to help with checking if this user paid or not
-        [Ignore]
+        [NotMapped]
         public bool hasPaid { get; set; }
 
         // Create the OnPropertyChanged method to raise the event 

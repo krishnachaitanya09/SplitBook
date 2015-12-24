@@ -1,8 +1,7 @@
-﻿using SQLite;
-using SQLite.Net.Attributes;
-using SQLiteNetExtensions.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,22 +10,24 @@ namespace SplitWisely.Model
 {
     public class Debt_Group
     {
-        [ForeignKey(typeof(User))]
+        [Key]
+        public int id { get; set; }
         public int from { get; set; }
-        [ForeignKey(typeof(User))]
+        
         public int to { get; set; }
         public string currency_code { get; set; }
         public string amount { get; set; }
-        [ForeignKey(typeof(Group))]
         public int group_id { get; set; }
+        [ForeignKey("group_id")]
+        public Group group { get; set; }
 
-        [OneToOne("from")]
+        [ForeignKey("from")]
         public User fromUser { get; set; }
-        [OneToOne("to")]
+        [ForeignKey("to")]
         public User toUser { get; set; }
 
         //the following is used in group summary expandable list
-        [Ignore]
+        [NotMapped]
         public int ownerId { get; set; }
 
         //need a copy contructor for this

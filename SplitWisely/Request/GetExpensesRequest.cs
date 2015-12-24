@@ -35,6 +35,7 @@ namespace SplitWisely.Request
                     CallbackOnFailure(response.StatusCode);
                     return;
                 }
+                var x = Encoding.UTF8.GetString(response.RawBytes);
                 Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(Encoding.UTF8.GetString(response.RawBytes));
                 Newtonsoft.Json.Linq.JToken testToken = root["expenses"];
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };

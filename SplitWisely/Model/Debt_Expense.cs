@@ -1,8 +1,8 @@
 ﻿using SQLite;
-using SQLite.Net.Attributes;
-using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,17 +11,18 @@ namespace SplitWisely.Model
 {
     public class Debt_Expense
     {
-        [ForeignKey(typeof(User))]
+        [Key]
+        public int id { get; set; }
         public int from { get; set; }
-        [ForeignKey(typeof(User))]
         public int to { get; set; }
         public string currency_code { get; set; }
-        public string amount { get; set; }
-        [ForeignKey(typeof(Expense))]
+        public string amount { get; set; }        
         public int expense_id { get; set; }
-        [OneToOne("from")]
+        [ForeignKey("expense_id")]
+        public Debt_Expense debt_Expense { get; set; }
+        [ForeignKey("from")]
         public User fromUser { get; set; }
-        [OneToOne("to")]
+        [ForeignKey("to")]
         public User toUser { get; set; }
     }
 }

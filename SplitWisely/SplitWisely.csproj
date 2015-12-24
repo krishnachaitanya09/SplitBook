@@ -148,6 +148,12 @@
     <Compile Include="Converter\PaymentImageFileConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpenseColorConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpensesConverter.cs" />
+    <Compile Include="Migrations\20151224113950_MyFirstMigration.cs" />
+    <Compile Include="Migrations\20151224113950_MyFirstMigration.designer.cs">
+      <DependentUpon>20151224113950_MyFirstMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DatabaseContextModelSnapshot.cs" />
+    <Compile Include="Model\DatabaseContext.cs" />
     <Compile Include="Utilities\SplitwiseAuthenticationBroker.cs" />
     <Compile Include="Views\ActivityPage.xaml.cs">
       <DependentUpon>ActivityPage.xaml</DependentUpon>
@@ -321,9 +327,6 @@
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
-    </SDKReference>
-    <SDKReference Include="SQLite.UAP.2015, Version=3.9.2">
-      <Name>SQLite for Universal App Platform</Name>
     </SDKReference>
     <SDKReference Include="WindowsMobile, Version=10.0.10240.0">
       <Name>Windows Mobile Extensions for the UWP</Name>

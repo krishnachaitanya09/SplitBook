@@ -1,8 +1,7 @@
-﻿using SQLite;
-using SQLite.Net.Attributes;
-using SQLiteNetExtensions.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,17 +10,16 @@ namespace SplitWisely.Model
 {
     public class Comment
     {
-        [Unique]
+        [Key]
         public int id { get; set; }
         public string content { get; set; }
         public string comment_type { get; set; }
         public string relation_type { get; set; }
         public int relation_id { get; set; }
         public string created_at { get; set; }
-        public string deleted_at { get; set; }
-        [ForeignKey(typeof(User))]
+        public string deleted_at { get; set; }        
         public int user_id { get; set; }
-        [OneToOne("user_id", CascadeOperations = CascadeOperation.CascadeRead)]
+        [ForeignKey("user_id")]
         public User user { get; set; }
     }
 }

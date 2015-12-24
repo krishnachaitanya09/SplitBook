@@ -1,4 +1,5 @@
-﻿using SplitWisely.Controller;
+﻿using Microsoft.Data.Entity;
+using SplitWisely.Controller;
 using SplitWisely.Model;
 using SplitWisely.Utilities;
 using SplitWisely.Views;
@@ -49,6 +50,11 @@ namespace SplitWisely
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;
+
+            using (var db = new DatabaseContext())
+            {
+                db.Database.Migrate();
+            }
         }
 
         /// <summary>
