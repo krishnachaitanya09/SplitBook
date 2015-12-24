@@ -86,7 +86,7 @@ namespace SplitWisely.Controller
             
             using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
-                List<Expense> expensesList = dbConn.GetAllWithChildren<Expense>(recursive: true).Where(e => e.deleted_by_user_id == 0 && e.group_id == 0 && e.repayments.Any(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId()))).OrderBy(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
+                List<Expense> expensesList = dbConn.GetAllWithChildren<Expense>(recursive: true).Where(e => e.deleted_by_user_id == 0 && e.group_id == 0 && e.repayments.Any(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId()))).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
 
                 if (expensesList == null && expensesList.Count == 0)
                     return null;

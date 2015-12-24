@@ -22,7 +22,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SplitWisely.Add_Expense_Pages
 {
@@ -84,7 +83,6 @@ namespace SplitWisely.Add_Expense_Pages
             if (addExpenseBackgroundWorker.IsBusy != true)
             {
                 busyIndicator.IsActive = true;
-
                 if (proceed)
                     addExpenseBackgroundWorker.RunWorkerAsync();
                 else
@@ -177,6 +175,10 @@ namespace SplitWisely.Add_Expense_Pages
                 {
                     (Application.Current as App).ADD_EXPENSE = null;
                     busyIndicator.IsActive = false;
+                    if (MainPage.syncDatabaseBackgroundWorker.IsBusy != true)
+                    {
+                        MainPage.syncDatabaseBackgroundWorker.RunWorkerAsync();
+                    }
                     this.Frame.Navigate(typeof(FriendsPage));
                 });
             }

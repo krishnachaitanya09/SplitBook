@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "Coding4Fun.Toolkit.Controls": "2.1.7",
     "FubarCoder.RestSharp.Portable": "3.1.0",
     "FubarCoder.RestSharp.Portable.OAuth": "3.1.0",
     "Microsoft.ApplicationInsights": "1.2.3",
