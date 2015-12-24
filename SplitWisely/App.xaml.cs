@@ -34,7 +34,8 @@ namespace SplitWisely
         public static bool FirstLoad = true;
         public Expense ADD_EXPENSE { get; set; }
         public Expense SELECTED_EXPENSE { get; set; }
-        
+        public Frame rootFrame { get; set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -63,7 +64,7 @@ namespace SplitWisely
             Helpers dbHelper = new Helpers();
             dbHelper.CreateDatabase();
 
-            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active

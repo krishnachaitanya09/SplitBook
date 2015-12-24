@@ -1,4 +1,5 @@
-﻿using SplitWisely.Controller;
+﻿using SplitWisely.Add_Expense_Pages;
+using SplitWisely.Controller;
 using SplitWisely.Model;
 using SplitWisely.Utilities;
 using System;
@@ -99,17 +100,19 @@ namespace SplitWisely.Views
             }
             else
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     //busyIndicator.IsRunning = false;
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
                         Helpers.logout();
+                        (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
                         //NavigationService.Navigate(new Uri("/Login.xaml", UriKind.Relative));
                     }
                     else
                     {
-                        //MessageBox.Show("Unable to delete expense", "Error", MessageBoxButton.OK);
+                        MessageDialog messageDialog = new MessageDialog("Unable to delete expense", "Error");
+                        await messageDialog.ShowAsync();
                     }
                 });
             }
@@ -120,13 +123,12 @@ namespace SplitWisely.Views
             //currently you cannot edit all expenses.
             if (canEditExpense())
             {
-                //PhoneApplicationService.Current.State[Constants.ADD_EXPENSE] = selectedExpense;
-                //NavigationService.Navigate(new Uri("/Add_Expense_Pages/EditExpense.xaml", UriKind.Relative));
+                (Application.Current as App).ADD_EXPENSE = selectedExpense;
+                this.Frame.Navigate(typeof(EditExpense));
             }
             else
             {
-                MessageDialog messageDialog = new MessageDialog("This expense has an unknown user (not a friend). You cannnot edit such an expense in this version. This facility will be added in a future update"
-                    , "Sorry");
+                MessageDialog messageDialog = new MessageDialog("This expense has an unknown user (not a friend). You cannnot edit such an expense in this version. This facility will be added in a future update", "Sorry");
                 await messageDialog.ShowAsync();
             }
         }

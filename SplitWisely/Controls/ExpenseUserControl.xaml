@@ -144,7 +144,7 @@
                 <Popup x:Name="friendListPopup" IsLightDismissEnabled="True" Margin="5,0">
                     <ListBox x:Name="friendList" SelectionMode="Multiple" x:FieldModifier="public" SelectionChanged="FriendListPicker_SelectionChanged"/>
                 </Popup>
-                <TextBox x:Name="groupListPicker" Loaded="groupListPicker_Loaded" Tapped="groupListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
+                <TextBox x:Name="groupListPicker" x:FieldModifier="public" Loaded="groupListPicker_Loaded" Tapped="groupListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
                 <Popup x:Name="groupListPopup" IsLightDismissEnabled="True" >
                     <ListBox x:Name="groupList" SelectionMode="Multiple" x:FieldModifier="public" SelectionChanged="GroupList_SelectionChanged"/>
                 </Popup>
@@ -184,6 +184,7 @@
                         </Grid.RowDefinitions>
                         <TextBox Grid.Row="0" 
 								x:Name="tbDescription" 
+                                x:FieldModifier="public"
 								AcceptsReturn="False" 
                                 TextWrapping="Wrap"
 								InputScope="Text" PlaceholderText="enter description"
@@ -200,7 +201,7 @@
 						            x:Name="currencyListPicker"						          
                                     HorizontalAlignment="Left"/>
 
-                            <TextBox x:Name="tbAmount" 
+                            <TextBox x:Name="tbAmount" x:FieldModifier="public"
 									AcceptsReturn="False" 
 									PlaceholderText="0.00"
                                     Width="150"
@@ -245,7 +246,7 @@
                                        Tapped="tbPaidBy_Tap"                                       
                                        Padding="10,0"
                                        FontSize="{StaticResource nameSize}"
-                                       x:Name="tbPaidBy"
+                                       x:Name="tbPaidBy" x:FieldModifier="public"
                                        Text="You"/>
                     </Border>
                 </Grid>
@@ -267,14 +268,14 @@
                             Grid.Column="1"
 						    BorderBrush="{StaticResource splitwiseGreyBG}"
 						    Foreground="Black"
-						    x:Name="SplitTypeListPicker" SelectionChanged="SplitTypeListPicker_SelectionChanged"/>
+						    x:Name="SplitTypeListPicker" x:FieldModifier="public" SelectionChanged="SplitTypeListPicker_SelectionChanged"/>
                 </Grid>
             </Grid>
         </Border>
 
-        <DatePicker x:Name="expenseDate" Margin="0,10" HorizontalAlignment="Center" Grid.Row="3"/>
+        <DatePicker x:Name="expenseDate" x:FieldModifier="public" Margin="0,10" HorizontalAlignment="Center" Grid.Row="3"/>
         <TextBox Grid.Row="4" 
-				x:Name="tbDetails"
+				x:Name="tbDetails" x:FieldModifier="public"
                 Margin="0,0,0,10"
                 BorderBrush="{StaticResource splitwiseGreyBG}"
                 MinHeight="150"
