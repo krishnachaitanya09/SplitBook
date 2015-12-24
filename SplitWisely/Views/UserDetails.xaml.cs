@@ -15,7 +15,6 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WinRTXamlToolkit.Controls.Extensions;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SplitWisely.Views
 {
@@ -104,7 +103,6 @@ namespace SplitWisely.Views
                 if (System.Convert.ToDouble(balance.amount, System.Globalization.CultureInfo.InvariantCulture) < 0)
                     return true;
             }
-
             return false;
         }
 
@@ -167,20 +165,6 @@ namespace SplitWisely.Views
                     userExpensesBackgroundWorker.RunWorkerAsync(false);
                 }
             }
-            //if (_scrollViewer.VerticalOffset > _scrollViewer.ScrollableHeight * 0.15)
-            //{
-            //    if (userDetailsPanel.Visibility == Visibility.Visible && userDetailsPanel.Opacity == 1)
-            //    {
-            //        userDetailsFadeOut.Begin();
-            //    }
-            //}
-            //else
-            //{
-            //    if (userDetailsPanel.Visibility == Visibility.Collapsed)
-            //    {
-            //        userDetailsFadeIn.Begin();
-            //    }
-            //}
         }
 
         private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -196,9 +180,8 @@ namespace SplitWisely.Views
                 return;
             Expense selectedExpense = llsExpenses.SelectedItem as Expense;
 
-            //PhoneApplicationService.Current.State[Constants.SELECTED_EXPENSE] = selectedExpense;
-            //NavigationService.Navigate(new Uri("/ExpenseDetail.xaml", UriKind.Relative));
-
+            (Application.Current as App).SELECTED_EXPENSE = selectedExpense;
+            this.Frame.Navigate(typeof(ExpenseDetail));
             llsExpenses.SelectedItem = null;
         }
     }

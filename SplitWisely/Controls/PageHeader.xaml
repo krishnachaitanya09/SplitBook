@@ -16,7 +16,7 @@
 
     <Grid x:Name="grid" Background="{x:Bind Background}">
         <Grid x:Name="titleBar">
-            <ContentPresenter HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="content"
+            <ContentPresenter VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" x:Name="content"
                               Margin="{x:Bind Padding}"
                               Content="{x:Bind HeaderContent}"/>
         </Grid>
