@@ -163,12 +163,12 @@
 
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
             <AppBarButton Name="add" Icon="Add" Label="Add" Click="btnAddExpense_Click" Foreground="White"/>
-            <AppBarButton Name="settle" Label="Settle" Click="btnSettle_Click" Foreground="White">
+            <AppBarButton Name="settle" Label="Settle" IsEnabled="False" Click="btnSettle_Click" Foreground="White">
                 <AppBarButton.Icon>
                     <BitmapIcon UriSource="ms-appx:///Assets/Icons/settle.png"/>
                 </AppBarButton.Icon>
             </AppBarButton>
-            <AppBarButton Name="remind" Label="Remind" Click="btnReminder_Click" Icon="Mail" Foreground="White"/>
+            <AppBarButton Name="remind" Label="Remind" IsEnabled="False" Click="btnReminder_Click" Icon="Mail" Foreground="White"/>
         </CommandBar>
     </RelativePanel>
 </Page>

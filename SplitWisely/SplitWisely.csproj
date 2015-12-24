@@ -99,6 +99,9 @@
     <Compile Include="Add_Expense_Pages\AddExpense.xaml.cs">
       <DependentUpon>AddExpense.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Add_Expense_Pages\AddPayment.xaml.cs">
+      <DependentUpon>AddPayment.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Add_Expense_Pages\EditExpense.xaml.cs">
       <DependentUpon>EditExpense.xaml</DependentUpon>
     </Compile>
@@ -235,6 +238,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Add_Expense_Pages\AddExpense.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Add_Expense_Pages\AddPayment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

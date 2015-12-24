@@ -34,6 +34,10 @@ namespace SplitWisely
         public static bool FirstLoad = true;
         public Expense ADD_EXPENSE { get; set; }
         public Expense SELECTED_EXPENSE { get; set; }
+        public User PAYMENT_USER { get; set; }
+        public int PAYMENT_TYPE { get; set; }
+        public int PAYMENT_GROUP { get; set; }
+
         public Frame rootFrame { get; set; }
 
         /// <summary>
@@ -42,11 +46,11 @@ namespace SplitWisely
         /// </summary>
         public App()
         {
-            this.InitializeComponent();            
+            this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;
         }
-            
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -55,12 +59,12 @@ namespace SplitWisely
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
-//#if DEBUG
-//            if (System.Diagnostics.Debugger.IsAttached)
-//            {
-//                this.DebugSettings.EnableFrameRateCounter = true;
-//            }
-//#endif
+            //#if DEBUG
+            //            if (System.Diagnostics.Debugger.IsAttached)
+            //            {
+            //                this.DebugSettings.EnableFrameRateCounter = true;
+            //            }
+            //#endif
             Helpers dbHelper = new Helpers();
             dbHelper.CreateDatabase();
 

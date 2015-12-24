@@ -48,6 +48,13 @@ namespace SplitWisely.Views
             {
                 userExpensesBackgroundWorker.RunWorkerAsync();
             }
+
+            if (hasOwesYouBalance())
+                remind.IsEnabled = true;
+
+            if (hasYouOweBalance() || hasOwesYouBalance())
+                settle.IsEnabled = true;
+
             if (selectedUser.balance.Count == 0)
                 selectedUser.balance.Add(new Balance_User() { amount = "0", currency_code = App.currentUser.default_currency, user_id = selectedUser.id });
             this.DataContext = selectedUser;
@@ -70,11 +77,11 @@ namespace SplitWisely.Views
             else
                 navParams = Constants.PAYMENT_TO;
 
-            //PhoneApplicationService.Current.State[Constants.PAYMENT_USER] = selectedUser;
-            //PhoneApplicationService.Current.State[Constants.PAYMENT_TYPE] = navParams;
-            //PhoneApplicationService.Current.State[Constants.PAYMENT_GROUP] = 0;
+            (Application.Current as App).PAYMENT_USER = selectedUser;
+            (Application.Current as App).PAYMENT_TYPE = navParams;
+            (Application.Current as App).PAYMENT_GROUP = 0;
 
-            //this.Frame.Navigate(typeof(Add_Expense_Pages.AddExpense))
+            this.Frame.Navigate(typeof(AddPayment));
             //NavigationService.Navigate(new Uri("/Add_Expense_Pages/AddPayment.xaml", UriKind.Relative));
         }
 
