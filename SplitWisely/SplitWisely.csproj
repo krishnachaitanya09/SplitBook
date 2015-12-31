@@ -148,11 +148,6 @@
     <Compile Include="Converter\PaymentImageFileConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpenseColorConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpensesConverter.cs" />
-    <Compile Include="Migrations\20151224113950_MyFirstMigration.cs" />
-    <Compile Include="Migrations\20151224113950_MyFirstMigration.designer.cs">
-      <DependentUpon>20151224113950_MyFirstMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\DatabaseContextModelSnapshot.cs" />
     <Compile Include="Model\DatabaseContext.cs" />
     <Compile Include="Utilities\SplitwiseAuthenticationBroker.cs" />
     <Compile Include="Views\ActivityPage.xaml.cs">

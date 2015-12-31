@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SQLite;
+using SQLite.Net.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +20,6 @@ namespace SplitWisely.Model
             displayType = DISPLAY_FOR_ALL_USER;
         }*/
 
-        [Key]
         public int id { get; set; }
         public int group_id { get; set; }
         public string description { get; set; }
@@ -45,38 +44,44 @@ namespace SplitWisely.Model
         public string cost { get; set; }
         public string currency_code { get; set; }
 
+        [Ignore]
         public List<Debt_Expense> repayments { get; set; }
-
+        
         public string date { get; set; }
         public string created_at { get; set; }
         public string updated_at { get; set; }
         public string deleted_at { get; set; }
 
+        [Column("created_by")]        
         public int created_by_user_id { get; set; }
 
+        [Column("updated_by")]
         public int updated_by_user_id { get; set; }
 
+        [Column("deleted_by")]
         public int deleted_by_user_id { get; set; }
-        [ForeignKey("created_by_user_id")]
+
+        [Ignore]
         public User created_by { get; set; }
-        [ForeignKey("updated_by_user_id")]
+        [Ignore]
         public User updated_by { get; set; }
-        [ForeignKey("deleted_by_user_id")]
+        [Ignore]
         public User deleted_by { get; set; }
-        [NotMapped]
+        [Ignore]
         public Picture receipt { get; set; }
-        [NotMapped]
+        [Ignore]
         public Category category { get; set; }
 
-        public virtual List<Expense_Share> users { get; set; }
+        [Ignore]
+        public List<Expense_Share> users { get; set; }
 
         //The following is used to help the ExpenseShareToAmountConverter
         //to determine if the amount is to be displayed as totaly for all users or as specific to one user
         //Eg: You booked a flight to KL to 7 ppl and paid for 490.
         //In all expenses, it will be shown as you lent 420 but in specific user it will be you lent 70
-        [NotMapped]
+        [Ignore]
         public int specificUserId { get; set; }
-        [NotMapped]
+        [Ignore]
         public int displayType { get; set; }
     }
 
@@ -84,17 +89,14 @@ namespace SplitWisely.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [Key]
-        public int id { get; set; }
         public int expense_id { get; set; }
-        [ForeignKey("expense_id")]
-        public Expense expense { get; set; }
-        public int user_id { get; set; }
-        [ForeignKey("user_id")]
+        [Ignore]
         public User user { get; set; }
 
-        [NotMapped]
+        [Ignore]
         public string currency { get; set; }
+
+        public int user_id { get; set; }
 
         private string _paidShare;
         public string paid_share
@@ -126,13 +128,13 @@ namespace SplitWisely.Model
 
 
         //to help with spliting expense unequally
-        [NotMapped]
+        [Ignore]
         public string percentage { get; set; }
-        [NotMapped]
+        [Ignore]
         public string share { get; set; }
 
         //to help with checking if this user paid or not
-        [NotMapped]
+        [Ignore]
         public bool hasPaid { get; set; }
 
         // Create the OnPropertyChanged method to raise the event 
