@@ -18,7 +18,6 @@ namespace SplitWisely.Model
         public const int TYPE_FRIEND_OWES = 1;
         public const int TYPE_YOU_OWE = 2;
 
-        [Unique]
         public int id { get; set; }
         public String typeString { get; set; }
 

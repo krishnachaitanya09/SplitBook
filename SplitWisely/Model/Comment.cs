@@ -1,6 +1,4 @@
-﻿using SQLite;
-using SQLite.Net.Attributes;
-using SQLiteNetExtensions.Attributes;
+﻿using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +16,7 @@ namespace SplitWisely.Model
         public string relation_type { get; set; }
         public int relation_id { get; set; }
         public string created_at { get; set; }
-        public string deleted_at { get; set; }
-        [ForeignKey(typeof(User))]
-        public int user_id { get; set; }
-        [OneToOne("user_id", CascadeOperations = CascadeOperation.CascadeRead)]
+        public string deleted_at { get; set; }       
         public User user { get; set; }
     }
 }

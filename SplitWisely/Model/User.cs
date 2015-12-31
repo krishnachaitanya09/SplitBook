@@ -1,6 +1,5 @@
 ﻿using SQLite;
 using SQLite.Net.Attributes;
-using SQLiteNetExtensions.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,23 +14,21 @@ namespace SplitWisely.Model
     {
         public static string DEFAULT_PROFILE_IMAGE_URL = @"https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/avatars/100-5eb999e2b4b24b823a9d82c29d42e9b2.png";
         
-        [Unique]
-        [PrimaryKey]
         public int id { get; set; }
         public string first_name { get; set; }
         public string last_name { get; set; }
 
-        [OneToOne]
+        [Ignore]
         public Picture picture { get; set; }
         
         public string email { get; set; }
         public string country_code { get; set; }
         public string default_currency { get; set; }
 
-        [OneToMany]
+        [Ignore]
         public List<Balance_User> balance { get; set; }
 
-        [ManyToMany(typeof(Group_Members))]
+        [Ignore]
         public List<Group> groups { get; set; }
 
 
