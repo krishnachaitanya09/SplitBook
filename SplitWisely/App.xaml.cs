@@ -1,26 +1,13 @@
-﻿using Microsoft.Data.Entity;
-using SplitWisely.Controller;
-using SplitWisely.Model;
+﻿using SplitWisely.Model;
 using SplitWisely.Utilities;
 using SplitWisely.Views;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace SplitWisely
@@ -35,6 +22,7 @@ namespace SplitWisely
         public static bool FirstLoad = true;
         public Expense ADD_EXPENSE { get; set; }
         public Expense SELECTED_EXPENSE { get; set; }
+        public Group SELECTED_GROUP { get; set; }         
         public User PAYMENT_USER { get; set; }
         public int PAYMENT_TYPE { get; set; }
         public int PAYMENT_GROUP { get; set; }
@@ -50,11 +38,6 @@ namespace SplitWisely
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;
-
-            using (var db = new DatabaseContext())
-            {
-                db.Database.Migrate();
-            }
         }
 
         /// <summary>

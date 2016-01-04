@@ -4,7 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
-
+using Windows.UI.Xaml.Navigation;
 
 namespace SplitWisely.Views
 {
@@ -13,11 +13,17 @@ namespace SplitWisely.Views
         public FriendsPage()
         {
             this.InitializeComponent();
-
+            this.PageHeader.BackButton.Visibility = Visibility.Collapsed;
             llsFriends.ItemsSource = MainPage.friendsList;
             balancePanel.DataContext = MainPage.netBalanceObj;
         }
-        
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            this.Frame.BackStack.Clear();
+            base.OnNavigatedTo(e);
+        }
+
         private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             var profilePic = sender as Image;

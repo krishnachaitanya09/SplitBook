@@ -38,6 +38,5 @@
             <TextBlock Text="you are owed" TextAlignment="Center" Foreground="{StaticResource GreyColorText}"/>
             <TextBlock x:Name="owesYouFriendsText" Text="{Binding  PositiveBalance}" Foreground="{Binding PositiveBalance, Converter={StaticResource BalanceColorConverter}, ConverterParameter='overall'}" TextAlignment="Center" />
         </StackPanel>
-        
     </Grid>
 </UserControl>
