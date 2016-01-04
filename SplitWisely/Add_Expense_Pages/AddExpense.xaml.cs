@@ -25,9 +25,6 @@ using Windows.UI.Xaml.Navigation;
 
 namespace SplitWisely.Add_Expense_Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class AddExpense : Page
     {
         BackgroundWorker addExpenseBackgroundWorker;
@@ -98,10 +95,10 @@ namespace SplitWisely.Add_Expense_Pages
             (Application.Current as App).ADD_EXPENSE = null;
 
             //This page might be accessed from the start screen tile and hence canGoBack might be false
-            //if (NavigationService.CanGoBack)
-            //    NavigationService.GoBack();
-            //else
-            //    Application.Current.Terminate();
+            if (this.Frame.CanGoBack)
+                this.Frame.GoBack();
+            else
+                Application.Current.Exit();
         }
 
         //private void btnPin_Click(object sender, EventArgs e)
@@ -191,7 +188,7 @@ namespace SplitWisely.Add_Expense_Pages
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
                         Helpers.logout();
-                        this.Frame.Navigate(typeof(LoginPage));
+                        MainPage.Current.Frame.Navigate(typeof(LoginPage));
                     }
                     else
                     {

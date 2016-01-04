@@ -31,12 +31,22 @@ namespace SplitWisely.Views
         public GroupsPage()
         {
             this.InitializeComponent();
+            this.PageHeader.BackButton.Click += BackButton_Click;
             llsGroups.ItemsSource = MainPage.groupsList;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            this.PageHeader.BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
         }
 
         private void llsGroups_Tap(object sender, SelectionChangedEventArgs e)
@@ -45,8 +55,8 @@ namespace SplitWisely.Views
                 return;
             Group selectedGroup = llsGroups.SelectedItem as Group;
 
-            //PhoneApplicationService.Current.State[Constants.SELECTED_GROUP] = selectedGroup;
-            //NavigationService.Navigate(new Uri("/GroupDetail.xaml", UriKind.Relative));
+            (Application.Current as App).SELECTED_GROUP = selectedGroup;
+            this.Frame.Navigate(typeof(GroupDetailsPage));
 
             llsGroups.SelectedItem = null;
         }

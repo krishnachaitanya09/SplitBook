@@ -315,12 +315,12 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <control:PageHeader x:Name="pageHeader" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="True">
+        <control:PageHeader x:Name="PageHeader" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="True">
             <control:PageHeader.HeaderContent>
                 <TextBlock Text="Expense" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <Grid x:Name="ContentPanel" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader">
+        <Grid x:Name="ContentPanel" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="PageHeader">
             <Pivot x:Name="pivot" SelectionChanged="Pivot_SelectionChanged">
                 <PivotItem Header= "Details" Margin="0">
                     <Grid Background="White">
