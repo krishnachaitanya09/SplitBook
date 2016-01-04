@@ -25,7 +25,10 @@
         </Grid.RowDefinitions>
         <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left">
             <control:PageHeader.HeaderContent>
-                <TextBlock Text="Groups" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal">
+                    <control:BackButton x:Name="BackButton"/>
+                    <TextBlock Text="Groups" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
         <ListBox x:Name="llsGroups" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsGroups_Tap">

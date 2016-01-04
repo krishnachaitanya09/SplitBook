@@ -375,7 +375,10 @@
         </VisualStateManager.VisualStateGroups>
         <control:PageHeader x:Name="PageHeader" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="True">
             <control:PageHeader.HeaderContent>
-                <TextBlock Text="Expense" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal">
+                    <control:BackButton x:Name="BackButton"/>
+                    <TextBlock Text="Expense" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
         <ContentDialog x:Name="contentDialog" Grid.RowSpan="2" Background="Transparent"/>

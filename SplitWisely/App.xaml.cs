@@ -5,9 +5,13 @@ using System;
 using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace SplitWisely
@@ -47,6 +51,32 @@ namespace SplitWisely
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            {
+                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                if (titleBar != null)
+                {
+                   
+                    titleBar.ButtonBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
+                    titleBar.ButtonHoverBackgroundColor = (Application.Current.Resources["splitwiseGreenHover"] as SolidColorBrush).Color;
+                    titleBar.ButtonPressedBackgroundColor = (Application.Current.Resources["splitwiseGreenPressed"] as SolidColorBrush).Color;
+                    titleBar.ButtonForegroundColor = Color.FromArgb(255, 255, 255, 254);
+                    titleBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color; ;
+                    titleBar.ForegroundColor = Color.FromArgb(255, 255, 255, 254);
+                }
+            }
+
+            //Mobile customization
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {
+                var statusBar = StatusBar.GetForCurrentView();
+                if (statusBar != null)
+                {
+                    statusBar.BackgroundOpacity = 1;
+                    statusBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
+                    statusBar.ForegroundColor = Color.FromArgb(255, 255, 255, 254);
+                }
+            }
 
             //#if DEBUG
             //            if (System.Diagnostics.Debugger.IsAttached)

@@ -25,7 +25,9 @@
     <x:Double x:Key="expenseDetailAmount">14</x:Double>
 
     <!--Colors-->
-    <SolidColorBrush x:Key="splitwiseGreen">#FF60BF9F</SolidColorBrush>
+    <SolidColorBrush x:Key="splitwiseGreen">#FF5BC5A7</SolidColorBrush>
+    <SolidColorBrush x:Key="splitwiseGreenHover">#FF7BD0B8</SolidColorBrush>
+    <SolidColorBrush x:Key="splitwiseGreenPressed">#FF8CD6C1</SolidColorBrush>
     <Color x:Key="green">#20B2AA</Color>
     <SolidColorBrush x:Key="negative">#FC5353</SolidColorBrush>
     <SolidColorBrush x:Key="positive">#20B2AA</SolidColorBrush>

@@ -31,14 +31,14 @@ namespace SplitWisely.Views
         public GroupsPage()
         {
             this.InitializeComponent();
-            this.PageHeader.BackButton.Click += BackButton_Click;
+            BackButton.Click += BackButton_Click;
             llsGroups.ItemsSource = MainPage.groupsList;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.PageHeader.BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

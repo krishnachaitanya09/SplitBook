@@ -8,6 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
+using Windows.Web.Http;
 
 namespace SplitWisely.Utilities
 {
@@ -17,10 +18,17 @@ namespace SplitWisely.Utilities
         {
             var tcs = new System.Threading.Tasks.TaskCompletionSource<string>();
 
+            var progressRing = new ProgressRing()
+            {
+                Foreground = Application.Current.Resources["splitwiseGreen"] as SolidColorBrush,
+                Width = 50,
+                Height = 50
+            };
+
             var button = new Button()
             {
                 Content = "Close",
-                Margin = new Thickness(0, 30, 30, 30),
+                Margin = new Thickness(0, 5, 30, 5),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom
             };
@@ -28,8 +36,7 @@ namespace SplitWisely.Utilities
             var w = new WebView
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                Margin = new Thickness(30.0),               
+                VerticalAlignment = VerticalAlignment.Stretch,           
             };
 
             var panel = new Grid()
@@ -41,9 +48,10 @@ namespace SplitWisely.Utilities
             panel.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
             panel.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             Grid.SetRow(w, 0);
-            Grid.SetRow(button, 1);
+            Grid.SetRow(button, 1);            
             panel.Children.Add(w);
             panel.Children.Add(button);
+            panel.Children.Add(progressRing);
 
             var b = new Border
             {
@@ -71,15 +79,28 @@ namespace SplitWisely.Utilities
                 b.Height = e.Size.Height;
             };
 
+            Windows.Web.Http.Filters.HttpBaseProtocolFilter myFilter = new Windows.Web.Http.Filters.HttpBaseProtocolFilter();
+            var cookieManager = myFilter.CookieManager;
+            HttpCookieCollection myCookieJar = cookieManager.GetCookies(uri);
+            foreach (HttpCookie cookie in myCookieJar)
+            {
+                cookieManager.DeleteCookie(cookie);
+            }
+            w.NavigationCompleted += (sender, e) =>
+              {
+                  progressRing.IsActive = false;
+              };
             w.Source = uri;
 
             button.Click += (sender, e) =>
             {
                 p.IsOpen = false;
+                progressRing.IsActive = false;
             };
 
             w.NavigationStarting += (sender, args) =>
             {
+                progressRing.IsActive = true;
                 if (args.Uri != null)
                 {
                     if (args.Uri.OriginalString.Contains("oauth_verifier"))
@@ -88,7 +109,7 @@ namespace SplitWisely.Utilities
                         if (arguments.Length < 1)
                             return;
                         tcs.SetResult(arguments[1]);
-                        p.IsOpen = false;
+                        p.IsOpen = false;                     
                     }
                     if (args.Uri.OriginalString.Contains("error=access_denied"))
                     {

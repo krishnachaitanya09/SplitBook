@@ -30,14 +30,14 @@ namespace SplitWisely.Views
         public UserDetails()
         {
             this.InitializeComponent();
-            this.PageHeader.BackButton.Click += BackButton_Click;
+            BackButton.Click += BackButton_Click;
             MainPage.Current.ResetNavMenu();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.PageHeader.BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
             selectedUser = e.Parameter as User;
 
             llsExpenses.ItemsSource = expensesList;

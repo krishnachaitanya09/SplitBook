@@ -28,6 +28,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI;
+using Windows.UI.Popups;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -48,17 +49,18 @@ namespace SplitWisely.Views
 
         private void AuthorizeButton_Click(object sender, RoutedEventArgs e)
         {
-            authorize.GetRequestToken(RequestTokenReceived);
+            progressRing.IsActive = true;
+            authorize.GetRequestToken(RequestTokenReceived, OnError);
         }
 
         private async void RequestTokenReceived(Uri uri)
         {
+            progressRing.IsActive = false;
             string requestToken;
             if ((requestToken = await SplitwiseAuthenticationBroker.AuthenticateAsync(uri)) != null)
             {
-                authorize.GetAccessToken(requestToken, AccessTokenReceived);
+                authorize.GetAccessToken(requestToken, AccessTokenReceived, OnError);
             }
-
         }
 
         private void AccessTokenReceived(string accessToken, string accessTokenSecret)
@@ -68,6 +70,13 @@ namespace SplitWisely.Views
             App.accessToken = Helpers.AccessToken;
             App.accessTokenSecret = Helpers.AccessTokenSecret;
             this.Frame.Navigate(typeof(MainPage), true);
+        }
+
+        private async void OnError(Exception ex)
+        {
+            progressRing.IsActive = false;
+            MessageDialog messageDialog = new MessageDialog(ex.Message, "Error");
+            await messageDialog.ShowAsync();
         }
     }
 }

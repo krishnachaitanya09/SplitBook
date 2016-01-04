@@ -1,4 +1,5 @@
-﻿using SplitWisely.Model;
+﻿using SplitWisely.Controller;
+using SplitWisely.Model;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -198,7 +199,7 @@ namespace SplitWisely.Utilities
         {
             ApplicationData.Current.LocalSettings.Values.Clear();
 
-            //SyncDatabase.DeleteAllDataInDB();
+            SyncDatabase.DeleteAllDataInDB();
         }
 
         public static bool IsValidEmail(string emailAddress)

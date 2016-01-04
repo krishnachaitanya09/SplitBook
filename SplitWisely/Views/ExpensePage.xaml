@@ -27,7 +27,10 @@
         </Grid.RowDefinitions>
         <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left">
             <control:PageHeader.HeaderContent>
-                <TextBlock Text="Expenses" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal">
+                    <control:BackButton x:Name="BackButton"/>
+                    <TextBlock Text="Expenses" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
         <ListView x:Name="llsExpenses" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsExpenses_Tap" Loaded="OnListViewLoaded">

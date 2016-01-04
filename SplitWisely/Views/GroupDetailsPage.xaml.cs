@@ -40,7 +40,7 @@ namespace SplitWisely.Views
         public GroupDetailsPage()
         {
             this.InitializeComponent();
-            this.PageHeader.BackButton.Click += BackButton_Click;
+            BackButton.Click += BackButton_Click;
 
             selectedGroup = (Application.Current as App).SELECTED_GROUP as Group;
             llsExpenses.ItemsSource = expensesList;
@@ -64,7 +64,7 @@ namespace SplitWisely.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.PageHeader.BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

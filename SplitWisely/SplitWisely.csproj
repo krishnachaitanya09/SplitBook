@@ -112,6 +112,9 @@
     <Compile Include="Controller\ModifyDatabase.cs" />
     <Compile Include="Controller\QueryDatabase.cs" />
     <Compile Include="Controller\SyncDatabase.cs" />
+    <Compile Include="Controls\BackButton.xaml.cs">
+      <DependentUpon>BackButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BalanceControl.xaml.cs">
       <DependentUpon>BalanceControl.xaml</DependentUpon>
     </Compile>
@@ -256,6 +259,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Add_Expense_Pages\EditExpense.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BackButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

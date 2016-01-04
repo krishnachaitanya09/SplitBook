@@ -50,30 +50,7 @@ namespace SplitWisely.Views
             {
                 Current = this;
                 this.TogglePaneButton.Focus(FocusState.Programmatic);
-            };
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
-            {
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                if (titleBar != null)
-                {
-                    titleBar.ButtonBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
-                    titleBar.ButtonForegroundColor = Colors.White;
-                    titleBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color; ;
-                    titleBar.ForegroundColor = Colors.White;
-                }
-            }
-
-            //Mobile customization
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            {
-                var statusBar = StatusBar.GetForCurrentView();
-                if (statusBar != null)
-                {
-                    statusBar.BackgroundOpacity = 1;
-                    statusBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color; ;
-                    statusBar.ForegroundColor = Colors.White;
-                }
-            }
+            };           
 
             this.RootSplitView.RegisterPropertyChangedCallback(
                SplitView.DisplayModeProperty,

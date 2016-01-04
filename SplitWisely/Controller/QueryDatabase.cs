@@ -324,7 +324,7 @@ namespace SplitWisely.Controller
         {
             using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
-                return dbConn.Query<Picture>("SELECT * FROM picture WHERE user_id= ?", new object[] { userId }).First();
+                return dbConn.Query<Picture>("SELECT * FROM picture WHERE user_id= ?", new object[] { userId }).FirstOrDefault();
             }
         }
     }

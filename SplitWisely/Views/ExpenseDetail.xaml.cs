@@ -28,7 +28,7 @@ namespace SplitWisely.Views
         public ExpenseDetail()
         {
             this.InitializeComponent();
-            this.PageHeader.BackButton.Click += BackButton_Click;
+            BackButton.Click += BackButton_Click;
 
             selectedExpense = (Application.Current as App).SELECTED_EXPENSE;
             selectedExpense.displayType = Expense.DISPLAY_FOR_ALL_USER;
@@ -59,7 +59,7 @@ namespace SplitWisely.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.PageHeader.BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

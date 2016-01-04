@@ -13,7 +13,7 @@ namespace SplitWisely.Views
         public FriendsPage()
         {
             this.InitializeComponent();
-            this.PageHeader.BackButton.Visibility = Visibility.Collapsed;
+            BackButton.Visibility = Visibility.Collapsed;
             llsFriends.ItemsSource = MainPage.friendsList;
             balancePanel.DataContext = MainPage.netBalanceObj;
         }
