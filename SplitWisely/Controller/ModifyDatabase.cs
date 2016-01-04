@@ -2,6 +2,8 @@
 using SplitWisely.Request;
 using SplitWisely.Utilities;
 using SQLite;
+using SQLite.Net;
+using SQLite.Net.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +57,7 @@ namespace SplitWisely.Controller
             //add user to database and to friends list in App.xaml
             //PhoneApplicationService.Current.State[Constants.NEW_USER] = friend;
 
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
                 dbConn.Insert(friend);
                 friend.picture.user_id = friend.id;
@@ -70,7 +72,7 @@ namespace SplitWisely.Controller
             //add user to database and to friends list in App.xaml
             //PhoneApplicationService.Current.State[Constants.NEW_GROUP] = group;
 
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
                 dbConn.BeginTransaction();
                 dbConn.Insert(group);

@@ -1,5 +1,7 @@
 ﻿using SplitWisely.Model;
 using SQLite;
+using SQLite.Net;
+using SQLite.Net.Interop;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,9 +20,9 @@ namespace SplitWisely.Utilities
         {
             try
             {
-                if (!await CheckFileExists("Database.db"))
+                if (!await CheckFileExists("Database.sqlite"))
                 {
-                    using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, true))
+                    using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, true))
                     {
                         //Delete all the data in the database as first use will also be called after logout.
                         dbConn.CreateTable<User>();

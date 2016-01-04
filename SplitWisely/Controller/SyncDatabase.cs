@@ -2,6 +2,8 @@
 using SplitWisely.Request;
 using SplitWisely.Utilities;
 using SQLite;
+using SQLite.Net;
+using SQLite.Net.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +49,7 @@ namespace SplitWisely.Controller
 
         private void _CurrentUserDetailsReceived(User currentUser)
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
                 //Insert user details to database
                 dbConn.InsertOrReplace(currentUser);
@@ -73,7 +75,7 @@ namespace SplitWisely.Controller
                 CallbackOnSuccess(true, HttpStatusCode.OK);
                 return;
             }
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
                 dbConn.BeginTransaction();
                 //Insert expenses
@@ -128,7 +130,7 @@ namespace SplitWisely.Controller
 
         private void _FriendsDetailsRecevied(List<User> friendsList)
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
 
                 //Now insert each friends picture and the balance of each user
@@ -166,7 +168,7 @@ namespace SplitWisely.Controller
 
         private void _GroupsDetailsReceived(List<Group> groupsList)
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
                 dbConn.BeginTransaction();
                 //handle the case where some groups might have been deleted.
@@ -216,7 +218,7 @@ namespace SplitWisely.Controller
         {
             if (currencyList != null && currencyList.Count != 0)
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
                 {
                     dbConn.DeleteAll<Currency>();
                     dbConn.InsertAll(currencyList);
@@ -240,7 +242,7 @@ namespace SplitWisely.Controller
 
         public static void DeleteAllDataInDB()
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
             {
                 dbConn.DeleteAll<User>();
                 dbConn.DeleteAll<Expense>();
@@ -250,7 +252,7 @@ namespace SplitWisely.Controller
                 dbConn.DeleteAll<Debt_Expense>();
                 dbConn.DeleteAll<Debt_Group>();
                 dbConn.DeleteAll<Expense_Share>();
-                dbConn.DeleteAll<Group_Members>();         
+                dbConn.DeleteAll<Group_Members>();
             }
         }
     }

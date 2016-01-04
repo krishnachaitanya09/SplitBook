@@ -12,7 +12,7 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+
 
 namespace SplitWisely.Views
 {
@@ -28,8 +28,6 @@ namespace SplitWisely.Views
         public ExpenseDetail()
         {
             this.InitializeComponent();
-            this.PageHeader.BackButton.Click += BackButton_Click;
-
             selectedExpense = (Application.Current as App).SELECTED_EXPENSE;
             selectedExpense.displayType = Expense.DISPLAY_FOR_ALL_USER;
             this.DataContext = selectedExpense;
@@ -56,19 +54,6 @@ namespace SplitWisely.Views
             this.conversationView.Loaded += (o, e) => ScrollToBottom();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            this.PageHeader.BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.Frame.CanGoBack)
-            {
-                this.Frame.GoBack();
-            }
-        }
 
         private async void btnDeleteExpense_Click(object sender, RoutedEventArgs e)
         {

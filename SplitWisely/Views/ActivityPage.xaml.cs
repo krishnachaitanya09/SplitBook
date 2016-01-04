@@ -1,5 +1,4 @@
-﻿using SplitWisely.Model;
-using System;
+﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -11,41 +10,19 @@ namespace SplitWisely.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ExpensePage : Page
-    {
-        public ExpensePage()
+    public sealed partial class ActivityPage : Page
+    {      
+        public ActivityPage()
         {
             this.InitializeComponent();
-            this.PageHeader.BackButton.Click += BackButton_Click;
-            llsExpenses.ItemsSource = MainPage.expensesList;
-        }
-
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.Frame.CanGoBack)
-            {
-                this.Frame.GoBack();
-            }
+            llsExpenses.ItemsSource = MainPage.expensesList;         
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.PageHeader.BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
         }
-
-        private void llsExpenses_Tap(object sender, SelectionChangedEventArgs e)
-        {
-            if (llsExpenses.SelectedItem == null)
-                return;
-            Expense selectedExpense = llsExpenses.SelectedItem as Expense;
-
-            (Application.Current as App).SELECTED_EXPENSE = selectedExpense;
-            this.Frame.Navigate(typeof(ExpenseDetail));
-
-            llsExpenses.SelectedItem = null;
-        }
-
+       
         private void OnListViewLoaded(object sender, RoutedEventArgs e)
         {
             var listview = sender as ListViewBase;

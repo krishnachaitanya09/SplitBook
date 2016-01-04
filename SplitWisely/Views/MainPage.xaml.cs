@@ -84,8 +84,6 @@ namespace SplitWisely.Views
                    this.CheckTogglePaneButtonSizeChanged();
                });
 
-            SystemNavigationManager.GetForCurrentView().BackRequested += SystemNavigationManager_BackRequested;
-
             expenseLoadingBackgroundWorker.WorkerSupportsCancellation = true;
             expenseLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(expenseLoadingBackgroundWorker_DoWork);
             if (expenseLoadingBackgroundWorker.IsBusy != true)
@@ -109,7 +107,7 @@ namespace SplitWisely.Views
 
         private void expenseLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            loadExpenses();
+            //loadExpenses();
         }
 
         private void loadFriends()
@@ -256,17 +254,6 @@ namespace SplitWisely.Views
             }
         }
 
-
-        private void SystemNavigationManager_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            if (!e.Handled && this.AppFrame.CanGoBack)
-            {
-                e.Handled = true;
-                this.AppFrame.GoBack();
-            }
-        }
-
-
         private void syncDatabaseBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             databaseSync.performSync();
@@ -315,7 +302,7 @@ namespace SplitWisely.Views
 
 
         private void OnNavigatedToPage(object sender, NavigationEventArgs e)
-        {          
+        {
             // After a successful navigation set keyboard focus to the loaded page
             if (e.Content is Page && e.Content != null)
             {
@@ -346,13 +333,7 @@ namespace SplitWisely.Views
                     this.frame.Navigate(typeof(GroupsPage));
                     break;
                 case 2:
-                    this.frame.Navigate(typeof(ExpensePage));
-                    break;
-                case 3:
-                    Helpers.logout();
-                    (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
-                    break;
-                default:
+                    this.frame.Navigate(typeof(ActivityPage));
                     break;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,8 +13,7 @@ namespace SplitWisely.Model
     public class User
     {
         public static string DEFAULT_PROFILE_IMAGE_URL = @"https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/avatars/100-5eb999e2b4b24b823a9d82c29d42e9b2.png";
-
-        [Unique]
+        
         public int id { get; set; }
         public string first_name { get; set; }
         public string last_name { get; set; }

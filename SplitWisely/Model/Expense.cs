@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +20,6 @@ namespace SplitWisely.Model
             displayType = DISPLAY_FOR_ALL_USER;
         }*/
 
-        [Unique]
         public int id { get; set; }
         public int group_id { get; set; }
         public string description { get; set; }
@@ -46,13 +46,13 @@ namespace SplitWisely.Model
 
         [Ignore]
         public List<Debt_Expense> repayments { get; set; }
-
+        
         public string date { get; set; }
         public string created_at { get; set; }
         public string updated_at { get; set; }
         public string deleted_at { get; set; }
 
-        [Column("created_by")]
+        [Column("created_by")]        
         public int created_by_user_id { get; set; }
 
         [Column("updated_by")]

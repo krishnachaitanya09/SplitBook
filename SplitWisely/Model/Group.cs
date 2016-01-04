@@ -1,4 +1,4 @@
-﻿using SQLite;
+﻿using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,6 @@ namespace SplitWisely.Model
 {
     public class Group
     {
-        [Unique]
         public int id { get; set; }
         public string name { get; set; }
         public string updated_at { get; set; }

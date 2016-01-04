@@ -70,7 +70,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <FontIcon Glyph="&#xEC42;" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="Activity" Foreground="White"/>
-                            <TextBlock Grid.Column="1" Text="Expenses" Foreground="White"/>
+                            <TextBlock Grid.Column="1" Text="Activity" Foreground="White"/>
                         </Grid>
                     </ListViewItem>
                     <ListViewItem>

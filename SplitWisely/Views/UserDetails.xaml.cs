@@ -30,14 +30,12 @@ namespace SplitWisely.Views
         public UserDetails()
         {
             this.InitializeComponent();
-            this.PageHeader.BackButton.Click += BackButton_Click;
             MainPage.Current.ResetNavMenu();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.PageHeader.BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
             selectedUser = e.Parameter as User;
 
             llsExpenses.ItemsSource = expensesList;
@@ -60,14 +58,6 @@ namespace SplitWisely.Views
             if (selectedUser.balance.Count == 0)
                 selectedUser.balance.Add(new Balance_User() { amount = "0", currency_code = App.currentUser.default_currency, user_id = selectedUser.id });
             this.DataContext = selectedUser;
-        }
-
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.Frame.CanGoBack)
-            {
-                this.Frame.GoBack();
-            }
         }
 
         private void btnAddExpense_Click(object sender, RoutedEventArgs e)

@@ -10,7 +10,7 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+
 
 namespace SplitWisely.Add_Expense_Pages
 {
@@ -22,12 +22,8 @@ namespace SplitWisely.Add_Expense_Pages
 
         public EditExpense()
         {
-            this.InitializeComponent();           
-        }
+            this.InitializeComponent();
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
             editExpenseBackgroundWorker = new BackgroundWorker();
             editExpenseBackgroundWorker.WorkerSupportsCancellation = true;
             editExpenseBackgroundWorker.DoWork += new DoWorkEventHandler(editExpenseBackgroundWorker_DoWork);

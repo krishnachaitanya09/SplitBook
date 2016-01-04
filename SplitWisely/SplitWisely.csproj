@@ -118,9 +118,6 @@
     <Compile Include="Controls\ExpenseUserControl.xaml.cs">
       <DependentUpon>ExpenseUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GroupSettleUpUserSelector.xaml.cs">
-      <DependentUpon>GroupSettleUpUserSelector.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MultiplePayeeInputPopUpControl.xaml.cs">
       <DependentUpon>MultiplePayeeInputPopUpControl.xaml</DependentUpon>
     </Compile>
@@ -140,12 +137,6 @@
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Converter\CurrentUserRepaymentsConverter.cs" />
     <Compile Include="Converter\DateStringToDateConverter.cs" />
-    <Compile Include="Converter\ExpandViewerConverters\AllDebtAmountConverter.cs" />
-    <Compile Include="Converter\ExpandViewerConverters\AllDebtColorConverter.cs" />
-    <Compile Include="Converter\ExpandViewerConverters\AllDebtTextConverter.cs" />
-    <Compile Include="Converter\ExpandViewerConverters\ExpandableListModel.cs" />
-    <Compile Include="Converter\ExpandViewerConverters\SpecificDebtAmountConverter.cs" />
-    <Compile Include="Converter\ExpandViewerConverters\SpecificDebtColorConverter.cs" />
     <Compile Include="Converter\ExpenseAmountInCurrencyConverter.cs" />
     <Compile Include="Converter\ExpenseShareToAmountConverter.cs" />
     <Compile Include="Converter\ExpenseShareToColorConverter.cs" />
@@ -157,10 +148,10 @@
     <Compile Include="Converter\PaymentImageFileConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpenseColorConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpensesConverter.cs" />
-    <Compile Include="Controls\ExpandPanel.cs" />
+    <Compile Include="Model\DatabaseContext.cs" />
     <Compile Include="Utilities\SplitwiseAuthenticationBroker.cs" />
-    <Compile Include="Views\ExpensePage.xaml.cs">
-      <DependentUpon>ExpensePage.xaml</DependentUpon>
+    <Compile Include="Views\ActivityPage.xaml.cs">
+      <DependentUpon>ActivityPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ExpenseDetail.xaml.cs">
       <DependentUpon>ExpenseDetail.xaml</DependentUpon>
@@ -267,10 +258,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\GroupSettleUpUserSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MultiplePayeeInputPopUpControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -295,11 +282,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ExpensePage.xaml">
+    <Page Include="Views\ActivityPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -337,6 +320,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
     <SDKReference Include="WindowsMobile, Version=10.0.10240.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>

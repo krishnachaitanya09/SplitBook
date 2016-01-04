@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="SplitWisely.Views.ExpensePage"
+    x:Class="SplitWisely.Views.ActivityPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SplitWisely.Views"
@@ -25,12 +25,12 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left">
+        <control:PageHeader Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left">
             <control:PageHeader.HeaderContent>
-                <TextBlock Text="Expenses" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Text="Activity" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <ListView x:Name="llsExpenses" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsExpenses_Tap" Loaded="OnListViewLoaded">
+        <ListView x:Name="llsExpenses" Grid.Row="1" Background="{StaticResource FrameBackground}" Loaded="OnListViewLoaded">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
