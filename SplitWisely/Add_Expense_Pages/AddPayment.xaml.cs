@@ -23,7 +23,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace SplitWisely.Add_Expense_Pages
 {
@@ -91,8 +90,7 @@ namespace SplitWisely.Add_Expense_Pages
 
             if (addPaymentBackgroundWorker.IsBusy != true && transferAmount != 0 && !String.IsNullOrEmpty(currency))
             {
-                //busyIndicator.Content = "";
-                //busyIndicator.IsRunning = true;
+                busyIndicator.IsActive = true;
 
                 addPaymentBackgroundWorker.RunWorkerAsync();
             }
@@ -100,7 +98,7 @@ namespace SplitWisely.Add_Expense_Pages
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            //NavigationService.GoBack();
+            this.Frame.GoBack();
         }
 
         private void setupData()
@@ -185,15 +183,15 @@ namespace SplitWisely.Add_Expense_Pages
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    //busyIndicator.IsRunning = false;
-                    //NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+                    busyIndicator.IsActive = false;
+                    this.Frame.Navigate(typeof(MainPage));
                 });
             }
             else
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    //busyIndicator.IsRunning = false;
+                    busyIndicator.IsActive = false;
 
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {

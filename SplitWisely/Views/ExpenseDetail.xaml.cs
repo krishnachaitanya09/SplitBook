@@ -109,20 +109,20 @@ namespace SplitWisely.Views
                     {
                         MainPage.syncDatabaseBackgroundWorker.RunWorkerAsync();
                     }
-                    //busyIndicator.IsRunning = false;
-                    //NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+                    busyIndicator.IsActive = false;
+                    this.Frame.Navigate(typeof(FriendsPage));
                 });
             }
             else
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    //busyIndicator.IsRunning = false;
+                    busyIndicator.IsActive = false;
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
                         Helpers.logout();
                         (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
-                        //NavigationService.Navigate(new Uri("/Login.xaml", UriKind.Relative));
+                        MainPage.Current.Frame.Navigate(typeof(LoginPage));
                     }
                     else
                     {
@@ -185,7 +185,7 @@ namespace SplitWisely.Views
                     }
                     ScrollToBottom();
                 }
-                //busyIndicator.IsRunning = false;
+                busyIndicator.IsActive = false;
             });
         }
 
@@ -217,7 +217,7 @@ namespace SplitWisely.Views
             if (!addCommentBackgroundWorker.IsBusy)
             {
                 this.Focus(FocusState.Programmatic);
-                //busyIndicator.IsRunning = true;                
+                busyIndicator.IsActive = true;                
                 addCommentBackgroundWorker.RunWorkerAsync(new CustomCommentView(commentBox.Text.Trim(), DateTime.Now, App.currentUser.name));
                 commentBox.Text = "";
             }

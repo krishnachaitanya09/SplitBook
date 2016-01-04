@@ -22,7 +22,7 @@ namespace SplitWisely.Add_Expense_Pages
 
         public EditExpense()
         {
-            this.InitializeComponent();           
+            this.InitializeComponent();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -128,19 +128,19 @@ namespace SplitWisely.Add_Expense_Pages
             bool proceed = await this.expenseControl.setupExpense();
             if (editExpenseBackgroundWorker.IsBusy != true)
             {
-                //busyIndicator.IsRunning = true;
+                busyIndicator.IsActive = true;
 
                 if (proceed)
                     editExpenseBackgroundWorker.RunWorkerAsync();
-                //else
-                //busyIndicator.IsRunning = false;
+                else
+                    busyIndicator.IsActive = false;
             }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             (Application.Current as App).ADD_EXPENSE = null;
-            //NavigationService.GoBack();
+            this.Frame.GoBack();
         }
 
         //returns true only if one or less group is selected
@@ -203,15 +203,15 @@ namespace SplitWisely.Add_Expense_Pages
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     (Application.Current as App).ADD_EXPENSE = null;
-                    //busyIndicator.IsRunning = false;
-                    //NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+                    busyIndicator.IsActive = false;
+                    this.Frame.Navigate(typeof(FriendsPage));
                 });
             }
             else
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    //busyIndicator.IsRunning = false;
+                    busyIndicator.IsActive = false;
 
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
@@ -232,19 +232,19 @@ namespace SplitWisely.Add_Expense_Pages
             bool proceed = await this.expenseControl.setupExpense();
             if (editExpenseBackgroundWorker.IsBusy != true)
             {
-               // busyIndicator.IsRunning = true;
+                busyIndicator.IsActive = true;
 
                 if (proceed)
                     editExpenseBackgroundWorker.RunWorkerAsync();
-                //else
-                    //busyIndicator.IsRunning = false;
+                else
+                    busyIndicator.IsActive = false;
             }
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             (Application.Current as App).ADD_EXPENSE = null;
-            //NavigationService.GoBack();
+            this.Frame.GoBack();
         }
     }
 }

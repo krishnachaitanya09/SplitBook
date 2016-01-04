@@ -17,9 +17,9 @@ namespace SplitWisely.Model
         public void setBalances(string currency, double net, double positive, double negative)
         {
             currencyCode = currency.ToUpper() + " ";
-            netBalance = Convert.ToDouble(net).ToString();
-            positiveBalance = Convert.ToDouble(positive).ToString();
-            negativeBalance = Convert.ToDouble(negative).ToString();
+            NetBalance = Convert.ToDouble(net).ToString();
+            PositiveBalance = Convert.ToDouble(positive).ToString();
+            NegativeBalance = Convert.ToDouble(negative).ToString();
         }
 
 

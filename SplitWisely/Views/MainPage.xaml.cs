@@ -36,7 +36,7 @@ namespace SplitWisely.Views
         private double postiveBalance = 0, negativeBalance = 0, totalBalance = 0;
         public static int pageNo = 0;
         public static bool morePages = true, hasDataLoaded = false;
-        public static NetBalances netBalanceObj = new NetBalances();
+        public static NetBalances netBalance = new NetBalances();
         public static BackgroundWorker expenseLoadingBackgroundWorker = new BackgroundWorker();
         public static BackgroundWorker groupLoadingBackgroundWorker = new BackgroundWorker();
         public static BackgroundWorker syncDatabaseBackgroundWorker = new BackgroundWorker();
@@ -50,7 +50,7 @@ namespace SplitWisely.Views
             {
                 Current = this;
                 this.TogglePaneButton.Focus(FocusState.Programmatic);
-            };           
+            };
 
             this.RootSplitView.RegisterPropertyChangedCallback(
                SplitView.DisplayModeProperty,
@@ -82,6 +82,38 @@ namespace SplitWisely.Views
             syncDatabaseBackgroundWorker.WorkerSupportsCancellation = true;
             syncDatabaseBackgroundWorker.DoWork += new DoWorkEventHandler(syncDatabaseBackgroundWorker_DoWork);
 
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            NavMenuList.SelectedIndex = 0;
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                return;
+            }
+            else
+            {
+                bool firstUse = (bool)e.Parameter;
+                databaseSync = new SyncDatabase(SyncCompleted);
+                //This condition will only be true if the user has launched this page. This paramter (afterLogin) wont be there
+                //if the page has been accessed from the back stack
+                if (firstUse)
+                {
+                    databaseSync.isFirstSync(true);
+
+                    //disable the add expense and searchtill first sycn is complete
+                    //btnAddExpense.IsEnabled = false;
+                    //btnSearchExpense.IsEnabled = false;
+                }
+
+                if (syncDatabaseBackgroundWorker.IsBusy != true)
+                {
+                    busyIndicator.IsActive = true;
+                    syncDatabaseBackgroundWorker.RunWorkerAsync();
+                    //btnRefresh.IsEnabled = false;
+                }
+            }
         }
 
         private void expenseLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -132,8 +164,7 @@ namespace SplitWisely.Views
             //if default currency is not set then dont display the balances. Only the text is enough.
             if (App.currentUser.default_currency == null)
                 return;
-            netBalanceObj.setBalances(App.currentUser.default_currency, totalBalance, postiveBalance, negativeBalance);
-            //balancePanel.DataContext = netBalanceObj;            
+            netBalance.setBalances(App.currentUser.default_currency, totalBalance, postiveBalance, negativeBalance);
         }
 
         private void populateData()
@@ -193,45 +224,7 @@ namespace SplitWisely.Views
                     }
                 }
             });
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            NavMenuList.SelectedIndex = 0;
-            if (App.FirstLoad)
-            {
-                App.FirstLoad = false;
-                if (e.NavigationMode == NavigationMode.Back)
-                {
-                    return;
-                }
-                else
-                {
-                    bool firstUse = (bool)e.Parameter;
-                    databaseSync = new SyncDatabase(SyncCompleted);
-                    //busyIndicator.Content = "Syncing";
-                    //This condition will only be true if the user has launched this page. This paramter (afterLogin) wont be there
-                    //if the page has been accessed from the back stack
-                    if (firstUse)
-                    {
-                        databaseSync.isFirstSync(true);
-                        //busyIndicator.Content = "Setting up for first use";
-
-                        //disable the add expense and searchtill first sycn is complete
-                        //btnAddExpense.IsEnabled = false;
-                        //btnSearchExpense.IsEnabled = false;
-                    }
-
-                    if (syncDatabaseBackgroundWorker.IsBusy != true)
-                    {
-                        //busyIndicator.IsRunning = true;
-                        syncDatabaseBackgroundWorker.RunWorkerAsync();
-                        //btnRefresh.IsEnabled = false;
-                    }
-                }
-            }
-        }
+        }       
 
 
         private void SystemNavigationManager_BackRequested(object sender, BackRequestedEventArgs e)
@@ -260,9 +253,14 @@ namespace SplitWisely.Views
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
+                    busyIndicator.IsActive = false;
                     pageNo = 0;
                     populateData();
                     hasDataLoaded = true;
+                    
+                    //btnAddExpense.IsEnabled = true;
+                    //btnSearchExpense.IsEnabled = true;
+                    //btnRefresh.IsEnabled = true;
                 });
             }
             else
@@ -275,7 +273,7 @@ namespace SplitWisely.Views
                     //    // btnAddExpense.IsEnabled = true;
                     //    //btnSearchExpense.IsEnabled = true;
 
-                    //    busyIndicator.IsRunning = false;
+                    busyIndicator.IsActive = false;
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
                         Helpers.logout();
@@ -292,7 +290,7 @@ namespace SplitWisely.Views
 
 
         private void OnNavigatedToPage(object sender, NavigationEventArgs e)
-        {          
+        {
             // After a successful navigation set keyboard focus to the loaded page
             if (e.Content is Page && e.Content != null)
             {

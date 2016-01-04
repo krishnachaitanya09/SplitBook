@@ -85,9 +85,6 @@
                     </ListViewItem>
                 </ListView>
             </SplitView.Pane>
-
-            <!-- OnNavigatingToPage we synchronize the selected item in the nav menu with the current page.
-                 OnNavigatedToPage we move keyboard focus to the first item on the page after it's loaded and update the Back button. -->
             <Frame x:Name="frame"
                    Navigated="OnNavigatedToPage">
                 <!--<Frame.ContentTransitions>
@@ -100,11 +97,15 @@
                     </TransitionCollection>
                 </Frame.ContentTransitions>-->
             </Frame>
+            <!-- OnNavigatingToPage we synchronize the selected item in the nav menu with the current page.
+                 OnNavigatedToPage we move keyboard focus to the first item on the page after it's loaded and update the Back button. -->
+
         </SplitView>
         <ToggleButton x:Name="TogglePaneButton" Background="{StaticResource splitwiseGreen}"
                       TabIndex="1"
                       Style="{StaticResource SplitViewTogglePaneButtonStyle}" Click="TogglePaneButton_Clicked"
                       AutomationProperties.Name="Menu"
                       ToolTipService.ToolTip="Menu" />
+        <ProgressRing x:Name="busyIndicator" Foreground="{StaticResource splitwiseGreen}" Height="50" Width="50"/>
     </Grid>
 </Page>

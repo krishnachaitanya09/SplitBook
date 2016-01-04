@@ -3,24 +3,13 @@ using SplitWisely.Model;
 using SplitWisely.Utilities;
 using SplitWisely.Views;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 
 namespace SplitWisely.Add_Expense_Pages
@@ -96,7 +85,7 @@ namespace SplitWisely.Add_Expense_Pages
 
             //This page might be accessed from the start screen tile and hence canGoBack might be false
             if (this.Frame.CanGoBack)
-                this.Frame.GoBack();
+                this.Frame.Navigate(typeof(FriendsPage));
             else
                 Application.Current.Exit();
         }

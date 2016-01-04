@@ -91,8 +91,7 @@ namespace SplitWisely.Views
             (Application.Current as App).PAYMENT_TYPE = navParams;
             (Application.Current as App).PAYMENT_GROUP = 0;
 
-            this.Frame.Navigate(typeof(AddPayment));
-            //NavigationService.Navigate(new Uri("/Add_Expense_Pages/AddPayment.xaml", UriKind.Relative));
+            this.Frame.Navigate(typeof(AddPayment));           
         }
 
         private async void btnReminder_Click(object sender, RoutedEventArgs e)

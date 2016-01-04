@@ -23,10 +23,9 @@ namespace SplitWisely
     {
         public static string accessToken, accessTokenSecret;
         public static User currentUser;
-        public static bool FirstLoad = true;
         public Expense ADD_EXPENSE { get; set; }
         public Expense SELECTED_EXPENSE { get; set; }
-        public Group SELECTED_GROUP { get; set; }         
+        public Group SELECTED_GROUP { get; set; }
         public User PAYMENT_USER { get; set; }
         public int PAYMENT_TYPE { get; set; }
         public int PAYMENT_GROUP { get; set; }
@@ -56,7 +55,7 @@ namespace SplitWisely
                 var titleBar = ApplicationView.GetForCurrentView().TitleBar;
                 if (titleBar != null)
                 {
-                   
+
                     titleBar.ButtonBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
                     titleBar.ButtonHoverBackgroundColor = (Application.Current.Resources["splitwiseGreenHover"] as SolidColorBrush).Color;
                     titleBar.ButtonPressedBackgroundColor = (Application.Current.Resources["splitwiseGreenPressed"] as SolidColorBrush).Color;

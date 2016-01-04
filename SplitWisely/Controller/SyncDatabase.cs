@@ -241,7 +241,7 @@ namespace SplitWisely.Controller
         public static void DeleteAllDataInDB()
         {
             using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
-            {
+            {               
                 dbConn.DeleteAll<User>();
                 dbConn.DeleteAll<Expense>();
                 dbConn.DeleteAll<Group>();

@@ -44,7 +44,6 @@ namespace SplitWisely.Views
 
             selectedGroup = (Application.Current as App).SELECTED_GROUP as Group;
             llsExpenses.ItemsSource = expensesList;
-            //this.llsExpenses.DataRequested += this.OnDataRequested;
 
             groupExpensesBackgroundWorker = new BackgroundWorker();
             groupExpensesBackgroundWorker.WorkerSupportsCancellation = true;

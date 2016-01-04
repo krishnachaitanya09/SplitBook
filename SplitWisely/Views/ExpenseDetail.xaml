@@ -469,5 +469,10 @@
             <AppBarButton Name="edit" Icon="Edit" Label="Edit" Click="btnEdit_Click" Foreground="White"/>
             <AppBarButton Name="refresh" Icon="Refresh" Label="Refresh Comments" Click="btnRefresh_Click" Visibility="Collapsed" Foreground="White"/>
         </CommandBar>
+        
+        <ProgressRing Background="#CC000000" Foreground="{StaticResource splitwiseGreen}"
+                                            x:Name="busyIndicator" 
+                                            Grid.Row="0" 
+                                            Grid.RowSpan="2"/>
     </RelativePanel>
 </Page>

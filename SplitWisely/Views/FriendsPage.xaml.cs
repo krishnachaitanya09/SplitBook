@@ -10,12 +10,17 @@ namespace SplitWisely.Views
 {
     public sealed partial class FriendsPage : Page
     {
+        public static FriendsPage Current;
         public FriendsPage()
         {
             this.InitializeComponent();
+            this.Loaded += (sender, args) =>
+            {
+                Current = this;
+            };
             BackButton.Visibility = Visibility.Collapsed;
             llsFriends.ItemsSource = MainPage.friendsList;
-            balancePanel.DataContext = MainPage.netBalanceObj;
+            balancePanel.DataContext = MainPage.netBalance;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
