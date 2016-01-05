@@ -166,6 +166,9 @@
     <Compile Include="Views\CreateFriend.xaml.cs">
       <DependentUpon>CreateFriend.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CreateGroup.xaml.cs">
+      <DependentUpon>CreateGroup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ExpensePage.xaml.cs">
       <DependentUpon>ExpensePage.xaml</DependentUpon>
     </Compile>
@@ -311,6 +314,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CreateFriend.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CreateGroup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

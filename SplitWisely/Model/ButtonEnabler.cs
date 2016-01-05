@@ -13,6 +13,13 @@ namespace SplitWisely.Model
         private bool refreshButtonEnabled;
         private bool searchButtonEnabled;
 
+        public ButtonEnabler()
+        {
+            AddButtonEnabled = true;
+            RefreshButtonEnabled = true;
+            SearchButtonEnabled = true;
+        }
+
         public bool AddButtonEnabled
         {
             get { return addButtonEnabled; }

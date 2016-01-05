@@ -82,7 +82,7 @@ namespace SplitWisely.Views
                 case 0:
                     if (deleteExpenseBackgroundWorker.IsBusy != true)
                     {
-                        //busyIndicator.IsRunning = true;
+                        busyIndicator.IsActive = true;
                         deleteExpenseBackgroundWorker.RunWorkerAsync();
                     }
                     break;

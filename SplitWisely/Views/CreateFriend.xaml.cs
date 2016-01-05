@@ -33,10 +33,18 @@ namespace SplitWisely.Views
         public CreateFriend()
         {
             this.InitializeComponent();
-
+            BackButton.Click += BackButton_Click;
             createFriendBackgroundWorker = new BackgroundWorker();
             createFriendBackgroundWorker.WorkerSupportsCancellation = true;
             createFriendBackgroundWorker.DoWork += new DoWorkEventHandler(createFriendBackgroundWorker_DoWork);
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.Frame.CanGoBack)
+            {
+                this.Frame.GoBack();
+            }
         }
 
         private void OkayButton_Click(object sender, RoutedEventArgs e)

@@ -75,12 +75,12 @@ namespace SplitWisely.Views
 
         private void AddGroup_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(CreateGroup));
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-
+            MainPage.Current.FetchData();
         }
     }
 }
