@@ -175,6 +175,9 @@
     <Compile Include="Views\ExpenseDetail.xaml.cs">
       <DependentUpon>ExpenseDetail.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ExpenseSearch.xaml.cs">
+      <DependentUpon>ExpenseSearch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FriendsPage.xaml.cs">
       <DependentUpon>FriendsPage.xaml</DependentUpon>
     </Compile>
@@ -326,6 +329,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ExpenseDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExpenseSearch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

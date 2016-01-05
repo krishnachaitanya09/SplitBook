@@ -88,7 +88,7 @@ namespace SplitWisely.Views
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(ExpenseSearch));
         }
     }
 }
