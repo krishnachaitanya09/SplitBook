@@ -42,6 +42,13 @@ namespace SplitWisely.Controls
         public ExpenseUserControl()
         {
             this.InitializeComponent();
+
+            if (expense == null)
+            {
+                expense = new Expense();
+                expense.group_id = 0; //by default the expense is in no group
+            }
+
             friendListPicker.AddHandler(TappedEvent, new TappedEventHandler(friendListPicker_Tapped), true);
             groupListPicker.AddHandler(TappedEvent, new TappedEventHandler(groupListPicker_Tapped), true);
 
@@ -68,12 +75,6 @@ namespace SplitWisely.Controls
 
             this.SplitTypeListPicker.ItemsSource = AmountSplit.GetAmountSplitTypes();
             this.SplitTypeListPicker.SelectedIndex = 0;
-
-            if (expense == null)
-            {
-                expense = new Expense();
-                expense.group_id = 0; //by default the expense is in no group
-            }
 
             //add current user
             expenseShareUsers.Add(getCurrentUser());

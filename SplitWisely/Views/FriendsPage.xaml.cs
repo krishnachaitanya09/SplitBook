@@ -105,7 +105,7 @@ namespace SplitWisely.Views
 
         private void AddFriend_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(CreateFriend));
         }
     }
 }

@@ -29,7 +29,8 @@ namespace SplitWisely
         public User PAYMENT_USER { get; set; }
         public int PAYMENT_TYPE { get; set; }
         public int PAYMENT_GROUP { get; set; }
-
+        public User NEW_USER { get; set; }
+         
         public Frame rootFrame { get; set; }
 
         /// <summary>

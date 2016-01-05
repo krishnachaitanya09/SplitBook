@@ -163,6 +163,9 @@
     <Compile Include="Controls\ExpandPanel.cs" />
     <Compile Include="Model\ButtonEnabler.cs" />
     <Compile Include="Utilities\SplitwiseAuthenticationBroker.cs" />
+    <Compile Include="Views\CreateFriend.xaml.cs">
+      <DependentUpon>CreateFriend.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ExpensePage.xaml.cs">
       <DependentUpon>ExpensePage.xaml</DependentUpon>
     </Compile>
@@ -306,6 +309,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CreateFriend.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ExpensePage.xaml">
       <SubType>Designer</SubType>
