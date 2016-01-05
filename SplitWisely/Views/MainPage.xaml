@@ -85,6 +85,7 @@
                     </ListViewItem>
                 </ListView>
             </SplitView.Pane>
+
             <Frame x:Name="frame"
                    Navigated="OnNavigatedToPage">
                 <!--<Frame.ContentTransitions>

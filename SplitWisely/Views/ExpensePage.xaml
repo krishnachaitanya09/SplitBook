@@ -20,12 +20,38 @@
 
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" HorizontalContentAlignment="Left">
+    <RelativePanel Background="{StaticResource splitwiseGreen}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <!--VisualState to be triggered when window width is >=720 effective pixels.-->
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.VerticalAlignment" Value="Top" />
+                        <Setter Target="commandBar.HorizontalAlignment" Value="Right" />
+                        <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
+                        <Setter Target="llsExpenses.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                        <Setter Target="commandBar.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="commandBar.VerticalAlignment" Value="Bottom" />
+                        <Setter Target="llsExpenses.(RelativePanel.Above)" Value="commandBar"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignTopWithPanel="True">
             <control:PageHeader.HeaderContent>
                 <StackPanel Orientation="Horizontal">
                     <control:BackButton x:Name="BackButton"/>
@@ -33,7 +59,7 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <ListView x:Name="llsExpenses" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsExpenses_Tap" Loaded="OnListViewLoaded">
+        <ListView x:Name="llsExpenses" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsExpenses_Tap" Loaded="OnListViewLoaded" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -77,5 +103,11 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-    </Grid>
+
+        <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
+            <AppBarButton Name="add" Icon="Add" Label="Add Expense" IsEnabled="{Binding AddButtonEnabled}" Click="AddExpense_Click" Foreground="White"/>
+            <AppBarButton Name="refresh" Label="Refresh" Icon="Refresh" IsEnabled="{Binding RefreshButtonEnabled}" Click="RefreshButton_Click" Foreground="White"/>
+            <AppBarButton Name="search" Label="Search" Icon="Find" IsEnabled="{Binding SearchButtonEnabled}" Click="SearchButton_Click" Foreground="White"/>
+        </CommandBar>
+    </RelativePanel>
 </Page>

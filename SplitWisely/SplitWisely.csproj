@@ -161,6 +161,7 @@
     <Compile Include="Converter\UserDetails\UserDetailsExpenseColorConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpensesConverter.cs" />
     <Compile Include="Controls\ExpandPanel.cs" />
+    <Compile Include="Model\ButtonEnabler.cs" />
     <Compile Include="Utilities\SplitwiseAuthenticationBroker.cs" />
     <Compile Include="Views\ExpensePage.xaml.cs">
       <DependentUpon>ExpensePage.xaml</DependentUpon>

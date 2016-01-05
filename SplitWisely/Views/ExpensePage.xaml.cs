@@ -1,4 +1,5 @@
-﻿using SplitWisely.Model;
+﻿using SplitWisely.Add_Expense_Pages;
+using SplitWisely.Model;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -72,6 +73,22 @@ namespace SplitWisely.Views
                     MainPage.expenseLoadingBackgroundWorker.RunWorkerAsync(false);
                 }
             }
+        }
+
+        private void AddExpense_Click(object sender, RoutedEventArgs e)
+        {
+            (Application.Current as App).ADD_EXPENSE = null;
+            this.Frame.Navigate(typeof(AddExpense));
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage.Current.FetchData();
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SplitWisely.Controller;
+﻿using SplitWisely.Add_Expense_Pages;
+using SplitWisely.Controller;
 using SplitWisely.Model;
 using System;
 using System.Collections.Generic;
@@ -61,5 +62,20 @@ namespace SplitWisely.Views
             llsGroups.SelectedItem = null;
         }
 
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddExpense_Click(object sender, RoutedEventArgs e)
+        {
+            (Application.Current as App).ADD_EXPENSE = null;
+            this.Frame.Navigate(typeof(AddExpense));
+        }
+
+        private void AddGroup_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -44,7 +44,7 @@ namespace SplitWisely.Controller
             request.getCurrentUser(_CurrentUserDetailsReceived, _OnErrorReceived);
 
         }
-
+       
         private void _CurrentUserDetailsReceived(User currentUser)
         {
             using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))

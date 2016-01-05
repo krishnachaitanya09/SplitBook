@@ -37,6 +37,7 @@ namespace SplitWisely.Views
         public static int pageNo = 0;
         public static bool morePages = true, hasDataLoaded = false;
         public static NetBalances netBalance = new NetBalances();
+        public static ButtonEnabler buttonEnabler = new ButtonEnabler();
         public static BackgroundWorker expenseLoadingBackgroundWorker = new BackgroundWorker();
         public static BackgroundWorker groupLoadingBackgroundWorker = new BackgroundWorker();
         public static BackgroundWorker syncDatabaseBackgroundWorker = new BackgroundWorker();
@@ -103,15 +104,15 @@ namespace SplitWisely.Views
                     databaseSync.isFirstSync(true);
 
                     //disable the add expense and searchtill first sycn is complete
-                    //btnAddExpense.IsEnabled = false;
-                    //btnSearchExpense.IsEnabled = false;
+                    buttonEnabler.AddButtonEnabled = false;
+                    buttonEnabler.SearchButtonEnabled = false;
                 }
 
                 if (syncDatabaseBackgroundWorker.IsBusy != true)
                 {
                     busyIndicator.IsActive = true;
                     syncDatabaseBackgroundWorker.RunWorkerAsync();
-                    //btnRefresh.IsEnabled = false;
+                    buttonEnabler.RefreshButtonEnabled = false;
                 }
             }
         }
@@ -224,7 +225,19 @@ namespace SplitWisely.Views
                     }
                 }
             });
-        }       
+        }
+
+        public void FetchData()
+        {
+            if (databaseSync == null)
+                databaseSync = new SyncDatabase(SyncCompleted);
+
+            busyIndicator.IsActive = true;
+            buttonEnabler.RefreshButtonEnabled = false;
+
+            if (!syncDatabaseBackgroundWorker.IsBusy)
+                syncDatabaseBackgroundWorker.RunWorkerAsync();
+        }
 
 
         private void SystemNavigationManager_BackRequested(object sender, BackRequestedEventArgs e)
@@ -257,21 +270,21 @@ namespace SplitWisely.Views
                     pageNo = 0;
                     populateData();
                     hasDataLoaded = true;
-                    
-                    //btnAddExpense.IsEnabled = true;
-                    //btnSearchExpense.IsEnabled = true;
-                    //btnRefresh.IsEnabled = true;
+
+                    buttonEnabler.AddButtonEnabled = true;
+                    buttonEnabler.SearchButtonEnabled = true;
+                    buttonEnabler.RefreshButtonEnabled = true;
                 });
             }
             else
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    //    btnRefresh.IsEnabled = true;
+                    buttonEnabler.RefreshButtonEnabled = true;
 
                     //    // don't need to handle the below two as there two are only disabled on first launch. If first launch sync fails, then these two buttons cannot be activated.
-                    //    // btnAddExpense.IsEnabled = true;
-                    //    //btnSearchExpense.IsEnabled = true;
+                    buttonEnabler.AddButtonEnabled = true;
+                    buttonEnabler.SearchButtonEnabled = true;
 
                     busyIndicator.IsActive = false;
                     if (errorCode == HttpStatusCode.Unauthorized)

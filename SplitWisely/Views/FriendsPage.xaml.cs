@@ -1,4 +1,5 @@
-﻿using SplitWisely.Model;
+﻿using SplitWisely.Add_Expense_Pages;
+using SplitWisely.Model;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,6 +22,7 @@ namespace SplitWisely.Views
             BackButton.Visibility = Visibility.Collapsed;
             llsFriends.ItemsSource = MainPage.friendsList;
             balancePanel.DataContext = MainPage.netBalance;
+            commandBar.DataContext = MainPage.buttonEnabler;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -83,6 +85,27 @@ namespace SplitWisely.Views
             User selectedUser = llsFriends.SelectedItem as User;
             this.Frame.Navigate(typeof(UserDetails), selectedUser);
             llsFriends.SelectedItem = null;
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage.Current.FetchData();
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
+        private void AddExpense_Click(object sender, RoutedEventArgs e)
+        {
+            (Application.Current as App).ADD_EXPENSE = null;
+            this.Frame.Navigate(typeof(AddExpense));
+        }
+
+        private void AddFriend_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

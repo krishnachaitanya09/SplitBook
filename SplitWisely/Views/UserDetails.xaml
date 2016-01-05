@@ -127,7 +127,6 @@
                         <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
                         <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
                         <Setter Target="ContentPanel.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
-                        <Setter Target="PageHeader.BackButton.Width" Value="408"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
