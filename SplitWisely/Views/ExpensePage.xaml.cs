@@ -32,6 +32,7 @@ namespace SplitWisely.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            MainPage.Current.NavMenuList.SelectedIndex = 2;
             BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -45,6 +46,7 @@ namespace SplitWisely.Views
             this.Frame.Navigate(typeof(ExpenseDetail));
 
             llsExpenses.SelectedItem = null;
+            MainPage.Current.ResetNavMenu();
         }
 
         private void OnListViewLoaded(object sender, RoutedEventArgs e)
@@ -79,16 +81,19 @@ namespace SplitWisely.Views
         {
             (Application.Current as App).ADD_EXPENSE = null;
             this.Frame.Navigate(typeof(AddExpense));
+            MainPage.Current.ResetNavMenu();
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Current.FetchData();
+            MainPage.Current.ResetNavMenu();
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(ExpenseSearch));
+            MainPage.Current.ResetNavMenu();
         }
     }
 }

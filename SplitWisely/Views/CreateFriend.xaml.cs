@@ -34,6 +34,7 @@ namespace SplitWisely.Views
         {
             this.InitializeComponent();
             BackButton.Click += BackButton_Click;
+            MainPage.Current.ResetNavMenu();
             createFriendBackgroundWorker = new BackgroundWorker();
             createFriendBackgroundWorker.WorkerSupportsCancellation = true;
             createFriendBackgroundWorker.DoWork += new DoWorkEventHandler(createFriendBackgroundWorker_DoWork);

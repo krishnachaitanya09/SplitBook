@@ -35,6 +35,7 @@ namespace SplitWisely.Views
         {
             this.InitializeComponent();
             BackButton.Click += BackButton_Click;
+
             searchExpenseBackgroundWorker = new BackgroundWorker();
             searchExpenseBackgroundWorker.WorkerSupportsCancellation = true;
             searchExpenseBackgroundWorker.DoWork += new DoWorkEventHandler(searchExpenseBackgroundWorker_DoWork);

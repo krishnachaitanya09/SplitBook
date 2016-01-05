@@ -28,6 +28,8 @@ namespace SplitWisely.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.Frame.BackStack.Clear();
+            if (MainPage.Current != null)
+                MainPage.Current.NavMenuList.SelectedIndex = 0;
             base.OnNavigatedTo(e);
         }
 
@@ -85,6 +87,7 @@ namespace SplitWisely.Views
             User selectedUser = llsFriends.SelectedItem as User;
             this.Frame.Navigate(typeof(UserDetails), selectedUser);
             llsFriends.SelectedItem = null;
+            MainPage.Current.ResetNavMenu();
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -95,17 +98,20 @@ namespace SplitWisely.Views
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(ExpenseSearch));
+            MainPage.Current.ResetNavMenu();
         }
 
         private void AddExpense_Click(object sender, RoutedEventArgs e)
         {
             (Application.Current as App).ADD_EXPENSE = null;
             this.Frame.Navigate(typeof(AddExpense));
+            MainPage.Current.ResetNavMenu();
         }
 
         private void AddFriend_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(CreateFriend));
+            MainPage.Current.ResetNavMenu();
         }
     }
 }

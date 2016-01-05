@@ -9,14 +9,11 @@ using System.Globalization;
 using System.Net;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Popups;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 
@@ -88,7 +85,9 @@ namespace SplitWisely.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            me.DataContext = App.currentUser;
             NavMenuList.SelectedIndex = 0;
+            this.frame.Navigate(typeof(FriendsPage));
             if (e.NavigationMode == NavigationMode.Back)
             {
                 return;
@@ -309,7 +308,7 @@ namespace SplitWisely.Views
             {
                 var control = (Page)e.Content;
                 control.Loaded += Page_Loaded;
-            }
+            }            
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -317,6 +316,7 @@ namespace SplitWisely.Views
             ((Page)sender).Focus(FocusState.Programmatic);
             ((Page)sender).Loaded -= Page_Loaded;
             this.CheckTogglePaneButtonSizeChanged();
+           
         }
 
 
@@ -328,17 +328,16 @@ namespace SplitWisely.Views
             switch (NavMenuList.SelectedIndex)
             {
                 case 0:
-                    this.frame.Navigate(typeof(FriendsPage), false);
+                    
+                    SecondaryNavMenuList.SelectedIndex = -1;
                     break;
                 case 1:
-                    this.frame.Navigate(typeof(GroupsPage));
+                    
+                    SecondaryNavMenuList.SelectedIndex = -1;
                     break;
                 case 2:
-                    this.frame.Navigate(typeof(ExpensePage));
-                    break;
-                case 3:
-                    Helpers.logout();
-                    (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
+                    
+                    SecondaryNavMenuList.SelectedIndex = -1;
                     break;
                 default:
                     break;
@@ -353,12 +352,65 @@ namespace SplitWisely.Views
         public void ResetNavMenu()
         {
             NavMenuList.SelectedIndex = -1;
+            SecondaryNavMenuList.SelectedIndex = -1;
         }
 
         public Rect TogglePaneButtonRect
         {
             get;
             private set;
+        }
+
+        private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            var profilePic = sender as Image;
+            BitmapImage pic = new BitmapImage(new Uri("ms-appx:///Assets/Images/profilePhoto.png"));
+            profilePic.Source = pic;
+        }
+
+        private void SecondaryNavMenuList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (RootSplitView.IsPaneOpen)
+                RootSplitView.IsPaneOpen = false;
+
+            switch (SecondaryNavMenuList.SelectedIndex)
+            {
+                case 0:
+                   
+                    NavMenuList.SelectedIndex = -1;
+                    break;
+                case 1:                   
+                    NavMenuList.SelectedIndex = -1;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void FriendsMenu_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            this.frame.Navigate(typeof(FriendsPage), false);
+        }
+
+        private void GroupsMenu_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            this.frame.Navigate(typeof(GroupsPage));
+        }
+
+        private void ExpensesMenu_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            this.frame.Navigate(typeof(ExpensePage));
+        }
+
+        private void MeMenu_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            this.frame.Navigate(typeof(MePage));
+        }
+
+        private void LogOut_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            Helpers.logout();
+            (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
         }
 
         /// <summary>
