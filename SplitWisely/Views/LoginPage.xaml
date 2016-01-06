@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource AppBarBackgroundThemeBrush}">
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
@@ -20,7 +20,7 @@
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <StackPanel  Grid.Column="1" Grid.Row="1">
-            <TextBlock Text="SPLITWISELY" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Light" FontSize="24" Margin="0,0,0,20"/>
+            <TextBlock Text="S P L I T W I S E L Y" FontFamily="Times New Roman" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Light" FontSize="24" Margin="0,0,0,20"/>
             <Button Content="Authorize" Click="AuthorizeButton_Click" Foreground="White" Background="#FF60BF9F" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
         <ProgressRing x:Name="progressRing" Height="50" Width="50" Foreground="{StaticResource splitwiseGreen}" Grid.ColumnSpan="3" Grid.RowSpan="3"/>

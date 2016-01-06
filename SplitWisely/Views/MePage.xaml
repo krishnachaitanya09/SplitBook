@@ -65,80 +65,114 @@
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
         <Grid x:Name="Me" Background="White" RelativePanel.Below="PageHeader" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-            <ScrollViewer
+            <Grid MaxWidth="500">
+                <ScrollViewer
                   VerticalScrollBarVisibility="Auto">
-                <Grid Margin="10,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Padding="12">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Ellipse Grid.Column="0" Width="100" Height="100">
-                            <Ellipse.Fill>
-                                <ImageBrush>
-                                    <ImageBrush.ImageSource>
-                                        <BitmapImage ImageFailed="ProfilePic_ImageFailed" DecodePixelHeight="100" DecodePixelWidth="100" UriSource="{Binding PictureUrl}" />
-                                    </ImageBrush.ImageSource>
-                                </ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <Grid Grid.Column="1" Margin="12,6,0,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="tbName" Text="{Binding name}" Foreground="Black" Grid.Row="0" FontSize="18" HorizontalAlignment="Left"/>
-                            <TextBlock x:Name="tbEmail" Text="{Binding email}" Foreground="{StaticResource settled}" Grid.Row="1" FontSize="{StaticResource descriptionSize}" HorizontalAlignment="Left"/>
+                    <Grid Margin="10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Padding="12" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Ellipse Grid.Column="0" Width="100" Height="100">
+                                <Ellipse.Fill>
+                                    <ImageBrush>
+                                        <ImageBrush.ImageSource>
+                                            <BitmapImage ImageFailed="ProfilePic_ImageFailed" DecodePixelHeight="100" DecodePixelWidth="100" UriSource="{Binding PictureUrl}" />
+                                        </ImageBrush.ImageSource>
+                                    </ImageBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Grid Grid.Column="1" Margin="12,6,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="tbName" Text="{Binding name}" Foreground="Black" Grid.Row="0" FontSize="18" HorizontalAlignment="Left"/>
+                                <TextBlock x:Name="tbEmail" Text="{Binding email}" Foreground="{StaticResource settled}" Grid.Row="1" FontSize="{StaticResource descriptionSize}" HorizontalAlignment="Left"/>
+                            </Grid>
                         </Grid>
-                    </Grid>
 
-                    <StackPanel Orientation="Vertical" Grid.Row="1">
+                        <StackPanel Orientation="Vertical" Grid.Row="1">
 
-                        <HyperlinkButton Name="account_settings"
+                            <HyperlinkButton Name="account_settings"
                                    Padding="12,8"         
                                    Foreground="Black"                                    
                                    Tapped="Account_Settings_Tapped"
                                    FontSize="{StaticResource userDetailnameSize}">
-                            <TextBlock Text="Account Settings"/>
-                        </HyperlinkButton>
+                                <TextBlock Text="Account Settings"/>
+                            </HyperlinkButton>
 
-                        <HyperlinkButton Name="simplify_debt" 
+                            <HyperlinkButton Name="simplify_debt" 
                                    Padding="12,8"                                      
                                    Foreground="Black"                                    
                                    Tapped="Simplify_Debt_Tapped"
                                    FontSize="{StaticResource userDetailnameSize}">
-                            <TextBlock Text="Debt Simplification"/>
-                        </HyperlinkButton>
-                        <HyperlinkButton Name="rate" 
+                                <TextBlock Text="Debt Simplification"/>
+                            </HyperlinkButton>
+                            <HyperlinkButton Name="rate" 
                                    Padding="12,8"                                     
                                    Foreground="Black"                                   
                                    Tapped="Rate_Tapped"
                                    FontSize="{StaticResource userDetailnameSize}">
-                            <TextBlock Text="Rate and Review"/>
-                        </HyperlinkButton>
+                                <TextBlock Text="Rate and Review"/>
+                            </HyperlinkButton>
 
-                        <HyperlinkButton Name="removeAds" 
+                            <HyperlinkButton Name="removeAds" 
                                    Padding="12,8"  
                                    Foreground="Black" 
                                    Tapped="RemoveAds_Tapped"    
                                    FontSize="{StaticResource userDetailnameSize}">
-                            <TextBlock Text="Remove Ads"/>
-                        </HyperlinkButton>
+                                <TextBlock Text="Remove Ads"/>
+                            </HyperlinkButton>
 
-                        <!--<TextBlock Name="shameLessPlug" 
+                            <!--<TextBlock Name="shameLessPlug" 
                                    VerticalAlignment="Bottom"
                                    Margin="5,20,5,10" 
                                    TextWrapping="Wrap"
                                    Text="This app was developed by Saurabh Arora. Remember to review the app and buy me a beer if you like my work." 
                                    Foreground="{StaticResource settled}"
                                    FontSize="{StaticResource groupTimeSize}"/>-->
-                    </StackPanel>
-                </Grid>
-            </ScrollViewer>
+                        </StackPanel>
+                        <StackPanel Margin="10,40,10,0" Grid.Row="2">
+                            <RichTextBlock Foreground="{StaticResource TextBoxPlaceholderTextThemeBrush}">
+                                <Paragraph>
+                                    <Run>
+                                        Developed By &#160;
+                                    </Run>
+                                    <Bold>
+                                        <Run>Krishna Chaitanya Muppaneni &#160;</Run>
+                                    </Bold>
+                                    <Run>
+                                        with :) in Arlington &amp; San Antonio, Texas.
+                                    </Run>
+                                </Paragraph>
+                                <Paragraph>
+                                    <LineBreak/>
+                                    <Run>
+                                        Version: &#160;
+                                    </Run>
+                                    <Run x:Name="version"/>
+                                </Paragraph>
+                                <Paragraph>
+                                    <LineBreak/>
+                                    <Run>For feedback, queries and feature request, please contact us at :</Run>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Hyperlink Foreground="{StaticResource splitwiseGreen}" Click="Hyperlink_Click">
+                                        contact@techcryptic.com
+                                    </Hyperlink>
+                                </Paragraph>
+                            </RichTextBlock>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
         </Grid>
     </RelativePanel>
 </Page>

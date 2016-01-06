@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Email;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -23,6 +27,8 @@ namespace SplitWisely.Views
         {
             this.InitializeComponent();
             BackButton.Tapped += BackButton_Tapped;
+            PackageVersion PackageVersion = Package.Current.Id.Version;
+            version.Text = string.Format("{0}.{1}.{2}.{3}", PackageVersion.Major, PackageVersion.Minor, PackageVersion.Build, PackageVersion.Revision);
         }
 
         private void BackButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -66,6 +72,22 @@ namespace SplitWisely.Views
             var profilePic = sender as Image;
             BitmapImage pic = new BitmapImage(new Uri("ms-appx:///Assets/Images/profilePhoto.png"));
             profilePic.Source = pic;
+        }
+
+        private async void Hyperlink_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        {
+            ResourceLoader loader = new ResourceLoader();
+            EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
+
+            PackageVersion PackageVersion = Package.Current.Id.Version;
+
+            EmailMessage emailComposeTask = new EmailMessage();
+            emailComposeTask.Subject = "SplitWisely Feedback";
+            emailComposeTask.Body = String.Format(loader.GetString("FeedbackBody"), deviceInfo.SystemProductName, deviceInfo.FriendlyName,
+                deviceInfo.OperatingSystem, deviceInfo.SystemManufacturer, deviceInfo.SystemFirmwareVersion, deviceInfo.SystemHardwareVersion,
+                 string.Format("{0}.{1}.{2}.{3}", PackageVersion.Major, PackageVersion.Minor, PackageVersion.Build, PackageVersion.Revision));
+            emailComposeTask.To.Add(new EmailRecipient("contact@techcryptic.com"));
+            await EmailManager.ShowComposeNewEmailAsync(emailComposeTask);
         }
     }
 }
