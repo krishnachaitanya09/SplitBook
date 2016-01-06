@@ -109,7 +109,7 @@ namespace SplitWisely.Views
 
                 if (syncDatabaseBackgroundWorker.IsBusy != true)
                 {
-                    busyIndicator.IsActive = true;
+                    busyIndicator.Visibility = Visibility.Visible;
                     syncDatabaseBackgroundWorker.RunWorkerAsync();
                     buttonEnabler.RefreshButtonEnabled = false;
                 }
@@ -231,7 +231,7 @@ namespace SplitWisely.Views
             if (databaseSync == null)
                 databaseSync = new SyncDatabase(SyncCompleted);
 
-            busyIndicator.IsActive = true;
+            busyIndicator.Visibility = Visibility.Visible;
             buttonEnabler.RefreshButtonEnabled = false;
 
             if (!syncDatabaseBackgroundWorker.IsBusy)
@@ -265,7 +265,7 @@ namespace SplitWisely.Views
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    busyIndicator.IsActive = false;
+                    busyIndicator.Visibility = Visibility.Collapsed;
                     pageNo = 0;
                     populateData();
                     hasDataLoaded = true;
@@ -285,7 +285,7 @@ namespace SplitWisely.Views
                     buttonEnabler.AddButtonEnabled = true;
                     buttonEnabler.SearchButtonEnabled = true;
 
-                    busyIndicator.IsActive = false;
+                    busyIndicator.Visibility = Visibility.Collapsed;
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
                         Helpers.logout();
@@ -315,10 +315,8 @@ namespace SplitWisely.Views
         {
             ((Page)sender).Focus(FocusState.Programmatic);
             ((Page)sender).Loaded -= Page_Loaded;
-            this.CheckTogglePaneButtonSizeChanged();
-           
+            this.CheckTogglePaneButtonSizeChanged();           
         }
-
 
         private void NavMenuList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

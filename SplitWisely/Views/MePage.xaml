@@ -67,7 +67,7 @@
         <Grid x:Name="Me" Background="White" RelativePanel.Below="PageHeader" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <ScrollViewer
                   VerticalScrollBarVisibility="Auto">
-                <Grid>
+                <Grid Margin="10,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>

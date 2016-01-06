@@ -141,11 +141,11 @@
 						<Run Text="and:"/>
                 </TextBlock>
                 <TextBox x:Name="friendListPicker" Loaded="friendListPicker_Loaded" Tapped="friendListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
-                <Popup x:Name="friendListPopup" IsLightDismissEnabled="True" Margin="5,0">
+                <Popup MaxHeight="200" x:Name="friendListPopup" IsLightDismissEnabled="True" Margin="5,0">
                     <ListBox x:Name="friendList" SelectionMode="Multiple" x:FieldModifier="public" SelectionChanged="FriendListPicker_SelectionChanged"/>
                 </Popup>
                 <TextBox x:Name="groupListPicker" x:FieldModifier="public" Loaded="groupListPicker_Loaded" Tapped="groupListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
-                <Popup x:Name="groupListPopup" IsLightDismissEnabled="True" >
+                <Popup MaxHeight="200" x:Name="groupListPopup" IsLightDismissEnabled="True" >
                     <ListBox x:Name="groupList" SelectionMode="Multiple" x:FieldModifier="public" SelectionChanged="GroupList_SelectionChanged"/>
                 </Popup>
             </StackPanel>

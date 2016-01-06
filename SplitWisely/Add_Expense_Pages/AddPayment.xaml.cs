@@ -207,7 +207,6 @@ namespace SplitWisely.Add_Expense_Pages
             }
         }       
 
-
         private void tbAmount_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -215,6 +214,12 @@ namespace SplitWisely.Add_Expense_Pages
             //do not allow user to input more than one decimal point
             if (textBox.Text.Contains(decimalsep))
                 e.Handled = true;
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            tbAmount.Focus(FocusState.Programmatic);
+            tbAmount.Select(tbAmount.Text.Length, 0);
         }
     }
 }

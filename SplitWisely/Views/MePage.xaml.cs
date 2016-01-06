@@ -42,12 +42,12 @@ namespace SplitWisely.Views
 
         private void Account_Settings_Tapped(object sender, TappedRoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(AccountSettings));
         }
 
         private void Simplify_Debt_Tapped(object sender, TappedRoutedEventArgs e)
         {
-
+            this.Frame.Navigate(typeof(DebtSimplification));
         }
 
         private async void Rate_Tapped(object sender, TappedRoutedEventArgs e)

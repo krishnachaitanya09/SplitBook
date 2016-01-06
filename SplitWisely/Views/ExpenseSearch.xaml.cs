@@ -95,5 +95,10 @@ namespace SplitWisely.Views
                 busyIndicator.IsActive = false;
             });
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            SearchBox.Focus(FocusState.Programmatic);
+        }
     }
 }

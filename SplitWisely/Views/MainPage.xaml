@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:views="using:SplitWisely.Views"
     xmlns:local="using:SplitWisely"
+    xmlns:control="using:SplitWisely.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -84,11 +85,11 @@
                                     <ColumnDefinition Width="48" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Ellipse Grid.Column="0" Width="36" Height="36">
+                                <Ellipse Grid.Column="0" Width="32" Height="32">
                                     <Ellipse.Fill>
                                         <ImageBrush>
                                             <ImageBrush.ImageSource>
-                                                <BitmapImage ImageFailed="ProfilePic_ImageFailed" DecodePixelHeight="38" DecodePixelWidth="38" UriSource="{Binding PictureUrl}" />
+                                                <BitmapImage ImageFailed="ProfilePic_ImageFailed" DecodePixelHeight="32" DecodePixelWidth="32" UriSource="{Binding PictureUrl}" />
                                             </ImageBrush.ImageSource>
                                         </ImageBrush>
                                     </Ellipse.Fill>
@@ -131,6 +132,6 @@
                       Style="{StaticResource SplitViewTogglePaneButtonStyle}" Click="TogglePaneButton_Clicked"
                       AutomationProperties.Name="Menu"
                       ToolTipService.ToolTip="Menu" />
-        <ProgressRing x:Name="busyIndicator" Foreground="{StaticResource splitwiseGreen}" Height="50" Width="50"/>
+        <control:SyncIndicator x:Name="busyIndicator" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,50" Visibility="Collapsed"/>
     </Grid>
 </Page>

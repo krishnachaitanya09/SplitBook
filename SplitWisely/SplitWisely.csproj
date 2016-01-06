@@ -133,6 +133,9 @@
     <Compile Include="Controls\SelectPayeePopUpControl.xaml.cs">
       <DependentUpon>SelectPayeePopUpControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SyncIndicator.xaml.cs">
+      <DependentUpon>SyncIndicator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UnequallySplit.xaml.cs">
       <DependentUpon>UnequallySplit.xaml</DependentUpon>
     </Compile>
@@ -163,11 +166,17 @@
     <Compile Include="Controls\ExpandPanel.cs" />
     <Compile Include="Model\ButtonEnabler.cs" />
     <Compile Include="Utilities\SplitwiseAuthenticationBroker.cs" />
+    <Compile Include="Views\AccountSettings.xaml.cs">
+      <DependentUpon>AccountSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CreateFriend.xaml.cs">
       <DependentUpon>CreateFriend.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreateGroup.xaml.cs">
       <DependentUpon>CreateGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DebtSimplification.xaml.cs">
+      <DependentUpon>DebtSimplification.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ExpensePage.xaml.cs">
       <DependentUpon>ExpensePage.xaml</DependentUpon>
@@ -300,6 +309,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SyncIndicator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\UnequallySplit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -316,11 +329,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\AccountSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CreateFriend.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CreateGroup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DebtSimplification.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
