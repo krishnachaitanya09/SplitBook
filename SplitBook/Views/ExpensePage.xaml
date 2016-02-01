@@ -1,0 +1,113 @@
+﻿<Page
+    x:Class="SplitBook.Views.ExpensePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplitBook.Views"
+    xmlns:app="using:SplitBook.Converter"
+    xmlns:control="using:SplitBook.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <app:PaymentImageFileConverter x:Key="PaymentImageConverter"/>
+        <app:ExpenseShareToAmountConverter x:Key="ExpenseShareAmountConverter"/>
+        <app:ExpenseShareToColorConverter x:Key="ExpenseShareColorConverter"/>
+        <app:BoolToVisibilityConverter x:Key="BoolVisibilityConverter"/>
+        <app:ExpenseToTitleConverter x:Key="ExpenseTitleConverter" />
+        <app:ExpenseShareToWhoPaidConverter x:Key="ExpenseShareWhoPaidConverter"/>
+        <app:ExpenseShareToDescriptionConverter x:Key="ExpenseShareDescriptionConverter"/>
+
+    </Page.Resources>
+
+    <RelativePanel Background="{StaticResource splitwiseGreen}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <!--VisualState to be triggered when window width is >=720 effective pixels.-->
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.VerticalAlignment" Value="Top" />
+                        <Setter Target="commandBar.HorizontalAlignment" Value="Right" />
+                        <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
+                        <Setter Target="llsExpenses.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                        <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                        <Setter Target="commandBar.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="commandBar.VerticalAlignment" Value="Bottom" />
+                        <Setter Target="llsExpenses.(RelativePanel.Above)" Value="commandBar"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignTopWithPanel="True">
+            <control:PageHeader.HeaderContent>
+                <StackPanel Orientation="Horizontal">
+                    <control:BackButton x:Name="BackButton"/>
+                    <TextBlock Text="Expenses" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </control:PageHeader.HeaderContent>
+        </control:PageHeader>
+        <ListView x:Name="llsExpenses" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsExpenses_Tap" Loaded="OnListViewLoaded" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border  MaxWidth="500" BorderThickness="0,0,0,2" Background="White" BorderBrush="{StaticResource splitwiseGreyBG}">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="{Binding payment, Converter={StaticResource PaymentImageConverter}}" VerticalAlignment="Center" Width="50" Height="50" Margin="0,0,5,0"/>
+
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock x:Name="tbTitle" TextTrimming="WordEllipsis" Text="{Binding Converter={StaticResource ExpenseTitleConverter}}" Foreground="Black" Grid.Row="0" FontSize="{StaticResource expenseTitleSize}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="tbWhoPaid" Foreground="{StaticResource settled}" Text="{Binding Converter={StaticResource ExpenseShareWhoPaidConverter}}" Grid.Row="1" FontSize="{StaticResource descriptionSize}" Visibility="{Binding payment, Converter={StaticResource BoolVisibilityConverter}}"/>
+
+                            </Grid>
+
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock x:Name="tbDescription" Text="{Binding users, Converter={StaticResource ExpenseShareDescriptionConverter}}" Foreground="{Binding users, Converter={StaticResource ExpenseShareColorConverter}}" Grid.Row="0" FontSize="{StaticResource descriptionSize}" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding payment, Converter={StaticResource BoolVisibilityConverter}}"/>
+                                <TextBlock Foreground="{Binding users, Converter={StaticResource ExpenseShareColorConverter}}" Text="{Binding Converter={StaticResource ExpenseShareAmountConverter}}" Grid.Row="1" FontSize="{StaticResource amountSize}" HorizontalAlignment="Right" Visibility="{Binding payment, Converter={StaticResource BoolVisibilityConverter}}"/>
+
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
+            <AppBarButton Name="add" Icon="Add" Label="Add Expense" IsEnabled="{Binding AddButtonEnabled}" Click="AddExpense_Click" Foreground="White"/>
+            <AppBarButton Name="refresh" Label="Refresh" Icon="Refresh" IsEnabled="{Binding RefreshButtonEnabled}" Click="RefreshButton_Click" Foreground="White"/>
+            <AppBarButton Name="search" Label="Search" Icon="Find" IsEnabled="{Binding SearchButtonEnabled}" Click="SearchButton_Click" Foreground="White"/>
+        </CommandBar>
+    </RelativePanel>
+</Page>

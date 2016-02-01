@@ -1,0 +1,136 @@
+﻿<Page
+    x:Class="SplitBook.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:views="using:SplitBook.Views"
+    xmlns:local="using:SplitBook"
+    xmlns:control="using:SplitBook.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <!-- Adaptive triggers -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay"/>
+                        <Setter Target="RootSplitView.IsPaneOpen" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- Top-level navigation menu + app content -->
+        <SplitView x:Name="RootSplitView"
+                   DisplayMode="CompactOverlay"
+                   OpenPaneLength="200"
+                   IsTabStop="False"
+                   IsPaneOpen="False"
+                   PaneBackground="#FF5D5D5D">
+            <SplitView.Pane>
+                <Grid>
+                    <ListView x:Name="NavMenuList" x:FieldModifier="public"
+                          TabIndex="3" 
+                          ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}" SelectionChanged="NavMenuList_SelectionChanged">
+                        <ListViewItem Margin="0,48,0,0" Tapped="FriendsMenu_Tapped">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xE2AF;" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="Friends" Foreground="White"/>
+                                <TextBlock Grid.Column="1" Text="Friends" Foreground="White"/>
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem Tapped="GroupsMenu_Tapped">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xE716;" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="Groups" Foreground="White"/>
+                                <TextBlock Grid.Column="1" Text="Groups" Foreground="White"/>
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem Tapped="ExpensesMenu_Tapped">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xEC42;" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="Activity" Foreground="White"/>
+                                <TextBlock Grid.Column="1" Text="Expenses" Foreground="White"/>
+                            </Grid>
+                        </ListViewItem>
+                    </ListView>
+                    <ListView x:Name="SecondaryNavMenuList" x:FieldModifier="public" BorderBrush="#FF848484" BorderThickness="0,1,0,0" VerticalAlignment="Bottom" Margin="0,0,0,10"
+                          TabIndex="4"
+                          ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}" SelectionChanged="SecondaryNavMenuList_SelectionChanged">
+                        <ListViewItem x:Name="me" Tapped="MeMenu_Tapped">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Grid.Column="0" Width="32" Height="32">
+                                    <Ellipse.Fill>
+                                        <ImageBrush>
+                                            <ImageBrush.ImageSource>
+                                                <BitmapImage ImageFailed="ProfilePic_ImageFailed" DecodePixelHeight="32" DecodePixelWidth="32" UriSource="{Binding PictureUrl}" />
+                                            </ImageBrush.ImageSource>
+                                        </ImageBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock Grid.Column="1" Text="{Binding name}" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="White"/>
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem Tapped="LogOut_Tapped">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xE8D7;" FontSize="16"  HorizontalAlignment="Center" ToolTipService.ToolTip="Log out" Foreground="White"/>
+                                <TextBlock Grid.Column="1" Text="Log Out" Foreground="White"/>
+                            </Grid>
+                        </ListViewItem>
+                    </ListView>
+                </Grid>
+            </SplitView.Pane>
+            <Frame x:Name="frame"
+                   Navigated="OnNavigatedToPage">
+                <!--<Frame.ContentTransitions>
+                    <TransitionCollection>
+                        <NavigationThemeTransition>
+                            <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                <EntranceNavigationTransitionInfo/>
+                            </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                        </NavigationThemeTransition>
+                    </TransitionCollection>
+                </Frame.ContentTransitions>-->
+            </Frame>
+            <!-- OnNavigatingToPage we synchronize the selected item in the nav menu with the current page.
+                 OnNavigatedToPage we move keyboard focus to the first item on the page after it's loaded and update the Back button. -->
+
+        </SplitView>
+        <ToggleButton x:Name="TogglePaneButton" Background="{StaticResource splitwiseGreen}"
+                      TabIndex="1"
+                      Style="{StaticResource SplitViewTogglePaneButtonStyle}" Click="TogglePaneButton_Clicked"
+                      AutomationProperties.Name="Menu"
+                      ToolTipService.ToolTip="Menu" />
+        <control:SyncIndicator x:Name="busyIndicator" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,50" Visibility="Collapsed"/>
+    </Grid>
+</Page>

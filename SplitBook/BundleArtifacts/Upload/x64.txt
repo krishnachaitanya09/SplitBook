@@ -1,0 +1,2 @@
+MainPackage=F:\Projects\SplitWisely\SplitWisely\bin\x64\Release\Upload\SplitWisely_1.0.0.0_x64.appx
+SymbolPackage=F:\Projects\SplitWisely\SplitWisely\AppPackages\SplitWisely_1.0.0.0\SplitWisely_1.0.0.0_x64.appxsym
