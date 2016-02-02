@@ -43,6 +43,12 @@ namespace SplitBook.Views
             llsExpenses.ItemsSource = expenseSearchResult;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("ExpenseSearchPage");
+            base.OnNavigatedTo(e);
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)

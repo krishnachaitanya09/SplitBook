@@ -46,6 +46,11 @@ namespace SplitBook.Views
             authorize = new OAuthRequest();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("LoginPage");
+            base.OnNavigatedTo(e);
+        }
 
         private void AuthorizeButton_Click(object sender, RoutedEventArgs e)
         {

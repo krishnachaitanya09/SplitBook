@@ -68,6 +68,12 @@ namespace SplitBook.Add_Expense_Pages
             }
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("AddPaymentPage");
+            base.OnNavigatedTo(e);
+        }
+
         private void BackButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)

@@ -44,7 +44,7 @@ namespace SplitBook.Utilities
             }
             catch (Exception ex)
             {
-
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
             }
         }
 

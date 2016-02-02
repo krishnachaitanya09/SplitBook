@@ -51,6 +51,7 @@ namespace SplitBook.Add_Expense_Pages
             {
                 this.expenseControl.expenseShareUsers.Add(item);
             }
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("EditExpensePage");
         }
 
         private void ExpenseControl_Loaded(object sender, RoutedEventArgs e)

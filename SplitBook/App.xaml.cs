@@ -42,7 +42,13 @@ namespace SplitBook
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            this.Resuming += OnResuming;       
+            this.Resuming += OnResuming;
+            this.UnhandledException += App_UnhandledException; 
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendException(e.Message, true);
         }
 
         /// <summary>

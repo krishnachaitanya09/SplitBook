@@ -22,7 +22,7 @@ namespace SplitBook.Converter
                 paidShare = System.Convert.ToDouble(shareUser.paid_share, System.Globalization.CultureInfo.InvariantCulture);
                 owedShare = System.Convert.ToDouble(shareUser.owed_share, System.Globalization.CultureInfo.InvariantCulture);
             }
-            catch (FormatException exception)
+            catch (FormatException)
             {
 
             }

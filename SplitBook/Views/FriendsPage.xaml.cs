@@ -30,6 +30,7 @@ namespace SplitBook.Views
             this.Frame.BackStack.Clear();
             if (MainPage.Current != null)
                 MainPage.Current.NavMenuList.SelectedIndex = 0;
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("FriendsPage");
             base.OnNavigatedTo(e);
         }
 

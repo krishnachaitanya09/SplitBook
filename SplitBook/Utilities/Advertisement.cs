@@ -19,6 +19,24 @@ namespace SplitBook.Utilities
                 ShowAds = false;
             }
         }
+
+        public static async void PurchaseRemoveAds()
+        {
+            if (!CurrentAppSimulator.LicenseInformation.ProductLicenses["NoAds"].IsActive)
+            {
+                try
+                {
+                    await CurrentAppSimulator.RequestProductPurchaseAsync("NoAds");
+                    //Check the license state to determine if the in-app purchase was successful.
+                }
+                catch (Exception e)
+                {
+                    GoogleAnalytics.EasyTracker.GetTracker().SendException(e.Message, false);
+                    // The in-app purchase was not completed because 
+                    // an error occurred.
+                }
+            }
+        }
     }
 }
 

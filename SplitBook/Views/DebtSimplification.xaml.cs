@@ -30,6 +30,12 @@ namespace SplitBook.Views
             browser.Navigate(url);
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("DebtSimplificationPage");
+            base.OnNavigatedTo(e);
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)

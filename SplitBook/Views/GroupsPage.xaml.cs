@@ -41,6 +41,7 @@ namespace SplitBook.Views
             base.OnNavigatedTo(e);
             MainPage.Current.NavMenuList.SelectedIndex = 1;
             BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("GroupsPage");
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

@@ -60,6 +60,7 @@ namespace SplitBook.Views
             if (selectedUser.balance.Count == 0)
                 selectedUser.balance.Add(new Balance_User() { amount = "0", currency_code = App.currentUser.default_currency, user_id = selectedUser.id });
             this.DataContext = selectedUser;
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("UserDetailsPage");
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

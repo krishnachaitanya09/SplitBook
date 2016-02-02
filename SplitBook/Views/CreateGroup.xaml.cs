@@ -59,6 +59,12 @@ namespace SplitBook.Views
             llsFriends.ItemsSource = groupMembers;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("CreateGroupPage");
+            base.OnNavigatedTo(e);
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)

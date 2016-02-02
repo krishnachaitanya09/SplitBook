@@ -34,6 +34,7 @@ namespace SplitBook.Views
             base.OnNavigatedTo(e);
             MainPage.Current.NavMenuList.SelectedIndex = 2;
             BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("ExpensePage");
         }
 
         private void llsExpenses_Tap(object sender, SelectionChangedEventArgs e)

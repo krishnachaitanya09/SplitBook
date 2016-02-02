@@ -64,7 +64,7 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <Grid x:Name="Me" Background="White" RelativePanel.Below="PageHeader" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+        <Grid x:Name="Me" Background="White" RelativePanel.Below="PageHeader" RelativePanel.Above="AdControl" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <Grid MaxWidth="500">
                 <ScrollViewer
                   VerticalScrollBarVisibility="Auto">
@@ -179,6 +179,9 @@
                     </Grid>
                 </ScrollViewer>
             </Grid>
+        </Grid>
+        <Grid x:Name="AdControl" Background="White" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+            <control:AdControl HorizontalAlignment="Center" />
         </Grid>
     </RelativePanel>
 </Page>

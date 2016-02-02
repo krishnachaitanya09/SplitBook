@@ -40,6 +40,12 @@ namespace SplitBook.Views
             createFriendBackgroundWorker.DoWork += new DoWorkEventHandler(createFriendBackgroundWorker_DoWork);
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("CreateFriendPage");
+            base.OnNavigatedTo(e);
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)

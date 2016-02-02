@@ -61,6 +61,12 @@ namespace SplitBook.Views
             this.currencyList.ItemsSource = currenciesList;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("AccountSettingsPage");
+            base.OnNavigatedTo(e);
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)

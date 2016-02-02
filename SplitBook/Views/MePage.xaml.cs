@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SplitBook.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel.Store;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Security.ExchangeActiveSyncProvisioning;
@@ -29,6 +31,10 @@ namespace SplitBook.Views
             BackButton.Tapped += BackButton_Tapped;
             PackageVersion PackageVersion = Package.Current.Id.Version;
             version.Text = string.Format("{0}.{1}.{2}.{3}", PackageVersion.Major, PackageVersion.Minor, PackageVersion.Build, PackageVersion.Revision);
+            if (!Advertisement.ShowAds)
+            {
+                removeAds.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void BackButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -44,6 +50,7 @@ namespace SplitBook.Views
             base.OnNavigatedTo(e);
             MainPage.Current.SecondaryNavMenuList.SelectedIndex = 0;
             Me.DataContext = App.currentUser;
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("MePage");
         }
 
         private void Account_Settings_Tapped(object sender, TappedRoutedEventArgs e)
@@ -60,11 +67,13 @@ namespace SplitBook.Views
         {
             var uriRate = new Uri(@"ms-windows-store:REVIEW?PFN=" + Windows.ApplicationModel.Package.Current.Id.FamilyName);
             await Windows.System.Launcher.LaunchUriAsync(uriRate);
+            GoogleAnalytics.EasyTracker.GetTracker().SendEvent("UI", "Rate_Click", "Rate", 0);
         }
 
         private void RemoveAds_Tapped(object sender, TappedRoutedEventArgs e)
         {
-
+            Advertisement.PurchaseRemoveAds();
+            GoogleAnalytics.EasyTracker.GetTracker().SendEvent("UI", "RemoveAds_Click", "RemoveAds", 0);
         }
 
         private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -88,6 +97,7 @@ namespace SplitBook.Views
                  string.Format("{0}.{1}.{2}.{3}", PackageVersion.Major, PackageVersion.Minor, PackageVersion.Build, PackageVersion.Revision));
             emailComposeTask.To.Add(new EmailRecipient("contact@techcryptic.com"));
             await EmailManager.ShowComposeNewEmailAsync(emailComposeTask);
+            GoogleAnalytics.EasyTracker.GetTracker().SendEvent("UI", "Contact_Click", "Contact", 0);
         }
     }
 }

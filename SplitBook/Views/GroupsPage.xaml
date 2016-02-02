@@ -31,7 +31,7 @@
                         <Setter Target="commandBar.HorizontalAlignment" Value="Right" />
                         <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
                         <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
-                        <Setter Target="llsGroups.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                        <Setter Target="AdControl.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -44,7 +44,7 @@
                         <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
                         <Setter Target="commandBar.HorizontalAlignment" Value="Stretch" />
                         <Setter Target="commandBar.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="llsGroups.(RelativePanel.Above)" Value="commandBar"/>
+                        <Setter Target="AdControl.(RelativePanel.Above)" Value="commandBar"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -57,7 +57,7 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <ListView x:Name="llsGroups" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsGroups_Tap" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+        <ListView x:Name="llsGroups" Grid.Row="1" Background="{StaticResource FrameBackground}" SelectionChanged="llsGroups_Tap" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Above="AdControl">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -100,7 +100,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        
+        <control:AdControl x:Name="AdControl" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
             <AppBarButton Name="add" Icon="Add" Label="Add" IsEnabled="{Binding AddButtonEnabled}" Foreground="White">
                 <AppBarButton.Flyout>

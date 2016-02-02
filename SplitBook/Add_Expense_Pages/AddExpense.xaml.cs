@@ -11,6 +11,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
 namespace SplitBook.Add_Expense_Pages
 {
@@ -33,6 +34,12 @@ namespace SplitBook.Add_Expense_Pages
             //This helps to auto-populate if the user is coming from the GroupDetails or UserDetails page
             autoPopulateGroup();
             autoPopulateExpenseShareUsers();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            GoogleAnalytics.EasyTracker.GetTracker().SendView("AddExpensePage");
+            base.OnNavigatedTo(e);
         }
 
         private void BackButton_Tapped(object sender, TappedRoutedEventArgs e)
