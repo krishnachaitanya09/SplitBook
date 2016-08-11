@@ -18,9 +18,9 @@ namespace SplitBook.Converter
         {
             SolidColorBrush colorBrush;
             double finalBalance = 0;
-            if(parameter != null && parameter.ToString().Equals("overall"))
+            if (parameter != null && parameter.ToString().Equals("overall"))
             {
-                finalBalance += System.Convert.ToDouble(value);
+                finalBalance += value != null ? Double.Parse(value.ToString(), System.Globalization.NumberStyles.Currency) : 0;
             }
             else if (parameter != null && parameter.ToString().Equals("group"))
             {
@@ -35,7 +35,7 @@ namespace SplitBook.Converter
             }
             if (finalBalance > 0)
                 colorBrush = Application.Current.Resources["positive"] as SolidColorBrush;
-            else if(finalBalance == 0)
+            else if (finalBalance == 0)
                 colorBrush = Application.Current.Resources["settled"] as SolidColorBrush;
             else
                 colorBrush = Application.Current.Resources["negative"] as SolidColorBrush;

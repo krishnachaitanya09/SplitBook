@@ -15,13 +15,6 @@ namespace SplitBook.Model
         private string negativeBalance;
         private string currencyCode;
 
-        public NetBalances()
-        {
-            NetBalance = "0";
-            PositiveBalance = "0";
-            NegativeBalance = "0";
-        }
-
         public void setBalances(string currency_name, double net, double positive, double negative)
         {
             using (SplitBookContext db = new SplitBookContext())
