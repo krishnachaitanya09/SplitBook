@@ -1,7 +1,9 @@
-﻿using SplitBook.Model;
+﻿using SplitBook.Controller;
+using SplitBook.Model;
 using SplitBook.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +25,21 @@ namespace SplitBook.Converter
             else
             {
                 string currency = defaultBalance.currency_code;
+                string amount;
+                if (currency.Equals(App.currentUser.default_currency))
+                {
+                    QueryDatabase obj = new QueryDatabase();
+                    string unit = obj.getUnitForCurrency(currency);
+                    var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
+                    format.CurrencySymbol = unit;
+                    format.CurrencyNegativePattern = 1;
+                    amount = String.Format(format, "{0:C}", Math.Abs(finalBalance));
+                }
+                else
+                {
+                    amount = currency + String.Format("{0:0.00}", Math.Abs(finalBalance));
+                }
 
-                //QueryDatabase obj = new QueryDatabase();
-                //string unit = obj.getUnitForCurrency(currency);
-
-                string amount = currency + String.Format("{0:0.00}", Math.Abs(finalBalance));
                 if (hasMultipleBalances)
                     return amount + "*";
                 else
