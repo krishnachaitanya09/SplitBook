@@ -63,17 +63,9 @@ namespace SplitBook.Views
 
             expenseLoadingBackgroundWorker.WorkerSupportsCancellation = true;
             expenseLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(expenseLoadingBackgroundWorker_DoWork);
-            if (expenseLoadingBackgroundWorker.IsBusy != true)
-            {
-                expenseLoadingBackgroundWorker.RunWorkerAsync();
-            }
 
             groupLoadingBackgroundWorker.WorkerSupportsCancellation = true;
             groupLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(groupLoadingBackgroundWorker_DoWork);
-            if (groupLoadingBackgroundWorker.IsBusy != true)
-            {
-                groupLoadingBackgroundWorker.RunWorkerAsync();
-            }
 
             populateData();
 
@@ -115,6 +107,21 @@ namespace SplitBook.Views
                 }
             }
         }
+
+        private void populateData()
+        {
+            loadFriends();
+            if (expenseLoadingBackgroundWorker.IsBusy != true)
+            {
+                expenseLoadingBackgroundWorker.RunWorkerAsync();
+            }
+
+            if (groupLoadingBackgroundWorker.IsBusy != true)
+            {
+                groupLoadingBackgroundWorker.RunWorkerAsync();
+            }
+        }
+
 
         private void expenseLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -166,21 +173,7 @@ namespace SplitBook.Views
                 return;
             netBalance.setBalances(App.currentUser.default_currency, totalBalance, postiveBalance, negativeBalance);
         }
-
-        private void populateData()
-        {
-            loadFriends();
-            if (expenseLoadingBackgroundWorker.IsBusy != true)
-            {
-                expenseLoadingBackgroundWorker.RunWorkerAsync();
-            }
-
-            if (groupLoadingBackgroundWorker.IsBusy != true)
-            {
-                groupLoadingBackgroundWorker.RunWorkerAsync();
-            }
-        }
-
+   
         private async void loadExpenses()
         {
             List<Expense> allExpenses;
