@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace SplitBook.Model
 {
     public class Notifications
     {
+        [Key]
         public int id { get; set; }
         public bool added_as_friend { get; set; }
         public bool added_to_group { get; set; }

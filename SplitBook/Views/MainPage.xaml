@@ -38,7 +38,7 @@
                    DisplayMode="CompactOverlay"
                    OpenPaneLength="200"
                    IsTabStop="False"
-                   IsPaneOpen="False"
+                   IsPaneOpen="True"
                    PaneBackground="#FF5D5D5D">
             <SplitView.Pane>
                 <Grid>

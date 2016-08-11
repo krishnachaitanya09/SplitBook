@@ -1,6 +1,6 @@
-MainPackage=F:\Projects\SplitWisely\SplitWisely\bin\ARM\Release\Upload\SplitWisely_1.0.0.0_ARM.appx
-SymbolPackage=F:\Projects\SplitWisely\SplitWisely\AppPackages\SplitWisely_1.0.0.0\SplitWisely_1.0.0.0_ARM.appxsym
-ResourcePack=F:\Projects\SplitWisely\SplitWisely\_scale-100.appx
-ResourcePack=F:\Projects\SplitWisely\SplitWisely\_scale-125.appx
-ResourcePack=F:\Projects\SplitWisely\SplitWisely\_scale-150.appx
-ResourcePack=F:\Projects\SplitWisely\SplitWisely\_scale-400.appx
+MainPackage=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\Upload\SplitBook_1.1.0.0_ARM.appx
+SymbolPackage=F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_1.1.0.0\SplitBook_1.1.0.0_ARM.appxsym
+ResourcePack=F:\Projects\SplitBook\SplitBook\_scale-100.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\_scale-125.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\_scale-150.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\_scale-400.appx

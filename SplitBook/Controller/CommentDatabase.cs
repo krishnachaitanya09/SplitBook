@@ -1,7 +1,6 @@
 ﻿using SplitBook.Model;
 using SplitBook.Request;
 using SplitBook.Utilities;
-using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;

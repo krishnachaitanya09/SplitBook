@@ -34,13 +34,14 @@ namespace SplitBook.Views
             this.InitializeComponent();
             BackButton.Click += BackButton_Click;
             llsGroups.ItemsSource = MainPage.groupsList;
+            commandBar.DataContext = MainPage.buttonEnabler;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             MainPage.Current.NavMenuList.SelectedIndex = 1;
-            BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;         
             GoogleAnalytics.EasyTracker.GetTracker().SendView("GroupsPage");
         }
 

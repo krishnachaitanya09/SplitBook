@@ -42,7 +42,7 @@ namespace SplitBook.Request
                 List<Expense> expenses = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Expense>>(testToken.ToString(), settings);
                 CallbackOnSuccess(expenses);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 CallbackOnFailure(HttpStatusCode.ServiceUnavailable);
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,16 +15,39 @@ namespace SplitBook.Model
         private string negativeBalance;
         private string currencyCode;
 
-        public void setBalances(string currency, double net, double positive, double negative)
+        public NetBalances()
         {
-            currencyCode = currency.ToUpper() + " ";
-            NetBalance = Convert.ToDouble(net).ToString();
-            PositiveBalance = Convert.ToDouble(positive).ToString();
-            NegativeBalance = Convert.ToDouble(negative).ToString();
+            NetBalance = "0";
+            PositiveBalance = "0";
+            NegativeBalance = "0";
+        }
+
+        public void setBalances(string currency_name, double net, double positive, double negative)
+        {
+            using (SplitBookContext db = new SplitBookContext())
+            {
+                Currency currency = db.Currency.Where(c => c.currency_code == currency_name.ToUpper()).FirstOrDefault();
+                currencyCode = currency != null ? currency.unit : string.Empty;
+            }
+            if (currencyCode != String.Empty)
+            {
+                var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
+                format.CurrencySymbol = currencyCode;
+                format.CurrencyNegativePattern = 1;
+                NetBalance = String.Format(format, "{0:C}", Convert.ToDouble(net));
+                PositiveBalance = String.Format(format, "{0:C}", Convert.ToDouble(positive));
+                NegativeBalance = String.Format(format, "{0:C}", Convert.ToDouble(negative));
+            }
+            else
+            {
+                NetBalance = Convert.ToDouble(net).ToString();
+                PositiveBalance = Convert.ToDouble(positive).ToString();
+                NegativeBalance =  Convert.ToDouble(negative).ToString();
+            }
         }
 
 
-        public String NetBalance
+        public string NetBalance
         {
             get { return netBalance; }
             set
@@ -33,7 +57,7 @@ namespace SplitBook.Model
             }
         }
 
-        public String PositiveBalance
+        public string PositiveBalance
         {
             get { return positiveBalance; }
             set
@@ -43,7 +67,7 @@ namespace SplitBook.Model
             }
         }
 
-        public String NegativeBalance
+        public string NegativeBalance
         {
             get { return negativeBalance; }
             set

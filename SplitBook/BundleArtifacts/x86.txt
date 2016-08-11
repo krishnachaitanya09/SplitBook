@@ -1,2 +1,2 @@
-MainPackage=F:\Projects\SplitWisely\SplitWisely\bin\x86\Release\SplitWisely_1.0.0.0_x86.appx
-SymbolPackage=F:\Projects\SplitWisely\SplitWisely\AppPackages\SplitWisely_1.0.0.0_Test\SplitWisely_1.0.0.0_x86.appxsym
+MainPackage=F:\Projects\SplitBook\SplitBook\bin\x86\Release\SplitBook_1.1.0.0_x86.appx
+SymbolPackage=F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_1.1.0.0_Test\SplitBook_1.1.0.0_x86.appxsym

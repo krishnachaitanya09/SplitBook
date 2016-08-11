@@ -1,6 +1,5 @@
 ﻿using SplitBook.Controller;
 using SplitBook.Model;
-using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,53 +13,7 @@ using Windows.Storage;
 namespace SplitBook.Utilities
 {
     public class Helpers
-    {
-        public async void CreateDatabase()
-        {
-            try
-            {
-                if (!await CheckFileExists("Database.db"))
-                {
-                    using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, true))
-                    {
-                        //Delete all the data in the database as first use will also be called after logout.
-                        dbConn.CreateTable<User>();
-                        dbConn.CreateTable<Expense>();
-                        dbConn.CreateTable<Model.Group>();
-                        dbConn.CreateTable<Picture>();
-                        dbConn.CreateTable<Balance_User>();
-                        dbConn.CreateTable<Debt_Expense>();
-                        dbConn.CreateTable<Debt_Group>();
-                        dbConn.CreateTable<Expense_Share>();
-                        dbConn.CreateTable<Group_Members>();
-                        dbConn.CreateTable<AmountSplit>();
-                        dbConn.CreateTable<Category>();
-                        dbConn.CreateTable<Comment>();
-                        dbConn.CreateTable<Currency>();
-                        dbConn.CreateTable<ExpenseType>();
-                        dbConn.CreateTable<Notifications>();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
-            }
-        }
-
-        public async Task<bool> CheckFileExists(string fileName)
-        {
-            try
-            {
-                var store = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
+    {       
         public static string GetQueryParameter(string input, string parameterName)
         {
             foreach (string item in input.Split('&'))

@@ -361,10 +361,11 @@
     <MainPackageIdentityName>47961KrishnaChaitanya.SplitWisely</MainPackageIdentityName>
     <ReservedNames>
       <ReservedName>SplitWisely</ReservedName>
+      <ReservedName>SplitExpense</ReservedName>
+      <ReservedName>SplitBook</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
-    <MainPackageIdentityName>47961KrishnaChaitanya.BirthdayWisher</MainPackageIdentityName>
     <MainPackageIdentityName>47961KrishnaChaitanya.IndiaPost</MainPackageIdentityName>
     <MainPackageIdentityName>47961KrishnaChaitanya.IndiaPostBeta</MainPackageIdentityName>
   </AccountPackageIdentityNames>

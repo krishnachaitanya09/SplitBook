@@ -1,4 +1,5 @@
-﻿using SplitBook.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using SplitBook.Model;
 using SplitBook.Utilities;
 using SplitBook.Views;
 using System;
@@ -43,7 +44,12 @@ namespace SplitBook
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;
-            this.UnhandledException += App_UnhandledException; 
+            this.UnhandledException += App_UnhandledException;
+
+            using (var db = new SplitBookContext())
+            {
+                db.Database.Migrate();              
+            }
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -92,9 +98,7 @@ namespace SplitBook
             //            {
             //                this.DebugSettings.EnableFrameRateCounter = true;
             //            }
-            //#endif
-            Helpers dbHelper = new Helpers();
-            dbHelper.CreateDatabase();
+            //#endif     
 
             rootFrame = Window.Current.Content as Frame;
 

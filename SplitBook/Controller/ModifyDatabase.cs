@@ -1,7 +1,7 @@
 ﻿using SplitBook.Model;
 using SplitBook.Request;
 using SplitBook.Utilities;
-using SQLite;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,11 +55,11 @@ namespace SplitBook.Controller
             //add user to database and to friends list in App.xaml
             //PhoneApplicationService.Current.State[Constants.NEW_USER] = friend;
 
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SplitBookContext db = new SplitBookContext())
             {
-                dbConn.Insert(friend);
+                db.Add(friend);                
                 friend.picture.user_id = friend.id;
-                dbConn.Insert(friend.picture);
+                db.Add(friend.picture);
             }
 
             callback(true, HttpStatusCode.OK);
@@ -70,15 +70,14 @@ namespace SplitBook.Controller
             //add user to database and to friends list in App.xaml
             //PhoneApplicationService.Current.State[Constants.NEW_GROUP] = group;
 
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite, true))
+            using (SplitBookContext db = new SplitBookContext())
             {
-                dbConn.BeginTransaction();
-                dbConn.Insert(group);
+                db.Add(group);
 
                 foreach (var debt in group.simplified_debts)
                 {
                     debt.group_id = group.id;
-                    dbConn.InsertOrReplace(debt);
+                    db.Add(debt);
                 }
 
                 foreach (var member in group.members)
@@ -86,10 +85,10 @@ namespace SplitBook.Controller
                     Group_Members group_member = new Group_Members();
                     group_member.group_id = group.id;
                     group_member.user_id = member.id;
-                    dbConn.InsertOrReplace(group_member);
+                    db.Add(group_member);
                 }
 
-                dbConn.Commit();
+                db.SaveChanges();
             }
 
             callback(true, HttpStatusCode.OK);

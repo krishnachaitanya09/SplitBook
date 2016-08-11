@@ -106,7 +106,6 @@ namespace SplitBook.Views
             //the rest of the work is done in a backgroundworker
             QueryDatabase obj = new QueryDatabase();
             List<Expense> allExpenses = obj.getAllExpensesForGroup(selectedGroup.id, pageNo);
-
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (allExpenses == null || allExpenses.Count == 0)
@@ -175,7 +174,7 @@ namespace SplitBook.Views
             if (currentUserExpanderInfo.debtList.Count == 1)
                 recordPayment(currentUserExpanderInfo.debtList[0]);
             else
-            { 
+            {
                 GroupSettleUpUserSelector ChoosePayeePopup = new GroupSettleUpUserSelector(currentUserExpanderInfo.debtList, SettleUpSelectorClose);
                 ChoosePayeePopup.MaxWidth = this.ActualWidth;
                 ChoosePayeePopup.MinWidth = this.ActualWidth;
