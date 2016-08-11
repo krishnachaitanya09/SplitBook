@@ -146,18 +146,25 @@ namespace SplitBook.Views
                 friendsList.Add(friend);
                 Balance_User defaultBalance = Helpers.getDefaultBalance(friend.balance);
                 double balance = System.Convert.ToDouble(defaultBalance.amount, CultureInfo.InvariantCulture);
+                string currency = App.currentUser.default_currency;
                 if (balance > 0)
                 {
-                    postiveBalance += balance;
-                    totalBalance += balance;
+                    if (defaultBalance.currency_code.Equals(currency))
+                    {
+                        postiveBalance += balance;
+                        totalBalance += balance;
+                    }
                     owesYouFriends.Add(friend);
                     balanceFriends.Add(friend);
                 }
 
                 if (balance < 0)
                 {
-                    negativeBalance += balance;
-                    totalBalance += balance;
+                    if (defaultBalance.currency_code.Equals(currency))
+                    {
+                        negativeBalance += balance;
+                        totalBalance += balance;
+                    }
                     youOweFriends.Add(friend);
                     balanceFriends.Add(friend);
                 }
@@ -173,7 +180,7 @@ namespace SplitBook.Views
                 return;
             netBalance.setBalances(App.currentUser.default_currency, totalBalance, postiveBalance, negativeBalance);
         }
-   
+
         private async void loadExpenses()
         {
             List<Expense> allExpenses;
@@ -262,7 +269,7 @@ namespace SplitBook.Views
                     pageNo = 0;
                     populateData();
                     hasDataLoaded = true;
-                    me.DataContext = App.currentUser; 
+                    me.DataContext = App.currentUser;
 
                     buttonEnabler.AddButtonEnabled = true;
                     buttonEnabler.SearchButtonEnabled = true;
@@ -302,14 +309,14 @@ namespace SplitBook.Views
             {
                 var control = (Page)e.Content;
                 control.Loaded += Page_Loaded;
-            }            
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ((Page)sender).Focus(FocusState.Programmatic);
             ((Page)sender).Loaded -= Page_Loaded;
-            this.CheckTogglePaneButtonSizeChanged();           
+            this.CheckTogglePaneButtonSizeChanged();
         }
 
         private void NavMenuList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -320,15 +327,15 @@ namespace SplitBook.Views
             switch (NavMenuList.SelectedIndex)
             {
                 case 0:
-                    
+
                     SecondaryNavMenuList.SelectedIndex = -1;
                     break;
                 case 1:
-                    
+
                     SecondaryNavMenuList.SelectedIndex = -1;
                     break;
                 case 2:
-                    
+
                     SecondaryNavMenuList.SelectedIndex = -1;
                     break;
                 default:
@@ -368,10 +375,10 @@ namespace SplitBook.Views
             switch (SecondaryNavMenuList.SelectedIndex)
             {
                 case 0:
-                   
+
                     NavMenuList.SelectedIndex = -1;
                     break;
-                case 1:                   
+                case 1:
                     NavMenuList.SelectedIndex = -1;
                     break;
                 default:

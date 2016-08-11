@@ -105,7 +105,6 @@ namespace SplitBook.Utilities
                     return userBalance;
                 }
             }
-
             return balance[0];
         }
 
