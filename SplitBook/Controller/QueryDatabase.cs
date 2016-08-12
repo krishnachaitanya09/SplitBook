@@ -78,7 +78,7 @@ namespace SplitBook.Controller
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = db.User.Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
+                        expensesList[x].users[y].user = db.User.Include(u => u.picture).Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
                     }
                 }
                 return expensesList;
@@ -130,7 +130,7 @@ namespace SplitBook.Controller
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = db.User.Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
+                        expensesList[x].users[y].user = db.User.Include(u=>u.picture).Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
                     }
                 }
                 return expensesList;
@@ -199,7 +199,7 @@ namespace SplitBook.Controller
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = db.User.Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
+                        expensesList[x].users[y].user = db.User.Include(u => u.picture).Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
                     }
                 }
 
@@ -261,7 +261,7 @@ namespace SplitBook.Controller
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = db.User.Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
+                        expensesList[x].users[y].user = db.User.Include(u => u.picture).Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
                     }
                 }
 

@@ -461,6 +461,7 @@
                     </Grid>
                 </PivotItem>
             </Pivot>
+            <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}" x:Name="busyIndicator" />
         </Grid>
         <control:AdControl x:Name="AdControl" Background="{StaticResource FrameBackground}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
@@ -468,10 +469,5 @@
             <AppBarButton Name="edit" Icon="Edit" Label="Edit" Click="btnEdit_Click" Foreground="White"/>
             <AppBarButton Name="refresh" Icon="Refresh" Label="Refresh Comments" Click="btnRefresh_Click" Visibility="Collapsed" Foreground="White"/>
         </CommandBar>
-        
-        <ProgressRing Background="#CC000000" Foreground="{StaticResource splitwiseGreen}"
-                                            x:Name="busyIndicator" 
-                                            Grid.Row="0" 
-                                            Grid.RowSpan="2"/>
     </RelativePanel>
 </Page>

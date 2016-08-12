@@ -52,7 +52,7 @@
                       VerticalScrollBarVisibility="Auto">
             <Grid Background="Transparent">
                 <control:ExpenseUserControl HorizontalAlignment="Stretch" MaxWidth="500" x:Name="expenseControl"/>
-                <ProgressRing Foreground="{StaticResource splitwiseGreen}" x:Name="busyIndicator"/>
+                <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}" x:Name="busyIndicator"/>
             </Grid>
         </ScrollViewer>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">

@@ -250,8 +250,7 @@
                                           Height="250" 
                                           VerticalAlignment="Top"/>
                 </Grid>
-                <ProgressRing Background="#CC000000"
-                                                Foreground="White"
+                <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}"
                                                 x:Name="busyIndicator" 
                                                 Grid.Row="0" 
                                                 Grid.RowSpan="2"/>
