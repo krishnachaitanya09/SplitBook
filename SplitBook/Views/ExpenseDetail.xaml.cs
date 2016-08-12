@@ -34,7 +34,7 @@ namespace SplitBook.Views
             selectedExpense = (Application.Current as App).SELECTED_EXPENSE;
             selectedExpense.displayType = Expense.DISPLAY_FOR_ALL_USER;
             this.DataContext = selectedExpense;
-            llsRepayments.ItemsSource = selectedExpense.users;
+            //llsRepayments.ItemsSource = selectedExpense.users;
 
             deleteExpenseBackgroundWorker = new BackgroundWorker();
             deleteExpenseBackgroundWorker.WorkerSupportsCancellation = true;

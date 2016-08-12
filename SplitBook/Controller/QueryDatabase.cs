@@ -255,19 +255,19 @@ namespace SplitBook.Controller
             }
         }
 
-        private List<Expense_Share> getExpenseShareUsers(int expenseId, string currencyCode)
-        {
-            using (SplitBookContext db = new SplitBookContext())
-            {
-                List<Expense_Share> expenseShareList = db.Expense_Share.Where(e => e.expense_id == expenseId).ToList();                   
+        //private List<Expense_Share> getExpenseShareUsers(int expenseId, string currencyCode)
+        //{
+        //    using (SplitBookContext db = new SplitBookContext())
+        //    {
+        //        List<Expense_Share> expenseShareList = db.Expense_Share.Where(e => e.expense_id == expenseId).ToList();                   
 
-                for (var y = 0; y < expenseShareList.Count; y++)
-                {
-                    expenseShareList[y].currency = currencyCode;
-                }
-                return expenseShareList;
-            }
-        }
+        //        for (var y = 0; y < expenseShareList.Count; y++)
+        //        {
+        //            expenseShareList[y].currency = currencyCode;
+        //        }
+        //        return expenseShareList;
+        //    }
+        //}
 
         private List<Debt_Expense> getExpenseRepayments(int expenseId)
         {

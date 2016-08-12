@@ -373,7 +373,7 @@
                             </TextBlock>
                         </Border>
 
-                        <ListView Grid.Row="2" Name="llsRepayments" SelectionMode="None" Background="{StaticResource FrameBackground}">
+                        <ListView Grid.Row="2" Name="llsRepayments" ItemsSource="{Binding users}" SelectionMode="None" Background="{StaticResource FrameBackground}">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

@@ -1,7 +1,9 @@
-﻿using SplitBook.Model;
+﻿using SplitBook.Controller;
+using SplitBook.Model;
 using SplitBook.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,17 +39,17 @@ namespace SplitBook.Converter
 
             if (paidShare > 0)
             {
-                result = username + " paid " + currency + String.Format("{0:0.00}", paidShare);
+                result = username + " paid " + FormatCurrency(currency, paidShare);
 
                 if (owedShare > 0)
                 {
-                    result += " and owes " + currency + String.Format("{0:0.00}", owedShare);
+                    result += " and owes " + FormatCurrency(currency, owedShare);
                 }
 
             }
             else
             {
-                result = username + " owes " + currency + String.Format("{0:0.00}", owedShare);
+                result = username + " owes " + FormatCurrency(currency, owedShare);
             }
 
             return result;
@@ -56,6 +58,23 @@ namespace SplitBook.Converter
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
+        }
+
+        private string FormatCurrency(string currency_code, double value)
+        {
+            if (currency_code.Equals(App.currentUser.default_currency))
+            {
+                QueryDatabase obj = new QueryDatabase();
+                string unit = obj.getUnitForCurrency(currency_code);
+                var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
+                format.CurrencySymbol = unit;
+                format.CurrencyNegativePattern = 1;
+                return String.Format(format, "{0:C}", value);
+            }
+            else
+            {
+                return currency_code + String.Format("{0:0.00}", value);
+            }
         }
     }
 }

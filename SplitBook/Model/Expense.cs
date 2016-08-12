@@ -89,7 +89,7 @@ namespace SplitBook.Model
         public User user { get; set; }
 
         [NotMapped]
-        public string currency { get; set; }
+        public string currency { get { return expense.currency_code; } }
         [Key]
         public int user_id { get; set; }
 
