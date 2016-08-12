@@ -90,7 +90,7 @@ namespace SplitBook.Controller
             using (SplitBookContext db = new SplitBookContext())
             {
                 List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e=>e.users)
-                    .Where(e => e.deleted_by_user_id == 0 & e.repayments.All(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId())))
+                    .Where(e => e.deleted_by_user_id == 0 && e.repayments.Any(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId())))
                     .OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
                
                 if (expensesList == null && expensesList.Count == 0)
