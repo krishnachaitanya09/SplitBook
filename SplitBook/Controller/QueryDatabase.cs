@@ -60,7 +60,7 @@ namespace SplitBook.Controller
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
                     //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    //expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
 
                     //if (expensesList[x].updated_by_user_id != 0)
                     //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
@@ -106,7 +106,7 @@ namespace SplitBook.Controller
                     expensesList[x].specificUserId = userId;
 
                     //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    //expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
 
                     //if (expensesList[x].updated_by_user_id != 0)
                     //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
@@ -170,7 +170,7 @@ namespace SplitBook.Controller
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
                     //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    //expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
 
                     //if (expensesList[x].updated_by_user_id != 0)
                     //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
@@ -227,7 +227,7 @@ namespace SplitBook.Controller
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
                     //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    //expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
 
                     //if (expensesList[x].updated_by_user_id != 0)
                     //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);

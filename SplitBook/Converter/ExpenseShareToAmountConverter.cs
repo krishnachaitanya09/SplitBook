@@ -1,7 +1,9 @@
-﻿using SplitBook.Model;
+﻿using SplitBook.Controller;
+using SplitBook.Model;
 using SplitBook.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,13 +28,19 @@ namespace SplitBook.Converter
                 }
             }
 
-            string amount = null;
+            double amount = System.Convert.ToDouble("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            QueryDatabase obj = new QueryDatabase();
+            string unit = obj.getUnitForCurrency(expense.currency_code);
+            var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
+            format.CurrencySymbol = unit;
+            format.CurrencyNegativePattern = 1;
+
             if (currentUser == null)
-                return expense.currency_code + String.Format("{0:0.00}", System.Convert.ToDouble("0.00", System.Globalization.CultureInfo.InvariantCulture));
-
-            if(expense.displayType == Expense.DISPLAY_FOR_ALL_USER)
-                amount = String.Format("{0:0.00}", Math.Abs(System.Convert.ToDouble(currentUser.net_balance, System.Globalization.CultureInfo.InvariantCulture)));
-
+            {
+                amount = System.Convert.ToDouble("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else if (expense.displayType == Expense.DISPLAY_FOR_ALL_USER)
+                amount = Math.Abs(System.Convert.ToDouble(currentUser.net_balance, System.Globalization.CultureInfo.InvariantCulture));
             else
             {
                 List<Debt_Expense> repayments = expense.repayments;
@@ -42,13 +50,20 @@ namespace SplitBook.Converter
                 {
                     if ((repayment.from == currentUserId && repayment.to == specificUserId) || (repayment.to == currentUserId && repayment.from == specificUserId))
                     {
-                        amount = String.Format("{0:0.00}", Math.Abs(System.Convert.ToDouble(repayment.amount, System.Globalization.CultureInfo.InvariantCulture)));
+                        amount = Math.Abs(System.Convert.ToDouble(repayment.amount, System.Globalization.CultureInfo.InvariantCulture));
                         break;
                     }
                 }
             }
 
-            return expense.currency_code + amount;
+            if (expense.currency_code.Equals(App.currentUser.default_currency))
+            {
+                return String.Format(format, "{0:C}", amount);
+            }
+            else
+            {
+                return expense.currency_code + String.Format("{0:0.00}", amount);
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

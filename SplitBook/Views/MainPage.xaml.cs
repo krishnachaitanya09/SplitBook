@@ -28,7 +28,6 @@ namespace SplitBook.Views
         public static ObservableCollection<Expense> expensesList = new ObservableCollection<Expense>();
         public static ObservableCollection<Group> groupsList = new ObservableCollection<Group>();
         public static ObservableCollection<User> friendsList = new ObservableCollection<User>();
-        private object o = new object();
 
         private double postiveBalance = 0, negativeBalance = 0, totalBalance = 0;
         public static int pageNo = 0;
@@ -183,12 +182,8 @@ namespace SplitBook.Views
 
         private async void loadExpenses()
         {
-            List<Expense> allExpenses;
-            lock (o)
-            {
-                QueryDatabase obj = new QueryDatabase();
-                allExpenses = obj.getAllExpenses(pageNo);
-            }
+            QueryDatabase obj = new QueryDatabase();
+            List<Expense> allExpenses = obj.getAllExpenses(pageNo);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (pageNo == 0)

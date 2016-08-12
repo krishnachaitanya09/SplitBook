@@ -18,7 +18,7 @@ namespace SplitBook.Views
         {
             this.InitializeComponent();
             BackButton.Click += BackButton_Click;
-            llsExpenses.ItemsSource = MainPage.expensesList;
+            llsExpenses.ItemsSource = MainPage.expensesList;            
             commandBar.DataContext = MainPage.buttonEnabler;
         }
 
