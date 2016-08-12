@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Portable;
 using SplitBook.Model;
 using SplitBook.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,20 +22,16 @@ namespace SplitBook.Request
 
         public async void getAllExpenses(Action<List<Expense>> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
-            var request = new RestRequest(getExpensesURL);
-            request.AddParameter("limit", 0, ParameterType.GetOrPost);
             //request.AddParameter("updated_after", Helpers.getLastUpdatedTime(), ParameterType.GetOrPost);
-
             try
             {
-                IRestResponse response = await client.Execute(request);
+                HttpResponseMessage response = await client.GetAsync(getExpensesURL + "?limit=0");
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NotModified)
                 {
                     CallbackOnFailure(response.StatusCode);
                     return;
                 }
-                var x = Encoding.UTF8.GetString(response.RawBytes);
-                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(Encoding.UTF8.GetString(response.RawBytes));
+                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(await response.Content.ReadAsStringAsync());
                 Newtonsoft.Json.Linq.JToken testToken = root["expenses"];
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                 List<Expense> expenses = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Expense>>(testToken.ToString(), settings);

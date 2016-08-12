@@ -13,7 +13,7 @@ namespace SplitBook.Utilities
         public static String DATABASE_NAME = "splitwise.db";
         public static string DB_PATH = Path.Combine(ApplicationData.Current.LocalFolder.Path, DATABASE_NAME + ";PRAGMA journal_mode=WAL;");
 
-        public static String SPLITWISE_API_URL = " https://secure.splitwise.com/api/v3.0/";
+        public static String SPLITWISE_API_URL = "https://secure.splitwise.com/api/v3.0/";
         public static String SPLITWISE_AUTHORIZE_URL = "https://secure.splitwise.com/authorize";
         public static String OAUTH_CALLBACK = "http://techcryptic.com";
         public static String consumerKey = "etGuasDJQxqFTfpVFsWdeunzraxAtfi3cCNxwcOL";

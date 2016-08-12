@@ -1,22 +1,24 @@
-﻿using RestSharp.Portable.Authenticators;
-using RestSharp.Portable.HttpClient;
+﻿using AsyncOAuth;
 using SplitBook.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Web.Http.Headers;
 
 namespace SplitBook.Request
 {
     abstract class RestBaseRequest
     {
-        protected RestClient client;
+        protected HttpClient client;
 
         public RestBaseRequest()
         {
-            client = new RestClient(Constants.SPLITWISE_API_URL);
-            client.Authenticator = OAuth1Authenticator.ForProtectedResource(Constants.consumerKey, Constants.consumerSecret, App.accessToken, App.accessTokenSecret);
+            client = OAuthUtility.CreateOAuthClient(Constants.consumerKey, Constants.consumerSecret, new AccessToken(App.accessToken, App.accessTokenSecret));
+            client.BaseAddress = new Uri(Constants.SPLITWISE_API_URL);            
         }
-    }
+    }   
 }

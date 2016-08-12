@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Portable;
 using SplitBook.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,24 +23,22 @@ namespace SplitBook.Request
 
         public async void createGroup(Action<Group> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
-            var request = new RestRequest(createGroupURL, Method.POST);
-
-            request.AddParameter("name", groupToAdd.name, ParameterType.GetOrPost);
+            List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
+            postContent.Add(new KeyValuePair<string, string>("name", groupToAdd.name));
 
             int count = 0;
             foreach (var user in groupToAdd.members)
             {
                 string idKey = String.Format("users__{0}__user_id", count);
-                request.AddParameter(idKey, user.id, ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>(idKey, Convert.ToString(user.id, System.Globalization.CultureInfo.InvariantCulture)));
 
                 count++;
             }
-
-
-            IRestResponse response = await client.Execute(request);
+            HttpContent httpContent = new FormUrlEncodedContent(postContent);
             try
             {
-                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(Encoding.UTF8.GetString(response.RawBytes));
+                HttpResponseMessage response = await client.PostAsync(createGroupURL, httpContent);
+                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(await response.Content.ReadAsStringAsync());
                 Newtonsoft.Json.Linq.JToken testToken = root["group"];
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                 Group group = Newtonsoft.Json.JsonConvert.DeserializeObject<Group>(testToken.ToString(), settings);

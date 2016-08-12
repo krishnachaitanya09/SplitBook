@@ -18,28 +18,28 @@ namespace SplitBook.Controller
         {
             using (SplitBookContext db = new SplitBookContext())
             {
-                List<User> friendsList = db.User.Include(u=>u.picture).Include(u => u.balance).Where(u=>u.id != Helpers.getCurrentUserId()).OrderBy(u=>u.first_name).ToList<User>();
-                App.currentUser = db.User.Include(u => u.picture).Where(u => u.id == Helpers.getCurrentUserId()).FirstOrDefault();                               
+                List<User> friendsList = db.User.Include(u => u.picture).Include(u => u.balance).Where(u => u.id != Helpers.getCurrentUserId()).OrderBy(u => u.first_name).ToList<User>();
+                App.currentUser = db.User.Include(u => u.picture).Where(u => u.id == Helpers.getCurrentUserId()).FirstOrDefault();
                 return friendsList;
             }
         }
 
-        public User getCurrentUser()
-        {
-            using (SplitBookContext db = new SplitBookContext())
-            {               
-                return db.User.Include(u => u.picture).Where(u => u.id == Helpers.getCurrentUserId()).FirstOrDefault();
-            }
-        }
+        //public User getCurrentUser()
+        //{
+        //    using (SplitBookContext db = new SplitBookContext())
+        //    {
+        //        return db.User.Include(u => u.picture).Where(u => u.id == Helpers.getCurrentUserId()).FirstOrDefault();
+        //    }
+        //}
 
-        public List<User> getAllUsersIncludingMyself()
-        {
-            using (SplitBookContext db = new SplitBookContext())
-            {
-                List<User> friendsList = db.User.OrderBy(u=>u.first_name).ToList<User>();
-                return friendsList;
-            }
-        }
+        //public List<User> getAllUsersIncludingMyself()
+        //{
+        //    using (SplitBookContext db = new SplitBookContext())
+        //    {
+        //        List<User> friendsList = db.User.OrderBy(u => u.first_name).ToList<User>();
+        //        return friendsList;
+        //    }
+        //}
 
         public List<Expense> getAllExpenses(int pageNo = 0)
         {
@@ -48,7 +48,8 @@ namespace SplitBook.Controller
             using (SplitBookContext db = new SplitBookContext())
             {
                 //Only retrieve expenses that have not been deleted
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Where(e=>e.deleted_by_user_id == 0).OrderByDescending(e=>e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
+                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users)
+                    .Where(e => e.deleted_by_user_id == 0).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
 
                 if (expensesList == null && expensesList.Count == 0)
                     return null;
@@ -60,7 +61,12 @@ namespace SplitBook.Controller
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
                     //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+                    for (var y = 0; y < expensesList[x].repayments.Count; y++)
+                    {
+                        expensesList[x].repayments[y].fromUser = db.User.Where(u => u.id == expensesList[x].repayments[y].from).FirstOrDefault();
+                        expensesList[x].repayments[y].toUser = db.User.Where(u => u.id == expensesList[x].repayments[y].to).FirstOrDefault();
+                    }
+                    expensesList[x].created_by = db.User.Where(u => u.id == expensesList[x].created_by_user_id).FirstOrDefault();
 
                     //if (expensesList[x].updated_by_user_id != 0)
                     //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
@@ -72,7 +78,7 @@ namespace SplitBook.Controller
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id);
+                        expensesList[x].users[y].user = db.User.Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
                     }
                 }
                 return expensesList;
@@ -89,10 +95,10 @@ namespace SplitBook.Controller
             //Only retrieve expenses that have not been deleted
             using (SplitBookContext db = new SplitBookContext())
             {
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e=>e.users)
+                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users)
                     .Where(e => e.deleted_by_user_id == 0 && e.repayments.Any(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId())))
                     .OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
-               
+
                 if (expensesList == null && expensesList.Count == 0)
                     return null;
 
@@ -106,7 +112,13 @@ namespace SplitBook.Controller
                     expensesList[x].specificUserId = userId;
 
                     //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+                    for (var y = 0; y < expensesList[x].repayments.Count; y++)
+                    {
+                        expensesList[x].repayments[y].fromUser = db.User.Where(u => u.id == expensesList[x].repayments[y].from).FirstOrDefault();
+                        expensesList[x].repayments[y].toUser = db.User.Where(u => u.id == expensesList[x].repayments[y].to).FirstOrDefault();
+                    }
+
+                    expensesList[x].created_by = db.User.Where(u => u.id == expensesList[x].created_by_user_id).FirstOrDefault();
 
                     //if (expensesList[x].updated_by_user_id != 0)
                     //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
@@ -118,7 +130,7 @@ namespace SplitBook.Controller
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id);
+                        expensesList[x].users[y].user = db.User.Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
                     }
                 }
                 return expensesList;
@@ -129,7 +141,7 @@ namespace SplitBook.Controller
         {
             using (SplitBookContext db = new SplitBookContext())
             {
-                List<Group> groupsList = db.Group.Include(g=>g.group_members).Include(g=>g.simplified_debts).Where(g=>g.id != 0).OrderBy(g=>g.name).ToList<Group>();
+                List<Group> groupsList = db.Group.Include(g => g.group_members).Include(g => g.simplified_debts).Where(g => g.id != 0).OrderBy(g => g.name).ToList<Group>();
                 if (groupsList != null)
                 {
                     for (var x = 0; x < groupsList.Count; x++)
@@ -138,13 +150,13 @@ namespace SplitBook.Controller
                         //List<Group_Members> groupMembers = dbConn.Query<Group_Members>("SELECT * FROM group_members WHERE group_id= ?", param).ToList<Group_Members>();
                         foreach (var group_member in groupsList[x].group_members)
                         {
-                            groupsList[x].members.Add(getUserDetails(group_member.user_id));
+                            groupsList[x].members.Add(db.User.Where(u => u.id == group_member.user_id).FirstOrDefault());
                         }
 
                         foreach (var groupDebt in groupsList[x].simplified_debts)
                         {
-                            groupDebt.fromUser = getUserDetails(groupDebt.from);
-                            groupDebt.toUser = getUserDetails(groupDebt.to);
+                            groupDebt.fromUser = db.User.Where(u=>u.id == groupDebt.from).FirstOrDefault();
+                            groupDebt.toUser = db.User.Where(u => u.id == groupDebt.to).FirstOrDefault();
 
                             //groupsList[x].simplified_debts.Add(groupDebt);
                         }
@@ -161,7 +173,7 @@ namespace SplitBook.Controller
                 int offset = EXPENSES_ROWS * pageNo;
 
                 //Only retrieve expenses that have not been deleted
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Where(e=>e.deleted_by_user_id == 0 && e.group_id==groupId).OrderByDescending(e=>e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
+                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Where(e => e.deleted_by_user_id == 0 && e.group_id == groupId).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
 
                 //Get list of repayments for expense.
                 //Get the created by, updated by and deleted by user
@@ -170,7 +182,12 @@ namespace SplitBook.Controller
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
                     //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+                    for (var y = 0; y < expensesList[x].repayments.Count; y++)
+                    {
+                        expensesList[x].repayments[y].fromUser = db.User.Where(u => u.id == expensesList[x].repayments[y].from).FirstOrDefault();
+                        expensesList[x].repayments[y].toUser = db.User.Where(u => u.id == expensesList[x].repayments[y].to).FirstOrDefault();
+                    }
+                    expensesList[x].created_by = db.User.Where(u => u.id == expensesList[x].created_by_user_id).FirstOrDefault();
 
                     //if (expensesList[x].updated_by_user_id != 0)
                     //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
@@ -182,7 +199,7 @@ namespace SplitBook.Controller
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id);
+                        expensesList[x].users[y].user = db.User.Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
                     }
                 }
 
@@ -194,7 +211,7 @@ namespace SplitBook.Controller
         {
             using (SplitBookContext db = new SplitBookContext())
             {
-                List<Currency> currencyList = db.Currency.OrderBy(c=>c.currency_code).ToList();
+                List<Currency> currencyList = db.Currency.OrderBy(c => c.currency_code).ToList();
                 return currencyList;
             }
         }
@@ -203,7 +220,7 @@ namespace SplitBook.Controller
         {
             using (SplitBookContext db = new SplitBookContext())
             {
-                List<Currency> currencyList = db.Currency.Where(c=>c.currency_code == currencyCode).ToList();
+                List<Currency> currencyList = db.Currency.Where(c => c.currency_code == currencyCode).ToList();
                 if (currencyList != null && currencyList.Count != 0)
                 {
                     Currency currency = currencyList.First();
@@ -215,7 +232,7 @@ namespace SplitBook.Controller
         }
 
         public List<Expense> searchForExpense(string searchText)
-        {           
+        {
             using (SplitBookContext db = new SplitBookContext())
             {
                 List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Where(e => e.deleted_by_user_id == 0 && (e.description.ToUpper()).Contains(searchText)).OrderByDescending(e => e.date).Take(15).ToList();
@@ -227,7 +244,12 @@ namespace SplitBook.Controller
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
                     //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id);
+                    for (var y = 0; y < expensesList[x].repayments.Count; y++)
+                    {
+                        expensesList[x].repayments[y].fromUser = db.User.Where(u => u.id == expensesList[x].repayments[y].from).FirstOrDefault();
+                        expensesList[x].repayments[y].toUser = db.User.Where(u => u.id == expensesList[x].repayments[y].to).FirstOrDefault();
+                    }
+                    expensesList[x].created_by = db.User.Where(u => u.id == expensesList[x].created_by_user_id).FirstOrDefault();
 
                     //if (expensesList[x].updated_by_user_id != 0)
                     //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
@@ -239,7 +261,7 @@ namespace SplitBook.Controller
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id);
+                        expensesList[x].users[y].user = db.User.Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
                     }
                 }
 
@@ -247,13 +269,13 @@ namespace SplitBook.Controller
             }
         }
 
-        public List<Balance_User> getUserBalance(int userId)
-        {
-            using (SplitBookContext db = new SplitBookContext())
-            {
-                return db.Balance_User.Where(b => b.user_id == userId && b.amount != "0.0" && b.amount != "-0.0").ToList();                
-            }
-        }
+        //public List<Balance_User> getUserBalance(int userId)
+        //{
+        //    using (SplitBookContext db = new SplitBookContext())
+        //    {
+        //        return db.Balance_User.Where(b => b.user_id == userId && b.amount != "0.0" && b.amount != "-0.0").ToList();
+        //    }
+        //}
 
         //private List<Expense_Share> getExpenseShareUsers(int expenseId, string currencyCode)
         //{
@@ -269,35 +291,35 @@ namespace SplitBook.Controller
         //    }
         //}
 
-        private List<Debt_Expense> getExpenseRepayments(int expenseId)
-        {
-            using (SplitBookContext db = new SplitBookContext())
-            {
-                List<Debt_Expense> debtExpensesList = db.Debt_Expense.Where(d => d.expense_id == expenseId).ToList();                    
+        //private List<Debt_Expense> getExpenseRepayments(int expenseId)
+        //{
+        //    using (SplitBookContext db = new SplitBookContext())
+        //    {
+        //        List<Debt_Expense> debtExpensesList = db.Debt_Expense.Where(d => d.expense_id == expenseId).ToList();                    
 
-                for (var y = 0; y < debtExpensesList.Count; y++)
-                {
-                    debtExpensesList[y].fromUser = getUserDetails(debtExpensesList[y].from);
-                    debtExpensesList[y].toUser = getUserDetails(debtExpensesList[y].to);
-                }
-                return debtExpensesList;
-            }
-        }
+        //        for (var y = 0; y < debtExpensesList.Count; y++)
+        //        {
+        //            debtExpensesList[y].fromUser = getUserDetails(debtExpensesList[y].from);
+        //            debtExpensesList[y].toUser = getUserDetails(debtExpensesList[y].to);
+        //        }
+        //        return debtExpensesList;
+        //    }
+        //}
 
-        private User getUserDetails(int userId)
-        {
-            using (SplitBookContext db = new SplitBookContext())
-            {
-                return db.User.Include(u=>u.picture).Where(u => u.id == userId).FirstOrDefault();                                   
-            }
-        }
+        //private User getUserDetails(int userId)
+        //{
+        //    using (SplitBookContext db = new SplitBookContext())
+        //    {
+        //        return db.User.Include(u => u.picture).Where(u => u.id == userId).FirstOrDefault();
+        //    }
+        //}
 
-        private Picture getUserPicture(int userId)
-        {
-            using (SplitBookContext db = new SplitBookContext())
-            {
-                return db.Picture.Where(p => p.user_id == userId).FirstOrDefault();                    
-            }
-        }
+        //private Picture getUserPicture(int userId)
+        //{
+        //    using (SplitBookContext db = new SplitBookContext())
+        //    {
+        //        return db.Picture.Where(p => p.user_id == userId).FirstOrDefault();
+        //    }
+        //}
     }
 }

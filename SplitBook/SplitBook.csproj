@@ -172,9 +172,9 @@
     <Compile Include="Converter\UserDetails\UserDetailsExpenseColorConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpensesConverter.cs" />
     <Compile Include="Controls\ExpandPanel.cs" />
-    <Compile Include="Migrations\20160811140850_FirstMigration.cs" />
-    <Compile Include="Migrations\20160811140850_FirstMigration.designer.cs">
-      <DependentUpon>20160811140850_FirstMigration.cs</DependentUpon>
+    <Compile Include="Migrations\20160812221922_FirstMigration.cs" />
+    <Compile Include="Migrations\20160812221922_FirstMigration.designer.cs">
+      <DependentUpon>20160812221922_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\SplitBookContextModelSnapshot.cs" />
     <Compile Include="Model\ButtonEnabler.cs" />
@@ -455,6 +455,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SampleData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AsyncOAuth\AsyncOAuth.csproj">
+      <Project>{877842ff-edae-40e7-913b-c871ad5a48cc}</Project>
+      <Name>AsyncOAuth</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

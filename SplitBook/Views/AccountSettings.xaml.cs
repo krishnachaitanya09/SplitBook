@@ -29,7 +29,7 @@ namespace SplitBook.Views
     {
         BackgroundWorker getSupportedCurrenciesBackgroundWorker;
         BackgroundWorker editUserBackgroundWorker;
-        protected ObservableCollection<Currency> currenciesList = new ObservableCollection<Currency>();
+        private ObservableCollection<Currency> currenciesList = new ObservableCollection<Currency>();
         User currentUser;
         bool currencyModified = false;
 

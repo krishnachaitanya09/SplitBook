@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
-using RestSharp.Portable;
+
 using SplitBook.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,18 +26,19 @@ namespace SplitBook.Request
 
         public async void postComment(Action<List<Comment>> Callback)
         {
-            var request = new RestRequest(createCommentURL);
-            request.AddParameter("expense_id", expenseId, ParameterType.GetOrPost);
-            request.AddParameter("content", content, ParameterType.GetOrPost);
-            IRestResponse response = await client.Execute(request);
+            List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
+            postContent.Add(new KeyValuePair<string, string>("expense_id", Convert.ToString(expenseId, System.Globalization.CultureInfo.InvariantCulture)));
+            postContent.Add(new KeyValuePair<string, string>("content", content));
+            HttpContent httpContent = new FormUrlEncodedContent(postContent);
             try
             {
+                HttpResponseMessage response = await client.PostAsync(createCommentURL, httpContent);
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NotModified)
                 {
                     Callback(null);
                     return;
                 }
-                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(Encoding.UTF8.GetString(response.RawBytes));
+                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(await response.Content.ReadAsStringAsync());
                 Newtonsoft.Json.Linq.JToken testToken = root["comment"];
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                 Comment comment = Newtonsoft.Json.JsonConvert.DeserializeObject<Comment>(testToken.ToString(), settings);

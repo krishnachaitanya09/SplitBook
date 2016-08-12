@@ -152,7 +152,7 @@ namespace SplitBook.Controller
                     foreach (Currency currency in currencyList)
                     {
                         db.Currency.Add(currency);
-                    }
+                    }     
                     db.SaveChanges();
                 }
             }

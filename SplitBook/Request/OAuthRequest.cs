@@ -1,9 +1,8 @@
-﻿using RestSharp.Portable;
-using RestSharp.Portable.Authenticators;
-using RestSharp.Portable.HttpClient;
+﻿using AsyncOAuth;
 using SplitBook.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -22,25 +21,23 @@ namespace SplitBook.Request
 {
     class OAuthRequest
     {
-        public static String reuqestTokenURL = "get_request_token";
+        public static String requestTokenURL = "get_request_token";
         public static String accessTokenURL = "get_access_token";
-        public static string _oAuthToken, _oAuthTokenSecret;
+        private TokenResponse<RequestToken> tokenResponse;
+        private OAuthAuthorizer authorizer;
+
+        public OAuthRequest()
+        {
+            authorizer = new OAuthAuthorizer(Constants.consumerKey, Constants.consumerSecret);
+        }
 
         public async void GetRequestToken(Action<Uri> CallbackOnSuccess, Action<Exception> CallbackOnFailure)
         {
             try
             {
-                var client = new RestClient(Constants.SPLITWISE_API_URL);
-                client.Authenticator = OAuth1Authenticator.ForRequestToken(Constants.consumerKey, Constants.consumerSecret, Constants.OAUTH_CALLBACK);
-                var request = new RestRequest(OAuthRequest.reuqestTokenURL, Method.POST);
-                IRestResponse response = await client.Execute(request);
-                if (response.IsSuccess)
-                {
-                    _oAuthToken = Helpers.GetQueryParameter(Encoding.UTF8.GetString(response.RawBytes), "oauth_token");
-                    _oAuthTokenSecret = Helpers.GetQueryParameter(Encoding.UTF8.GetString(response.RawBytes), "oauth_token_secret");
-                    String authorizeUrl = Constants.SPLITWISE_AUTHORIZE_URL + "?oauth_token=" + _oAuthToken;
-                    CallbackOnSuccess(new Uri(authorizeUrl));
-                }
+                tokenResponse = await authorizer.GetRequestToken(Constants.SPLITWISE_API_URL + requestTokenURL);
+                String authorizeUrl = authorizer.BuildAuthorizeUrl(Constants.SPLITWISE_AUTHORIZE_URL, tokenResponse.Token);
+                CallbackOnSuccess(new Uri(authorizeUrl));
             }
             catch (Exception ex)
             {
@@ -53,16 +50,8 @@ namespace SplitBook.Request
             try
             {
                 string oauth_veririfer = Helpers.GetQueryParameter(uri, "oauth_verifier");
-                var client = new RestClient(Constants.SPLITWISE_API_URL);
-                client.Authenticator = OAuth1Authenticator.ForAccessToken(Constants.consumerKey, Constants.consumerSecret, _oAuthToken, _oAuthTokenSecret, oauth_veririfer);
-                var request = new RestRequest(OAuthRequest.accessTokenURL, Method.POST);
-                IRestResponse response = await client.Execute(request);
-                if (response.IsSuccess)
-                {
-                    string accessToken = Helpers.GetQueryParameter(Encoding.UTF8.GetString(response.RawBytes), "oauth_token");
-                    string accessTokenSecret = Helpers.GetQueryParameter(Encoding.UTF8.GetString(response.RawBytes), "oauth_token_secret");
-                    CallbackOnSuccess(accessToken, accessTokenSecret);
-                }
+                TokenResponse<AccessToken> accessTokenResponse = await authorizer.GetAccessToken(Constants.SPLITWISE_API_URL + accessTokenURL, tokenResponse.Token, oauth_veririfer);
+                CallbackOnSuccess(accessTokenResponse.Token.Key, accessTokenResponse.Token.Secret);
             }
             catch (Exception ex)
             {
@@ -71,4 +60,3 @@ namespace SplitBook.Request
         }
     }
 }
-

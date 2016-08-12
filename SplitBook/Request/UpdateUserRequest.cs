@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Portable;
+
 using SplitBook.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +13,7 @@ namespace SplitBook.Request
 {
     class UpdateUserRequest : RestBaseRequest
     {
-        public static String updateUserURL = "update_user/{id}";
+        public static String updateUserURL = "update_user/";
         User updatedUser;
 
         public UpdateUserRequest(User user)
@@ -24,32 +24,31 @@ namespace SplitBook.Request
 
         public async void updateUser(Action<User, HttpStatusCode> CallbackOnSuccess)
         {
-            var request = new RestRequest(updateUserURL, Method.POST);
-            request.AddUrlSegment("id", updatedUser.id.ToString());
+            List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
 
-            request.AddParameter("first_name", updatedUser.first_name, ParameterType.GetOrPost);
-            request.AddParameter("last_name", updatedUser.last_name, ParameterType.GetOrPost);
-            request.AddParameter("email", updatedUser.email, ParameterType.GetOrPost);
+            postContent.Add(new KeyValuePair<string, string>("first_name", updatedUser.first_name));
+            postContent.Add(new KeyValuePair<string, string>("last_name", updatedUser.last_name));
+            postContent.Add(new KeyValuePair<string, string>("email", updatedUser.email));
 
             if (!String.IsNullOrEmpty(updatedUser.default_currency))
-                request.AddParameter("default_currency", updatedUser.default_currency, ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>("default_currency", updatedUser.default_currency));
 
-            IRestResponse response = await client.Execute(request);
+            HttpContent httpContent = new FormUrlEncodedContent(postContent);
             try
             {
+                HttpResponseMessage response = await client.PostAsync(updateUserURL + updatedUser.id.ToString(), httpContent);
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NotModified)
                 {
                     CallbackOnSuccess(null, response.StatusCode);
                     return;
                 }
-                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(Encoding.UTF8.GetString(response.RawBytes));
+                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(await response.Content.ReadAsStringAsync());
                 Newtonsoft.Json.Linq.JToken testToken = root["user"];
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
 
                 User currentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(testToken.ToString(), settings);
                 CallbackOnSuccess(currentUser, HttpStatusCode.OK);
             }
-
             catch (Exception e)
             {
                 CallbackOnSuccess(null, HttpStatusCode.ServiceUnavailable);

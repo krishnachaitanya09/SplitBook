@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Portable;
+
 using SplitBook.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +13,7 @@ namespace SplitBook.Request
 {
     class UpdateExpenseRequest : RestBaseRequest
     {
-        public static String updateExpenseURL = "update_expense/{id}";
+        public static String updateExpenseURL = "update_expense/";
         Expense updatedExpense;
 
         public UpdateExpenseRequest(Expense expense)
@@ -24,38 +24,37 @@ namespace SplitBook.Request
 
         public async void updateExpense(Action<bool> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
-            var request = new RestRequest(updateExpenseURL, Method.POST);
-            request.AddUrlSegment("id", updatedExpense.id.ToString());
+            List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
 
             if (updatedExpense.payment)
-                request.AddParameter("payment", "true", ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>("payment", "true"));
             else
-                request.AddParameter("payment", "false", ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>("payment", "false"));
 
-            request.AddParameter("cost", Convert.ToString(Convert.ToDouble(updatedExpense.cost), System.Globalization.CultureInfo.InvariantCulture), ParameterType.GetOrPost);
-            request.AddParameter("description", updatedExpense.description, ParameterType.GetOrPost);
+            postContent.Add(new KeyValuePair<string, string>("cost", Convert.ToString(Convert.ToDouble(updatedExpense.cost), System.Globalization.CultureInfo.InvariantCulture)));
+            postContent.Add(new KeyValuePair<string, string>("description", updatedExpense.description));
 
             if (!String.IsNullOrEmpty(updatedExpense.currency_code))
-                request.AddParameter("currency_code", updatedExpense.currency_code, ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>("currency_code", updatedExpense.currency_code));
 
             if (!String.IsNullOrEmpty(updatedExpense.creation_method))
             {
-                request.AddParameter("creation_method", updatedExpense.creation_method, ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>("creation_method", updatedExpense.creation_method));
             }
 
             if (!String.IsNullOrEmpty(updatedExpense.details) && !updatedExpense.details.Equals(Expense.DEFAULT_DETAILS))
             {
-                request.AddParameter("details", updatedExpense.details, ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>("details", updatedExpense.details));
             }
 
             if (!String.IsNullOrEmpty(updatedExpense.date))
             {
-                request.AddParameter("date", updatedExpense.date, ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>("date", updatedExpense.date));
             }
 
             if (updatedExpense.group_id != 0)
             {
-                request.AddParameter("group_id", updatedExpense.group_id, ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>("group_id", Convert.ToString(updatedExpense.group_id, System.Globalization.CultureInfo.InvariantCulture)));
             }
 
             int count = 0;
@@ -64,17 +63,17 @@ namespace SplitBook.Request
                 string idKey = String.Format("users__array_{0}__user_id", count);
                 string paidKey = String.Format("users__array_{0}__paid_share", count);
                 string owedKey = String.Format("users__array_{0}__owed_share", count);
-                request.AddParameter(idKey, user.user_id, ParameterType.GetOrPost);
-                request.AddParameter(paidKey, Convert.ToString(Convert.ToDouble(user.paid_share), System.Globalization.CultureInfo.InvariantCulture), ParameterType.GetOrPost);
-                request.AddParameter(owedKey, Convert.ToString(Convert.ToDouble(user.owed_share), System.Globalization.CultureInfo.InvariantCulture), ParameterType.GetOrPost);
+                postContent.Add(new KeyValuePair<string, string>(idKey, Convert.ToString(user.user_id, System.Globalization.CultureInfo.InvariantCulture)));
+                postContent.Add(new KeyValuePair<string, string>(paidKey, Convert.ToString(Convert.ToDouble(user.paid_share), System.Globalization.CultureInfo.InvariantCulture)));
+                postContent.Add(new KeyValuePair<string, string>(owedKey, Convert.ToString(Convert.ToDouble(user.owed_share), System.Globalization.CultureInfo.InvariantCulture)));
 
                 count++;
             }
-
-            IRestResponse response = await client.Execute(request);
+            HttpContent httpContent = new FormUrlEncodedContent(postContent);
             try
             {
-                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(Encoding.UTF8.GetString(response.RawBytes));
+                HttpResponseMessage response = await client.PostAsync(updateExpenseURL + updatedExpense.id.ToString(), httpContent);
+                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(await response.Content.ReadAsStringAsync());
                 Newtonsoft.Json.Linq.JToken testToken = root["expenses"];
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                 List<Expense> expenseList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Expense>>(testToken.ToString(), settings);

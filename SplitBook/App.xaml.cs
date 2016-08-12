@@ -50,6 +50,21 @@ namespace SplitBook
             {
                 db.Database.Migrate();              
             }
+
+            AsyncOAuth.OAuthUtility.ComputeHash = (key, buffer) =>
+            {
+                var crypt = Windows.Security.Cryptography.Core.MacAlgorithmProvider.OpenAlgorithm("HMAC_SHA1");
+                var keyBuffer = Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(key);
+                var cryptKey = crypt.CreateKey(keyBuffer);
+
+                var dataBuffer = Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(buffer);
+                var signBuffer = Windows.Security.Cryptography.Core.CryptographicEngine.Sign(cryptKey, dataBuffer);
+
+                byte[] value;
+                Windows.Security.Cryptography.CryptographicBuffer.CopyToByteArray(signBuffer, out value);
+                return value;
+            };
+
         }
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)

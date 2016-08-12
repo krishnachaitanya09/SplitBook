@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Portable;
 using SplitBook.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,17 +23,15 @@ namespace SplitBook.Request
 
         public async void getComments(Action<List<Comment>> Callback)
         {
-            var request = new RestRequest(getCommentsURL);
-            request.AddParameter("expense_id", expenseId, ParameterType.GetOrPost);
-            IRestResponse response = await client.Execute(request);
             try
             {
+                HttpResponseMessage response = await client.GetAsync(getCommentsURL + "?expense_id=" + expenseId);
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NotModified)
                 {
                     Callback(null);
                     return;
                 }
-                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(Encoding.UTF8.GetString(response.RawBytes));
+                Newtonsoft.Json.Linq.JToken root = Newtonsoft.Json.Linq.JObject.Parse(await response.Content.ReadAsStringAsync());
                 Newtonsoft.Json.Linq.JToken testToken = root["comments"];
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                 List<Comment> comments = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Comment>>(testToken.ToString(), settings);
