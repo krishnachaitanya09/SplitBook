@@ -150,7 +150,7 @@ namespace SplitBook.Controller
                         //List<Group_Members> groupMembers = dbConn.Query<Group_Members>("SELECT * FROM group_members WHERE group_id= ?", param).ToList<Group_Members>();
                         foreach (var group_member in groupsList[x].group_members)
                         {
-                            groupsList[x].members.Add(db.User.Where(u => u.id == group_member.user_id).FirstOrDefault());
+                            groupsList[x].members.Add(db.User.Include(u=>u.picture).Where(u => u.id == group_member.user_id).FirstOrDefault());
                         }
 
                         foreach (var groupDebt in groupsList[x].simplified_debts)
