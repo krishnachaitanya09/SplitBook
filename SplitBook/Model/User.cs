@@ -11,7 +11,7 @@ namespace SplitBook.Model
 {
     public class User
     {
-        public static string DEFAULT_PROFILE_IMAGE_URL = @"https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/avatars/100-5eb999e2b4b24b823a9d82c29d42e9b2.png";
+        public static string DEFAULT_PROFILE_IMAGE_URL = @"https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/avatars/200-6baef68eb0735452002c63cc4d7b78a828f0e9ebb24bcfa9c3288eafeebf31b3.png";
 
         [Key]
         public int id { get; set; }
