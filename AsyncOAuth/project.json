@@ -1,8 +1,6 @@
 ﻿{
   "supports": {},
-  "dependencies": {
-    "Microsoft.Net.Http": "2.2.29"
-  },
+  "dependencies": {},
   "frameworks": {
     ".NETCore,Version=v4.5.1": {}
   }

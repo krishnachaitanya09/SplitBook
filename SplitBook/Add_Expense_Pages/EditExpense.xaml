@@ -57,6 +57,7 @@
             </Grid>
         </ScrollViewer>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
+            <AppBarButton Name="receipt" Icon="Camera" Label="Add Receipt" Click="btnReceipt_Click" Foreground="White"/>
             <AppBarButton Name="okay" Icon="Accept" Label="okay" Click="btnOkay_Click" Foreground="White"/>
             <AppBarButton Name="cancel" Icon="Cancel" Label="cancel" Click="btnCancel_Click" Foreground="White"/>
         </CommandBar>

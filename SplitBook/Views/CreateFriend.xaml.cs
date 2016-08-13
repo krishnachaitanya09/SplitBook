@@ -121,6 +121,7 @@ namespace SplitBook.Views
                         MessageDialog messageDialog = new MessageDialog("User has successfully been added as friend.", "Success");
                         await messageDialog.ShowAsync();
                     }
+                    MainPage.Current.FetchData();
                 });
             }
             else

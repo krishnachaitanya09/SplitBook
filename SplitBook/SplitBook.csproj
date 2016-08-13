@@ -279,6 +279,7 @@
     <Content Include="Assets\Images\groupIcon.png" />
     <Content Include="Assets\Images\profilePhoto.png" />
     <None Include="Package.StoreAssociation.xml" />
+    <Content Include="Assets\Images\receipt.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />

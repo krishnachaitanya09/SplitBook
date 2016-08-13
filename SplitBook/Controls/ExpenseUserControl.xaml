@@ -172,6 +172,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Image Grid.Column="0" 
 							Source="/Assets/Images/expense_general.png" 
@@ -213,6 +214,10 @@
                                     FontSize="{StaticResource nameSize}"/>
                         </StackPanel>
                     </Grid>
+                    <Image x:Name="receiptImage" x:FieldModifier="public" Grid.Column="2" Height="50" Width="50" 
+							Source="{Binding FallbackValue=/Assets/Images/receipt.png}" 
+							VerticalAlignment="Center" 
+							Margin="15,0"/>
                 </Grid>
             </Grid>
         </Border>

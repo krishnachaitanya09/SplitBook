@@ -107,12 +107,9 @@ namespace SplitBook.Views
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    if (MainPage.syncDatabaseBackgroundWorker.IsBusy != true)
-                    {
-                        MainPage.syncDatabaseBackgroundWorker.RunWorkerAsync();
-                    }
                     busyIndicator.IsActive = false;
                     this.Frame.Navigate(typeof(FriendsPage));
+                    MainPage.Current.FetchData();
                 });
             }
             else

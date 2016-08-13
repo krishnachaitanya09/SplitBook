@@ -134,6 +134,7 @@ namespace SplitBook.Views
                         MessageDialog messageDialog = new MessageDialog("Group has been successfully created.", "Success");
                         await messageDialog.ShowAsync();
                     }
+                    MainPage.Current.FetchData();
                 });
             }
             else

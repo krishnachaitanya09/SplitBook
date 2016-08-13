@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace SplitBook.Model
 {
@@ -14,11 +16,6 @@ namespace SplitBook.Model
         public static int DISPLAY_FOR_ALL_USER = 1000;
         public static int DISPLAY_FOR_SPECIFIC_USER = 1001;
         public static string DEFAULT_DETAILS = "No details associated with this expense.";
-
-        /*public Expense()
-        {
-            displayType = DISPLAY_FOR_ALL_USER;
-        }*/
 
         public int id { get; set; }
         public int group_id { get; set; }
@@ -75,6 +72,8 @@ namespace SplitBook.Model
         public int specificUserId { get; set; }
         [NotMapped]
         public int displayType { get; set; }
+        [NotMapped]
+        public StorageFile receiptFile { get; set; }
     }
 
     public class Expense_Share : INotifyPropertyChanged

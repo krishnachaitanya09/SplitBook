@@ -3,17 +3,22 @@
 using SplitBook.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace SplitBook.Request
 {
     class AddExpenseRequest : RestBaseRequest
     {
         public static String addExpenseURL = "create_expense";
+        public static String updateExpenseURL = "update_expense/";
         Expense paymentExpense;
 
         public AddExpenseRequest(Expense expense)
@@ -80,8 +85,36 @@ namespace SplitBook.Request
                 if (expenseList != null && expenseList.Count != 0)
                 {
                     Expense payment = expenseList[0];
-                    if (payment.id != 0)                   
-                        CallbackOnSuccess(true);                   
+                    if (payment.id != 0)
+                    {
+                        if (paymentExpense.receiptFile != null)
+                        {
+                            try
+                            {
+                                using (var form = new MultipartFormDataContent())
+                                {
+                                    using (IRandomAccessStream fileStream = await paymentExpense.receiptFile.OpenAsync(FileAccessMode.Read))
+                                    {
+                                        DataReader dataReader = new DataReader(fileStream.GetInputStreamAt(0));
+                                        var bytes = new byte[fileStream.Size];
+                                        await dataReader.LoadAsync((uint)fileStream.Size);
+                                        dataReader.ReadBytes(bytes);
+                                        var fileContent = new ByteArrayContent(bytes);
+                                        fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                                        {
+                                            Name = "\"receipt\"",
+                                            FileName = "\"" + paymentExpense.receiptFile.Name + "\""
+                                        }; // the extra quotes are key here
+                                        fileContent.Headers.ContentType = new MediaTypeHeaderValue(paymentExpense.receiptFile.ContentType);
+                                        form.Add(fileContent);
+                                        response = await client.PostAsync(updateExpenseURL + payment.id, form);
+                                    }
+                                }
+                            }
+                            catch { }
+                        }
+                        CallbackOnSuccess(true);
+                    }
                     else
                         CallbackOnFailure(response.StatusCode);
                 }

@@ -43,7 +43,7 @@ namespace SplitBook.Request
                 User user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(testToken.ToString(), settings);
                 if (user != null)
                 {
-                    if (user.id != 0)
+                    if (user.id != 0)                        
                         CallbackOnSuccess(user);
                     else
                         CallbackOnFailure(response.StatusCode);

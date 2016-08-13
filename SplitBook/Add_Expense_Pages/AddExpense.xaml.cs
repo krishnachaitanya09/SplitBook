@@ -4,13 +4,18 @@ using SplitBook.Utilities;
 using SplitBook.Views;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Net;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace SplitBook.Add_Expense_Pages
@@ -177,11 +182,8 @@ namespace SplitBook.Add_Expense_Pages
                 {
                     (Application.Current as App).ADD_EXPENSE = null;
                     busyIndicator.IsActive = false;
-                    if (MainPage.syncDatabaseBackgroundWorker.IsBusy != true)
-                    {
-                        MainPage.syncDatabaseBackgroundWorker.RunWorkerAsync();
-                    }
                     this.Frame.Navigate(typeof(FriendsPage));
+                    MainPage.Current.FetchData();
                 });
             }
             else
@@ -205,6 +207,36 @@ namespace SplitBook.Add_Expense_Pages
                     }
                     commandBar.IsEnabled = true;
                 });
+            }
+        }
+
+        private async void btnReceipt_Click(object sender, RoutedEventArgs e)
+        {
+            FileOpenPicker open = new FileOpenPicker();
+            open.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            open.ViewMode = PickerViewMode.Thumbnail;
+
+            // Filter to include a sample subset of file types
+            open.FileTypeFilter.Clear();
+            open.FileTypeFilter.Add(".bmp");
+            open.FileTypeFilter.Add(".png");
+            open.FileTypeFilter.Add(".jpeg");
+            open.FileTypeFilter.Add(".jpg");
+
+            // Open a stream for the selected file
+            StorageFile file = await open.PickSingleFileAsync();
+
+            // Ensure a file was selected
+            if (file != null)
+            {                
+                // Ensure the stream is disposed once the image is loaded
+                using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    await bitmapImage.SetSourceAsync(fileStream);
+                    this.expenseControl.receiptImage.Source = bitmapImage;                
+                }
+                this.expenseControl.expense.receiptFile = file;
             }
         }
     }
