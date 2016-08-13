@@ -357,9 +357,9 @@ namespace SplitBook.Views
 
         private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            var profilePic = sender as Image;
+            var profilePic = sender as BitmapImage;
             BitmapImage pic = new BitmapImage(new Uri("ms-appx:///Assets/Images/profilePhoto.png"));
-            profilePic.Source = pic;
+            profilePic = pic;
         }
 
         private void SecondaryNavMenuList_SelectionChanged(object sender, SelectionChangedEventArgs e)

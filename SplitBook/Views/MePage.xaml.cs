@@ -78,9 +78,9 @@ namespace SplitBook.Views
 
         private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            var profilePic = sender as Image;
+            var profilePic = sender as BitmapImage;
             BitmapImage pic = new BitmapImage(new Uri("ms-appx:///Assets/Images/profilePhoto.png"));
-            profilePic.Source = pic;
+            profilePic = pic;
         }
 
         private async void Hyperlink_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
