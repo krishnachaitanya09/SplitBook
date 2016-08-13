@@ -37,8 +37,8 @@ namespace SplitBook.Views
         private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             var profilePic = sender as BitmapImage;
-            BitmapImage pic = new BitmapImage(new Uri("ms-appx:///Assets/Images/profilePhoto.png"));
-            profilePic = pic;
+            profilePic.UriSource = new Uri("ms-appx:///Assets/Images/profilePhoto.png");
+
         }
 
         private void TotalBalance_Tapped(object sender, TappedRoutedEventArgs e)

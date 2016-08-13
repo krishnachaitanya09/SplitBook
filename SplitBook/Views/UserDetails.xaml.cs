@@ -251,12 +251,6 @@ namespace SplitBook.Views
             }
         }
 
-        private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-            var profilePic = sender as BitmapImage;
-            BitmapImage pic = new BitmapImage(new Uri("ms-appx:///Assets/Images/profilePhoto.png"));
-            profilePic = pic;
-        }
 
         private void llsExpenses_Tap(object sender, SelectionChangedEventArgs e)
         {
@@ -267,6 +261,12 @@ namespace SplitBook.Views
             (Application.Current as App).SELECTED_EXPENSE = selectedExpense;
             this.Frame.Navigate(typeof(ExpenseDetail));
             llsExpenses.SelectedItem = null;
+        }
+
+        private void ProfilePic_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            var profilePic = sender as BitmapImage;
+            profilePic.UriSource = new Uri("ms-appx:///Assets/Images/profilePhoto.png");
         }
     }
 }
