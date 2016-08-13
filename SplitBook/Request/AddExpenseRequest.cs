@@ -80,8 +80,8 @@ namespace SplitBook.Request
                 if (expenseList != null && expenseList.Count != 0)
                 {
                     Expense payment = expenseList[0];
-                    if (payment.id != 0)
-                        CallbackOnSuccess(true);
+                    if (payment.id != 0)                   
+                        CallbackOnSuccess(true);                   
                     else
                         CallbackOnFailure(response.StatusCode);
                 }

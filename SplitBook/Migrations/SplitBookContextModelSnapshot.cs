@@ -221,6 +221,22 @@ namespace SplitBook.Migrations
                     b.ToTable("Picture");
                 });
 
+            modelBuilder.Entity("SplitBook.Model.Receipt", b =>
+                {
+                    b.Property<int>("expense_id");
+
+                    b.Property<string>("large");
+
+                    b.Property<string>("original");
+
+                    b.HasKey("expense_id");
+
+                    b.HasIndex("expense_id")
+                        .IsUnique();
+
+                    b.ToTable("Receipt");
+                });
+
             modelBuilder.Entity("SplitBook.Model.User", b =>
                 {
                     b.Property<int>("id")
@@ -298,6 +314,14 @@ namespace SplitBook.Migrations
                     b.HasOne("SplitBook.Model.User", "User")
                         .WithOne("picture")
                         .HasForeignKey("SplitBook.Model.Picture", "user_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SplitBook.Model.Receipt", b =>
+                {
+                    b.HasOne("SplitBook.Model.Expense", "Expense")
+                        .WithOne("receipt")
+                        .HasForeignKey("SplitBook.Model.Receipt", "expense_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }

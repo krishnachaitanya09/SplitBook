@@ -61,8 +61,7 @@ namespace SplitBook.Model
         public User updated_by { get; set; }
         [NotMapped]
         public User deleted_by { get; set; }
-        [NotMapped]
-        public Picture receipt { get; set; }
+        public Receipt receipt { get; set; }
         [NotMapped]
         public Category category { get; set; }
 

@@ -145,6 +145,25 @@ namespace SplitBook.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Receipt",
+                columns: table => new
+                {
+                    expense_id = table.Column<int>(nullable: false),
+                    large = table.Column<string>(nullable: true),
+                    original = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Receipt", x => x.expense_id);
+                    table.ForeignKey(
+                        name: "FK_Receipt_Expense_expense_id",
+                        column: x => x.expense_id,
+                        principalTable: "Expense",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Group_Members",
                 columns: table => new
                 {
@@ -275,6 +294,12 @@ namespace SplitBook.Migrations
                 table: "Picture",
                 column: "user_id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Receipt_expense_id",
+                table: "Receipt",
+                column: "expense_id",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -304,13 +329,16 @@ namespace SplitBook.Migrations
                 name: "Picture");
 
             migrationBuilder.DropTable(
-                name: "Expense");
+                name: "Receipt");
 
             migrationBuilder.DropTable(
                 name: "Group");
 
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "Expense");
         }
     }
 }

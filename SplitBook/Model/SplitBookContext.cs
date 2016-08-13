@@ -13,6 +13,7 @@ namespace SplitBook.Model
         public DbSet<Expense> Expense { get; set; }
         public DbSet<Group> Group { get; set; }
         public DbSet<Picture> Picture { get; set; }
+        public DbSet<Receipt> Receipt { get; set; }
         public DbSet<Balance_User> Balance_User { get; set; }
         public DbSet<Debt_Expense> Debt_Expense { get; set; }
         public DbSet<Debt_Group> Debt_Group { get; set; }
@@ -31,7 +32,7 @@ namespace SplitBook.Model
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().Ignore(e => e.name).Ignore(e => e.PictureUrl);
-            modelBuilder.Entity<Expense>().Ignore(e => e.receipt).Ignore(e => e.category)
+            modelBuilder.Entity<Expense>().Ignore(e => e.category)
                 .Ignore(e => e.specificUserId).Ignore(e => e.displayType);
             modelBuilder.Entity<Picture>().HasKey(e => e.user_id);
             modelBuilder.Entity<Balance_User>().HasKey(e => e.user_id);

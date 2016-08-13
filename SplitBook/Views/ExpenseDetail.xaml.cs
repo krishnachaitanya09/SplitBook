@@ -235,7 +235,7 @@ namespace SplitBook.Views
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivot.SelectedIndex == 2)
+            if (pivot.SelectedIndex == 3)
             {
                 refresh.Visibility = Visibility.Visible;
             }

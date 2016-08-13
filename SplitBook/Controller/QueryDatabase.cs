@@ -48,7 +48,7 @@ namespace SplitBook.Controller
             using (SplitBookContext db = new SplitBookContext())
             {
                 //Only retrieve expenses that have not been deleted
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users)
+                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Include(e => e.receipt)
                     .Where(e => e.deleted_by_user_id == 0).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
 
                 if (expensesList == null && expensesList.Count == 0)
@@ -95,7 +95,7 @@ namespace SplitBook.Controller
             //Only retrieve expenses that have not been deleted
             using (SplitBookContext db = new SplitBookContext())
             {
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users)
+                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Include(e => e.receipt)
                     .Where(e => e.deleted_by_user_id == 0 && e.repayments.Any(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId())))
                     .OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
 
@@ -173,7 +173,7 @@ namespace SplitBook.Controller
                 int offset = EXPENSES_ROWS * pageNo;
 
                 //Only retrieve expenses that have not been deleted
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Where(e => e.deleted_by_user_id == 0 && e.group_id == groupId).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
+                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Include(e => e.receipt).Where(e => e.deleted_by_user_id == 0 && e.group_id == groupId).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
 
                 //Get list of repayments for expense.
                 //Get the created by, updated by and deleted by user
@@ -235,7 +235,7 @@ namespace SplitBook.Controller
         {
             using (SplitBookContext db = new SplitBookContext())
             {
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Where(e => e.deleted_by_user_id == 0 && (e.description.ToUpper()).Contains(searchText)).OrderByDescending(e => e.date).Take(15).ToList();
+                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Include(e => e.receipt).Where(e => e.deleted_by_user_id == 0 && (e.description.ToUpper()).Contains(searchText)).OrderByDescending(e => e.date).Take(15).ToList();
 
                 //Get list of repayments for expense.
                 //Get the created by, updated by and deleted by user

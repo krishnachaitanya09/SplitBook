@@ -172,12 +172,13 @@
     <Compile Include="Converter\UserDetails\UserDetailsExpenseColorConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpensesConverter.cs" />
     <Compile Include="Controls\ExpandPanel.cs" />
-    <Compile Include="Migrations\20160812221922_FirstMigration.cs" />
-    <Compile Include="Migrations\20160812221922_FirstMigration.designer.cs">
-      <DependentUpon>20160812221922_FirstMigration.cs</DependentUpon>
+    <Compile Include="Migrations\20160813022655_FirstMigration.cs" />
+    <Compile Include="Migrations\20160813022655_FirstMigration.designer.cs">
+      <DependentUpon>20160813022655_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\SplitBookContextModelSnapshot.cs" />
     <Compile Include="Model\ButtonEnabler.cs" />
+    <Compile Include="Model\Receipt.cs" />
     <Compile Include="Model\SplitBookContext.cs" />
     <Compile Include="Request\DeleteFriendRequest.cs" />
     <Compile Include="Utilities\Advertisement.cs" />

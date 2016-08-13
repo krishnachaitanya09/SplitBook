@@ -399,6 +399,11 @@
                         </ListView>
                     </Grid>
                 </PivotItem>
+                <PivotItem Header="Receipt" Margin="0">
+                    <Grid  Background="White">
+                        <Image Source="{Binding receipt.original}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="12" Stretch="None"/>
+                    </Grid>
+                </PivotItem>
                 <PivotItem Header="Notes" Margin="0">
                     <ScrollViewer Background="White">
                         <TextBlock Margin="20" 
