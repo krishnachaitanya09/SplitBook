@@ -44,6 +44,12 @@ namespace SplitBook.Controller
             request.createFriend(_FriendAdded, _OperationFailed);
         }
 
+        public void deleteFriend(int friendId)
+        {
+            DeleteFriendRequest request = new DeleteFriendRequest(friendId);
+            request.deleteFriend(_OperationSucceded, _OperationFailed);
+        }
+
         public void createGroup(Group group)
         {
             CreateGroupRequest request = new CreateGroupRequest(group);

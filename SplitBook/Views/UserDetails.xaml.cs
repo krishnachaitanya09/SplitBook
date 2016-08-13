@@ -9,12 +9,13 @@ using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Email;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WinRTXamlToolkit.Controls.Extensions;
-
+using System.Net;
 
 namespace SplitBook.Views
 {
@@ -22,6 +23,7 @@ namespace SplitBook.Views
     {
         User selectedUser;
         BackgroundWorker userExpensesBackgroundWorker;
+        BackgroundWorker deleteFriendBackgroundWorker;
         ObservableCollection<Expense> expensesList = new ObservableCollection<Expense>();
         private int pageNo = 0;
         private bool morePages = true;
@@ -32,6 +34,11 @@ namespace SplitBook.Views
             this.InitializeComponent();
             BackButton.Click += BackButton_Click;
             MainPage.Current.ResetNavMenu();
+
+
+            deleteFriendBackgroundWorker = new BackgroundWorker();
+            deleteFriendBackgroundWorker.WorkerSupportsCancellation = true;
+            deleteFriendBackgroundWorker.DoWork += new DoWorkEventHandler(deleteFriendBackgroundWorker_DoWork);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -78,6 +85,29 @@ namespace SplitBook.Views
 
             (Application.Current as App).ADD_EXPENSE = expenseToAdd;
             this.Frame.Navigate(typeof(AddExpense));
+        }
+
+        private async void btnDeleteFriend_Click(object sender, RoutedEventArgs e)
+        {
+            MessageDialog messageDialog = new MessageDialog("Are you sure?", "Delete Friend");
+            messageDialog.Commands.Add(new UICommand { Label = "yes", Id = 0 });
+            messageDialog.Commands.Add(new UICommand { Label = "no", Id = 1 });
+            IUICommand result = await messageDialog.ShowAsync();
+
+            switch ((int)result.Id)
+            {
+                case 0:
+                    if (deleteFriendBackgroundWorker.IsBusy != true)
+                    {
+                        busyIndicator.IsActive = true;
+                        deleteFriendBackgroundWorker.RunWorkerAsync();
+                    }
+                    break;
+                case 1:
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void btnSettle_Click(object sender, RoutedEventArgs e)
@@ -132,6 +162,46 @@ namespace SplitBook.Views
             }
 
             return false;
+        }
+
+        private void deleteFriendBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ModifyDatabase modify = new ModifyDatabase(_deleteFriendCompleted);
+            modify.deleteFriend(selectedUser.id);
+        }
+
+        private async void _deleteFriendCompleted(bool success, HttpStatusCode errorCode)
+        {
+            if (success)
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    if (MainPage.syncDatabaseBackgroundWorker.IsBusy != true)
+                    {
+                        MainPage.syncDatabaseBackgroundWorker.RunWorkerAsync();
+                    }
+                    busyIndicator.IsActive = false;
+                    this.Frame.Navigate(typeof(FriendsPage));
+                });
+            }
+            else
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                {
+                    busyIndicator.IsActive = false;
+                    if (errorCode == HttpStatusCode.Unauthorized)
+                    {
+                        Helpers.logout();
+                        (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
+                        MainPage.Current.Frame.Navigate(typeof(LoginPage));
+                    }
+                    else
+                    {
+                        MessageDialog messageDialog = new MessageDialog("Unable to delete friend", "Error");
+                        await messageDialog.ShowAsync();
+                    }
+                });
+            }
         }
 
         private void userExpensesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)

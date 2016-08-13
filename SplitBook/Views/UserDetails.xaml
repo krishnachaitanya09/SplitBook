@@ -162,10 +162,12 @@
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
+            <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}" x:Name="busyIndicator" />
         </Grid>
 
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
-            <AppBarButton Name="add" Icon="Add" Label="Add" Click="btnAddExpense_Click" Foreground="White"/>
+            <AppBarButton Name="add" Icon="Add" Label="Add Expense" Click="btnAddExpense_Click" Foreground="White"/>
+            <AppBarButton Name="delete" Icon="Delete" Label="Delete Friend" Click="btnDeleteFriend_Click" Foreground="White"/>
             <AppBarButton Name="settle" Label="Settle" IsEnabled="False" Click="btnSettle_Click" Foreground="White">
                 <AppBarButton.Icon>
                     <BitmapIcon UriSource="ms-appx:///Assets/Icons/settle.png"/>

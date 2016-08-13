@@ -179,6 +179,7 @@
     <Compile Include="Migrations\SplitBookContextModelSnapshot.cs" />
     <Compile Include="Model\ButtonEnabler.cs" />
     <Compile Include="Model\SplitBookContext.cs" />
+    <Compile Include="Request\DeleteFriendRequest.cs" />
     <Compile Include="Utilities\Advertisement.cs" />
     <Compile Include="Utilities\SplitwiseAuthenticationBroker.cs" />
     <Compile Include="Views\AccountSettings.xaml.cs">
