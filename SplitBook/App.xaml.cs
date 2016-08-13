@@ -88,9 +88,13 @@ namespace SplitBook
                     titleBar.ButtonBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
                     titleBar.ButtonHoverBackgroundColor = (Application.Current.Resources["splitwiseGreenHover"] as SolidColorBrush).Color;
                     titleBar.ButtonPressedBackgroundColor = (Application.Current.Resources["splitwiseGreenPressed"] as SolidColorBrush).Color;
-                    titleBar.ButtonForegroundColor = Color.FromArgb(255, 255, 255, 254);
+                    titleBar.ButtonForegroundColor = Colors.White;
                     titleBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color; ;
-                    titleBar.ForegroundColor = Color.FromArgb(255, 255, 255, 254);
+                    titleBar.ForegroundColor = Colors.White;
+                    titleBar.InactiveBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
+                    titleBar.InactiveForegroundColor = Colors.White;
+                    titleBar.ButtonInactiveBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
+                    titleBar.ButtonInactiveForegroundColor = Colors.White;
                 }
             }
 
@@ -102,7 +106,7 @@ namespace SplitBook
                 {
                     statusBar.BackgroundOpacity = 1;
                     statusBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
-                    statusBar.ForegroundColor = Color.FromArgb(255, 255, 255, 254);
+                    statusBar.ForegroundColor = Colors.White;                    
                 }
             }
 
