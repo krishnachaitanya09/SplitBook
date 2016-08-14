@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<UserControl 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SplitBook.Controls"
@@ -12,9 +12,8 @@
     Loaded="UserControl_Loaded">
 
     <Grid Background="{StaticResource FrameBackground}">
-        <Universal:AdMediatorControl Background="{StaticResource FrameBackground}" Name="AdMediator" Id="AdMediator-Id-504c2e83-08d6-405f-a2a5-da731188fd85" HorizontalAlignment="Center" VerticalAlignment="Bottom" 
-                                     BorderThickness="0" Height="50" Width="300"
-                                     AdMediatorError="AdMediator_AdMediatorError" AdSdkError="AdMediator_AdSdkError"/>
-
+        <Universal:AdMediatorControl x:Name="AdMediator" x:FieldModifier="public" Background="{StaticResource FrameBackground}" HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderThickness="0" Id="AdMediator-Id-7D1A0663-8223-457B-A8E1-C744474E7445" AdMediatorError="AdMediator_AdMediatorError"/>
     </Grid>
+    
+
 </UserControl>

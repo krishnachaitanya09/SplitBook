@@ -8,7 +8,7 @@ using SplitBook.Model;
 namespace SplitBook.Migrations
 {
     [DbContext(typeof(SplitBookContext))]
-    [Migration("20160813022655_FirstMigration")]
+    [Migration("20160814141413_FirstMigration")]
     partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

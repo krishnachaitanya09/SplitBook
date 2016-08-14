@@ -518,7 +518,6 @@
             <SplitView.Pane>
                 <Grid>
                     <ListView x:Name="NavMenuList" x:FieldModifier="public"
-                          TabIndex="3" 
                           ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}" SelectionChanged="NavMenuList_SelectionChanged">
                         <ListViewItem Tapped="FriendsMenu_Tapped">
                             <Grid>
@@ -552,7 +551,6 @@
                         </ListViewItem>
                     </ListView>
                     <ListView x:Name="SecondaryNavMenuList" x:FieldModifier="public" BorderBrush="#FF848484" BorderThickness="0,1,0,0" VerticalAlignment="Bottom" Margin="0,0,0,10"
-                          TabIndex="4"
                           ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}" SelectionChanged="SecondaryNavMenuList_SelectionChanged">
                         <ListViewItem x:Name="me" Tapped="MeMenu_Tapped">
                             <Grid>

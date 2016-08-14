@@ -26,7 +26,9 @@ namespace SplitBook.Utilities
             {
                 try
                 {
-                    await CurrentAppSimulator.RequestProductPurchaseAsync("NoAds");
+                    PurchaseResults purchaseResults = await CurrentAppSimulator.RequestProductPurchaseAsync("NoAds");
+                    if (purchaseResults.Status == ProductPurchaseStatus.Succeeded)
+                        UpdateInAppPurchases();
                     //Check the license state to determine if the in-app purchase was successful.
                 }
                 catch (Exception e)

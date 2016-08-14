@@ -360,8 +360,6 @@
   <ProductReservedInfo>
     <MainPackageIdentityName>47961KrishnaChaitanya.SplitWisely</MainPackageIdentityName>
     <ReservedNames>
-      <ReservedName>SplitWisely</ReservedName>
-      <ReservedName>SplitExpense</ReservedName>
       <ReservedName>SplitBook</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
@@ -369,5 +367,5 @@
     <MainPackageIdentityName>47961KrishnaChaitanya.IndiaPost</MainPackageIdentityName>
     <MainPackageIdentityName>47961KrishnaChaitanya.IndiaPostBeta</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://dev.windows.com/dashboard/Application?appId=9NBLGGH6JKM6" />
+  <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9NBLGGH6JKM6" />
 </StoreAssociation>

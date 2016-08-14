@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -40,6 +41,18 @@ namespace SplitBook.Controls
             if (Advertisement.ShowAds)
             {
                 AdMediator.Visibility = Visibility.Visible;                
+                if(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
+                {
+                    AdMediator.Width = 728;
+                    AdMediator.Height = 90;                   
+                }
+                else if(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+                {
+                    AdMediator.Width = 320;
+                    AdMediator.Height = 50;
+                }
+                AdMediator.Disable();
+                AdMediator.Resume();
             }
             else
             {

@@ -3,9 +3,10 @@
     "Coding4Fun.Toolkit.Controls": "2.1.8",
     "GoogleAnalyticsSDK": "1.3.0",
     "Microsoft.EntityFrameworkCore.Sqlite": "1.0.0",
-    "Microsoft.EntityFrameworkCore.Tools": "1.0.0-preview2-final",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Newtonsoft.Json": "9.0.1",
+    "SQLite": "3.12.3",
+    "SQLite.UWP.Native": "3.12.3",
     "WinRTXamlToolkit.UWP": "2.0.0"
   },
   "frameworks": {

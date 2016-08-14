@@ -1,6 +1,6 @@
-MainPackage=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_1.1.0.0_ARM.appx
-SymbolPackage=F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_1.1.0.0_Test\SplitBook_1.1.0.0_ARM.appxsym
-ResourcePack=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_1.1.0.0_scale-100.appx
-ResourcePack=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_1.1.0.0_scale-125.appx
-ResourcePack=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_1.1.0.0_scale-150.appx
-ResourcePack=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_1.1.0.0_scale-400.appx
+MainPackage=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_2.0.0.0_ARM.appx
+SymbolPackage=F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_2.0.0.0_Test\SplitBook_2.0.0.0_ARM.appxsym
+ResourcePack=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_2.0.0.0_scale-100.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_2.0.0.0_scale-125.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_2.0.0.0_scale-150.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\bin\ARM\Release\SplitBook_2.0.0.0_scale-400.appx
