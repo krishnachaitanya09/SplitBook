@@ -384,7 +384,7 @@
         <ContentDialog x:Name="contentDialog" Grid.RowSpan="2" Background="Transparent"/>
         <Grid x:Name="ContentPanel" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="PageHeader" RelativePanel.Above="AdControl">
             <Pivot Grid.Row="1">
-                <PivotItem Margin="0,5,0,0" Header="summary">
+                <PivotItem Margin="0,5,0,0" Header="Summary">
                     <ListView x:Name="listBox" SelectionMode="None" Background="{StaticResource FrameBackground}" ItemContainerStyle="{StaticResource ListViewItemExpanded}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -427,7 +427,7 @@
                     </ListView>
                 </PivotItem>
 
-                <PivotItem Margin="0,5,0,0" Header="expenses">
+                <PivotItem Margin="0,5,0,0" Header="Expenses">
                     <Grid Background="{StaticResource FrameBackground}">
                         <ListView Name="llsExpenses" Loaded="OnListViewLoaded" ItemTemplate="{StaticResource expensesTemplate}"   
                                                        SelectionChanged="llsExpenses_Tap">

@@ -297,7 +297,7 @@
                         <Setter Target="commandBar.HorizontalAlignment" Value="Right" />
                         <Setter Target="commandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
                         <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
-                        <Setter Target="AdControl.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                        <Setter Target="ContentPanel.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -310,7 +310,7 @@
                         <Setter Target="commandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
                         <Setter Target="commandBar.HorizontalAlignment" Value="Stretch" />
                         <Setter Target="commandBar.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="AdControl.(RelativePanel.Above)" Value="commandBar"/>
+                        <Setter Target="ContentPanel.(RelativePanel.Above)" Value="commandBar"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -323,7 +323,7 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <Grid x:Name="ContentPanel" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Above="AdControl" RelativePanel.Below="PageHeader">
+        <Grid x:Name="ContentPanel" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="PageHeader">
             <Pivot x:Name="pivot" SelectionChanged="Pivot_SelectionChanged">
                 <PivotItem Header= "Details" Margin="0">
                     <Grid Background="White">
@@ -399,9 +399,11 @@
                         </ListView>
                     </Grid>
                 </PivotItem>
-                <PivotItem Header="Receipt" Margin="0">
+                <PivotItem x:Name="receiptPivot" Header="Receipt" Margin="0">
                     <Grid  Background="White">
-                        <Image Source="{Binding receipt.original}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="12" Stretch="None"/>
+                        <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" ZoomMode="Enabled" MaxZoomFactor="3" MinZoomFactor="0.5">
+                            <Image Source="{Binding receipt.original}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12" Stretch="None"  MaxWidth="{Binding ActualWidth, ElementName=receiptPivot}" MaxHeight="{Binding ActualHeight, ElementName=receiptPivot}"/>
+                        </ScrollViewer>
                     </Grid>
                 </PivotItem>
                 <PivotItem Header="Notes" Margin="0">
@@ -468,7 +470,6 @@
             </Pivot>
             <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}" x:Name="busyIndicator" />
         </Grid>
-        <control:AdControl x:Name="AdControl" Background="{StaticResource FrameBackground}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
             <AppBarButton Name="delete" Icon="Delete" Label="Delete" Click="btnDeleteExpense_Click" Foreground="White"/>
             <AppBarButton Name="edit" Icon="Edit" Label="Edit" Click="btnEdit_Click" Foreground="White"/>

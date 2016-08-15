@@ -5,16 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SQLite;
 
 namespace SplitBook.Model
 {
     public class Receipt
     {
-        [Key]
+        [Unique]
         public int expense_id { get; set; }
         public string large { get; set; }
         public string original { get; set; }
-        [ForeignKey("expense_id")]
-        public Expense Expense { get; set; }
     }
 }

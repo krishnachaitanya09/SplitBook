@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +18,12 @@ namespace SplitBook.Model
         public static int DISPLAY_FOR_SPECIFIC_USER = 1001;
         public static string DEFAULT_DETAILS = "No details associated with this expense.";
 
+        /*public Expense()
+        {
+            displayType = DISPLAY_FOR_ALL_USER;
+        }*/
+
+        [Unique]
         public int id { get; set; }
         public int group_id { get; set; }
         public string description { get; set; }
@@ -40,6 +47,8 @@ namespace SplitBook.Model
         public bool transaction_confirmed { get; set; }
         public string cost { get; set; }
         public string currency_code { get; set; }
+
+        [Ignore]
         public List<Debt_Expense> repayments { get; set; }
 
         public string date { get; set; }
@@ -52,43 +61,44 @@ namespace SplitBook.Model
         public int updated_by_user_id { get; set; }
 
         public int deleted_by_user_id { get; set; }
-        [NotMapped]
+
+        [Ignore]
         public User created_by { get; set; }
-        [NotMapped]
+        [Ignore]
         public User updated_by { get; set; }
-        [NotMapped]
+        [Ignore]
         public User deleted_by { get; set; }
+        [Ignore]
         public Receipt receipt { get; set; }
-        [NotMapped]
+        [Ignore]
         public Category category { get; set; }
 
+        [Ignore]
         public List<Expense_Share> users { get; set; }
 
         //The following is used to help the ExpenseShareToAmountConverter
         //to determine if the amount is to be displayed as totaly for all users or as specific to one user
         //Eg: You booked a flight to KL to 7 ppl and paid for 490.
         //In all expenses, it will be shown as you lent 420 but in specific user it will be you lent 70
-        [NotMapped]
+        [Ignore]
         public int specificUserId { get; set; }
-        [NotMapped]
+        [Ignore]
         public int displayType { get; set; }
-        [NotMapped]
+        [Ignore]
         public StorageFile receiptFile { get; set; }
     }
 
     public class Expense_Share : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        [Key]
         public int expense_id { get; set; }
-        [ForeignKey("expense_id")]
+        [Ignore]
         public Expense expense { get; set; }
-        [NotMapped]
+        [Ignore]
         public User user { get; set; }
 
-        [NotMapped]
-        public string currency { get { return expense.currency_code; } }
-        [Key]
+        [Ignore]
+        public string currency { get; set; }
         public int user_id { get; set; }
 
         private string _paidShare;
@@ -121,13 +131,13 @@ namespace SplitBook.Model
 
 
         //to help with spliting expense unequally
-        [NotMapped]
+        [Ignore]
         public string percentage { get; set; }
-        [NotMapped]
+        [Ignore]
         public string share { get; set; }
 
         //to help with checking if this user paid or not
-        [NotMapped]
+        [Ignore]
         public bool hasPaid { get; set; }
 
         // Create the OnPropertyChanged method to raise the event 

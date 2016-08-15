@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -13,23 +14,26 @@ namespace SplitBook.Model
     {
         public static string DEFAULT_PROFILE_IMAGE_URL = @"https://dx0qysuen8cbs.cloudfront.net/assets/fat_rabbit/avatars/200-6baef68eb0735452002c63cc4d7b78a828f0e9ebb24bcfa9c3288eafeebf31b3.png";
 
-        [Key]
+        [Unique]
         public int id { get; set; }
         public string first_name { get; set; }
         public string last_name { get; set; }
 
+        [Ignore]
         public Picture picture { get; set; }
         
         public string email { get; set; }
         public string country_code { get; set; }
         public string default_currency { get; set; }
 
+        [Ignore]
         public List<Balance_User> balance { get; set; }
-        [NotMapped]
+
+        [Ignore]
         public List<Group> groups { get; set; }
         public string updated_at { get; set; }
 
-        [NotMapped]
+        [Ignore]
         public string name
         {
             get
@@ -45,7 +49,7 @@ namespace SplitBook.Model
             }
         }
 
-        [NotMapped]
+        [Ignore]
         public string PictureUrl
         {
             get

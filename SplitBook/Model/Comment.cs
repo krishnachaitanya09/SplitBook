@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +16,7 @@ namespace SplitBook.Model
         public int relation_id { get; set; }
         public string created_at { get; set; }
         public string deleted_at { get; set; }       
+        [Ignore]
         public User user { get; set; }
     }
 }

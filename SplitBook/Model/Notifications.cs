@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SplitBook.Model
 {
     public class Notifications
     {
-        [Key]
+        [Unique]
         public int id { get; set; }
         public bool added_as_friend { get; set; }
         public bool added_to_group { get; set; }

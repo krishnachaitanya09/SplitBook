@@ -13,27 +13,34 @@ namespace SplitBook.Utilities
         public static void UpdateInAppPurchases()
         {
             ShowAds = true;
-            var IsActive = CurrentAppSimulator.LicenseInformation.ProductLicenses["NoAds"].IsActive;
-            if (IsActive)
-            {
-                ShowAds = false;
+            try {
+                var IsActive = CurrentApp.LicenseInformation.ProductLicenses["NoAds"].IsActive;
+                if (IsActive)
+                {
+                    ShowAds = false;
+                }
             }
+           catch(Exception ex)
+            {
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
+            }
+           
         }
 
         public static async void PurchaseRemoveAds()
         {
-            if (!CurrentAppSimulator.LicenseInformation.ProductLicenses["NoAds"].IsActive)
+            if (!CurrentApp.LicenseInformation.ProductLicenses["NoAds"].IsActive)
             {
                 try
                 {
-                    PurchaseResults purchaseResults = await CurrentAppSimulator.RequestProductPurchaseAsync("NoAds");
+                    PurchaseResults purchaseResults = await CurrentApp.RequestProductPurchaseAsync("NoAds");
                     if (purchaseResults.Status == ProductPurchaseStatus.Succeeded)
                         UpdateInAppPurchases();
                     //Check the license state to determine if the in-app purchase was successful.
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    GoogleAnalytics.EasyTracker.GetTracker().SendException(e.Message, false);
+                    GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
                     // The in-app purchase was not completed because 
                     // an error occurred.
                 }

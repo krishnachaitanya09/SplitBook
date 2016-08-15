@@ -1,7 +1,7 @@
 ﻿using SplitBook.Model;
 using SplitBook.Request;
 using SplitBook.Utilities;
-
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,11 +61,11 @@ namespace SplitBook.Controller
             //add user to database and to friends list in App.xaml
             //PhoneApplicationService.Current.State[Constants.NEW_USER] = friend;
 
-            using (SplitBookContext db = new SplitBookContext())
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                db.Add(friend);                
+                dbConn.Insert(friend);
                 friend.picture.user_id = friend.id;
-                db.Add(friend.picture);
+                dbConn.Insert(friend.picture);
             }
 
             callback(true, HttpStatusCode.OK);
@@ -76,14 +76,15 @@ namespace SplitBook.Controller
             //add user to database and to friends list in App.xaml
             //PhoneApplicationService.Current.State[Constants.NEW_GROUP] = group;
 
-            using (SplitBookContext db = new SplitBookContext())
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                db.Add(group);
+                dbConn.BeginTransaction();
+                dbConn.InsertOrReplace(group);
 
                 foreach (var debt in group.simplified_debts)
                 {
                     debt.group_id = group.id;
-                    db.Add(debt);
+                    dbConn.InsertOrReplace(debt);
                 }
 
                 foreach (var member in group.members)
@@ -91,10 +92,10 @@ namespace SplitBook.Controller
                     Group_Members group_member = new Group_Members();
                     group_member.group_id = group.id;
                     group_member.user_id = member.id;
-                    db.Add(group_member);
+                    dbConn.InsertOrReplace(group_member);
                 }
 
-                db.SaveChanges();
+                dbConn.Commit();
             }
 
             callback(true, HttpStatusCode.OK);

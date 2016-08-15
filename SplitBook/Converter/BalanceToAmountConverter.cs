@@ -15,35 +15,55 @@ namespace SplitBook.Converter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            List<Balance_User> balanceList = value as List<Balance_User>;
-            bool hasMultipleBalances = Helpers.hasMultipleBalances(balanceList);
+            if (parameter != null && parameter.ToString().Equals("overall"))
+            {
+                QueryDatabase query = new QueryDatabase();
+                string currencyCode = query.getUnitForCurrency(App.currentUser.default_currency.ToUpper());
+                if (currencyCode != String.Empty)
+                {
+                    var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
+                    format.CurrencySymbol = currencyCode;
+                    format.CurrencyNegativePattern = 1;
+                    return String.Format(format, "{0:C}", System.Convert.ToDouble(value));
 
-            Balance_User defaultBalance = Helpers.getDefaultBalance(balanceList);
-            double finalBalance = System.Convert.ToDouble(defaultBalance.amount, System.Globalization.CultureInfo.InvariantCulture);
-            if (finalBalance == 0)
-                return null;
+                }
+                else
+                {
+                    return System.Convert.ToDouble(value).ToString();
+                }
+            }
             else
             {
-                string currency = defaultBalance.currency_code;
-                string amount;
-                if (currency.Equals(App.currentUser.default_currency))
-                {
-                    QueryDatabase obj = new QueryDatabase();
-                    string unit = obj.getUnitForCurrency(currency);
-                    var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
-                    format.CurrencySymbol = unit;
-                    format.CurrencyNegativePattern = 1;
-                    amount = String.Format(format, "{0:C}", Math.Abs(finalBalance));
-                }
-                else
-                {
-                    amount = currency + String.Format("{0:0.00}", Math.Abs(finalBalance));
-                }
+                List<Balance_User> balanceList = value as List<Balance_User>;
+                bool hasMultipleBalances = Helpers.hasMultipleBalances(balanceList);
 
-                if (hasMultipleBalances)
-                    return amount + "*";
+                Balance_User defaultBalance = Helpers.getDefaultBalance(balanceList);
+                double finalBalance = System.Convert.ToDouble(defaultBalance.amount, System.Globalization.CultureInfo.InvariantCulture);
+                if (finalBalance == 0)
+                    return null;
                 else
-                    return amount;
+                {
+                    string currency = defaultBalance.currency_code;
+                    string amount;
+                    if (currency.Equals(App.currentUser.default_currency))
+                    {
+                        QueryDatabase obj = new QueryDatabase();
+                        string unit = obj.getUnitForCurrency(currency);
+                        var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
+                        format.CurrencySymbol = unit;
+                        format.CurrencyNegativePattern = 1;
+                        amount = String.Format(format, "{0:C}", Math.Abs(finalBalance));
+                    }
+                    else
+                    {
+                        amount = currency + String.Format("{0:0.00}", Math.Abs(finalBalance));
+                    }
+
+                    if (hasMultipleBalances)
+                        return amount + "*";
+                    else
+                        return amount;
+                }
             }
         }
 

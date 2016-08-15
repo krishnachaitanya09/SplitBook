@@ -9,6 +9,7 @@ namespace SplitBook.Model
 {
     public class Category
     {
+        [Key]
         public int id { get; set; }
         public string name { get; set; }
     }

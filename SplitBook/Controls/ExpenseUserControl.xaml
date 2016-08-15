@@ -214,7 +214,7 @@
                                     FontSize="{StaticResource nameSize}"/>
                         </StackPanel>
                     </Grid>
-                    <Image x:Name="receiptImage" x:FieldModifier="public" Grid.Column="2" Height="50" Width="50" 
+                    <Image x:Name="receiptImage" x:FieldModifier="public" Grid.Column="2" Height="50" Width="50" Stretch="None"
 							Source="{Binding FallbackValue=/Assets/Images/receipt.png}" 
 							VerticalAlignment="Center" 
 							Margin="15,0"/>

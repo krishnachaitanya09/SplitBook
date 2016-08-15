@@ -1,5 +1,6 @@
 ﻿using SplitBook.Controller;
 using SplitBook.Model;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,12 +9,103 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Storage;
 
 namespace SplitBook.Utilities
 {
     public class Helpers
-    {       
+    {
+        public async void CreateDatabase()
+        {
+            try
+            {
+                if (!await CheckFileExists(Constants.DATABASE_NAME))
+                {
+                    using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                    {
+                        //Delete all the data in the database as first use will also be called after logout.
+                        dbConn.CreateTable<User>();
+                        dbConn.CreateTable<Expense>();
+                        dbConn.CreateTable<Model.Group>();
+                        dbConn.CreateTable<Picture>();
+                        dbConn.CreateTable<Receipt>();
+                        dbConn.CreateTable<Balance_User>();
+                        dbConn.CreateTable<Debt_Expense>();
+                        dbConn.CreateTable<Debt_Group>();
+                        dbConn.CreateTable<Expense_Share>();
+                        dbConn.CreateTable<Group_Members>();
+                        dbConn.CreateTable<Currency>();
+                        dbConn.CreateTable<Notifications>();
+                    }
+                }
+                else if (AppVersion != GetAppVersion())
+                {
+
+                    using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                    {
+                        dbConn.DropTable<Notifications>();
+                        dbConn.DropTable<User>();
+                        dbConn.DropTable<Expense>();
+                        dbConn.DropTable<Model.Group>();
+                        dbConn.DropTable<Picture>();
+                        dbConn.DropTable<Receipt>();
+                        dbConn.DropTable<Balance_User>();
+                        dbConn.DropTable<Debt_Expense>();
+                        dbConn.DropTable<Debt_Group>();
+                        dbConn.DropTable<Expense_Share>();
+                        dbConn.DropTable<Group_Members>();
+                        dbConn.DropTable<Currency>();
+                        dbConn.DropTable<Notifications>();
+
+                        dbConn.CreateTable<Notifications>();
+                        dbConn.CreateTable<User>();
+                        dbConn.CreateTable<Expense>();
+                        dbConn.CreateTable<Model.Group>();
+                        dbConn.CreateTable<Picture>();
+                        dbConn.CreateTable<Receipt>();
+                        dbConn.CreateTable<Balance_User>();
+                        dbConn.CreateTable<Debt_Expense>();
+                        dbConn.CreateTable<Debt_Group>();
+                        dbConn.CreateTable<Expense_Share>();
+                        dbConn.CreateTable<Group_Members>();
+                        dbConn.CreateTable<Currency>();
+                        dbConn.CreateTable<Notifications>();
+
+                        AppVersion = GetAppVersion();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
+            }
+        }
+
+        public async Task<bool> CheckFileExists(string fileName)
+        {
+            try
+            {
+                var store = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static string GetAppVersion()
+        {
+
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
+
+            return string.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+
+        }
+
         public static string GetQueryParameter(string input, string parameterName)
         {
             foreach (string item in input.Split('&'))
@@ -37,6 +129,12 @@ namespace SplitBook.Utilities
         {
             get { return (string)ApplicationData.Current.LocalSettings.Values[Constants.ACCESS_TOKEN_SECRET_TAG]; }
             set { ApplicationData.Current.LocalSettings.Values[Constants.ACCESS_TOKEN_SECRET_TAG] = value; }
+        }
+
+        public static string AppVersion
+        {
+            get { return (string)ApplicationData.Current.LocalSettings.Values[Constants.APP_VERSION]; }
+            set { ApplicationData.Current.LocalSettings.Values[Constants.APP_VERSION] = value; }
         }
 
         public static void setLastUpdatedTime()

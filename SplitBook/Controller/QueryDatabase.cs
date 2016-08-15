@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SplitBook.Model;
+﻿using SplitBook.Model;
 using SplitBook.Utilities;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +16,29 @@ namespace SplitBook.Controller
         //Returns the list of friends along with the balance and their picture.
         public List<User> getAllFriends()
         {
-            using (SplitBookContext db = new SplitBookContext())
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                List<User> friendsList = db.User.Include(u => u.picture).Include(u => u.balance).Where(u => u.id != Helpers.getCurrentUserId()).OrderBy(u => u.first_name).ToList<User>();
-                App.currentUser = db.User.Include(u => u.picture).Where(u => u.id == Helpers.getCurrentUserId()).FirstOrDefault();
+                List<User> friendsList = dbConn.Query<User>("SELECT * FROM user ORDER BY first_name").ToList<User>();
+                //remove the current user from the list as the user table also contains his details.
+                for (var x = 0; x < friendsList.Count; x++)
+                {
+                    if (friendsList[x].id == Helpers.getCurrentUserId())
+                    {
+                        if (App.currentUser == null)
+                        {
+                            App.currentUser = friendsList[x];
+                            App.currentUser.picture = getUserPicture(friendsList[x].id, dbConn);
+                        }
+                        friendsList.Remove(friendsList[x]);
+                        //As one element has been removed
+                        x--;
+                        continue;
+                    }
+
+                    object[] param = { friendsList[x].id };
+                    friendsList[x].balance = dbConn.Query<Balance_User>("SELECT * FROM balance_user WHERE user_id= ?  AND amount <> '0.0' AND amount <> '-0.0'", param).ToList<Balance_User>();
+                    friendsList[x].picture = getUserPicture(friendsList[x].id, dbConn);
+                }
                 return friendsList;
             }
         }
@@ -44,12 +63,12 @@ namespace SplitBook.Controller
         public List<Expense> getAllExpenses(int pageNo = 0)
         {
             int offset = EXPENSES_ROWS * pageNo;
+            object[] param = { offset, EXPENSES_ROWS };
 
-            using (SplitBookContext db = new SplitBookContext())
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
                 //Only retrieve expenses that have not been deleted
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Include(e => e.receipt)
-                    .Where(e => e.deleted_by_user_id == 0).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
+                List<Expense> expensesList = dbConn.Query<Expense>("SELECT * FROM expense WHERE deleted_by_user_id=0 ORDER BY datetime(date) DESC LIMIT ?,?", param).ToList<Expense>();
 
                 if (expensesList == null && expensesList.Count == 0)
                     return null;
@@ -60,26 +79,22 @@ namespace SplitBook.Controller
                 for (var x = 0; x < expensesList.Count; x++)
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
-                    //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    for (var y = 0; y < expensesList[x].repayments.Count; y++)
-                    {
-                        expensesList[x].repayments[y].fromUser = db.User.Where(u => u.id == expensesList[x].repayments[y].from).FirstOrDefault();
-                        expensesList[x].repayments[y].toUser = db.User.Where(u => u.id == expensesList[x].repayments[y].to).FirstOrDefault();
-                    }
-                    expensesList[x].created_by = db.User.Where(u => u.id == expensesList[x].created_by_user_id).FirstOrDefault();
+                    expensesList[x].repayments = getExpenseRepayments(expensesList[x].id, dbConn);
+                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id, dbConn);
 
-                    //if (expensesList[x].updated_by_user_id != 0)
-                    //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
+                    if (expensesList[x].updated_by_user_id != 0)
+                        expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id, dbConn);
 
-                    //if (expensesList[x].deleted_by_user_id != 0)
-                    //    expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id);
+                    if (expensesList[x].deleted_by_user_id != 0)
+                        expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id, dbConn);
 
-                    //expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code);
+                    expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code, dbConn);
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = db.User.Include(u => u.picture).Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
+                        expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id, dbConn);
                     }
+                    expensesList[x].receipt = getReceipt(expensesList[x].id, dbConn);
                 }
                 return expensesList;
             }
@@ -93,11 +108,10 @@ namespace SplitBook.Controller
             //or
             //paid by me and owed by him
             //Only retrieve expenses that have not been deleted
-            using (SplitBookContext db = new SplitBookContext())
+            object[] param = { Helpers.getCurrentUserId(), userId, userId, Helpers.getCurrentUserId(), offset, EXPENSES_ROWS };
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Include(e => e.receipt)
-                    .Where(e => e.deleted_by_user_id == 0 && e.repayments.Any(r => (r.from == Helpers.getCurrentUserId() && r.to == userId) || (r.from == userId && r.to == Helpers.getCurrentUserId())))
-                    .OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList();
+                List<Expense> expensesList = dbConn.Query<Expense>("SELECT expense.id, expense.group_id, expense.description, expense.details, expense.payment, expense.transaction_confirmed, expense.creation_method, expense.cost, expense.currency_code, expense.date, expense.created_by_user_id, expense.created_at, expense.updated_by_user_id, expense.updated_at, expense.deleted_at, expense.deleted_by_user_id FROM expense INNER JOIN debt_expense ON expense.id = debt_expense.expense_id WHERE expense.deleted_by_user_id=0 AND ((debt_expense.\"from\" = ? AND debt_expense.\"to\" = ?) OR (debt_expense.\"from\" = ? AND debt_expense.\"to\" = ?)) ORDER BY datetime(date) DESC LIMIT ?,?", param).ToList<Expense>();
 
                 if (expensesList == null && expensesList.Count == 0)
                     return null;
@@ -111,27 +125,23 @@ namespace SplitBook.Controller
                     expensesList[x].displayType = Expense.DISPLAY_FOR_SPECIFIC_USER;
                     expensesList[x].specificUserId = userId;
 
-                    //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    for (var y = 0; y < expensesList[x].repayments.Count; y++)
-                    {
-                        expensesList[x].repayments[y].fromUser = db.User.Where(u => u.id == expensesList[x].repayments[y].from).FirstOrDefault();
-                        expensesList[x].repayments[y].toUser = db.User.Where(u => u.id == expensesList[x].repayments[y].to).FirstOrDefault();
-                    }
+                    expensesList[x].repayments = getExpenseRepayments(expensesList[x].id, dbConn);
+                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id, dbConn);
 
-                    expensesList[x].created_by = db.User.Where(u => u.id == expensesList[x].created_by_user_id).FirstOrDefault();
+                    if (expensesList[x].updated_by_user_id != 0)
+                        expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id, dbConn);
 
-                    //if (expensesList[x].updated_by_user_id != 0)
-                    //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
+                    if (expensesList[x].deleted_by_user_id != 0)
+                        expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id, dbConn);
 
-                    //if (expensesList[x].deleted_by_user_id != 0)
-                    //    expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id);
-
-                    //expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code);
+                    expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code, dbConn);
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = db.User.Include(u=>u.picture).Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
+                        expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id, dbConn);
                     }
+
+                    expensesList[x].receipt = getReceipt(expensesList[x].id, dbConn);
                 }
                 return expensesList;
             }
@@ -139,26 +149,30 @@ namespace SplitBook.Controller
 
         public List<Group> getAllGroups()
         {
-            using (SplitBookContext db = new SplitBookContext())
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                List<Group> groupsList = db.Group.Include(g => g.group_members).Include(g => g.simplified_debts).Where(g => g.id != 0).OrderBy(g => g.name).ToList<Group>();
+                List<Group> groupsList = dbConn.Query<Group>("SELECT * FROM [group] ORDER BY name").ToList<Group>();
                 if (groupsList != null)
                 {
                     for (var x = 0; x < groupsList.Count; x++)
                     {
                         groupsList[x].members = new List<User>();
-                        //List<Group_Members> groupMembers = dbConn.Query<Group_Members>("SELECT * FROM group_members WHERE group_id= ?", param).ToList<Group_Members>();
-                        foreach (var group_member in groupsList[x].group_members)
+                        groupsList[x].simplified_debts = new List<Debt_Group>();
+
+                        object[] param = { groupsList[x].id };
+                        List<Group_Members> groupMembers = dbConn.Query<Group_Members>("SELECT * FROM group_members WHERE group_id= ?", param).ToList<Group_Members>();
+                        foreach (var member in groupMembers)
                         {
-                            groupsList[x].members.Add(db.User.Include(u=>u.picture).Where(u => u.id == group_member.user_id).FirstOrDefault());
+                            groupsList[x].members.Add(getUserDetails(member.user_id, dbConn));
                         }
 
-                        foreach (var groupDebt in groupsList[x].simplified_debts)
+                        List<Debt_Group> groupSimplifiedDebts = dbConn.Query<Debt_Group>("SELECT * FROM debt_group WHERE group_id= ?", param).ToList<Debt_Group>();
+                        foreach (var groupDebt in groupSimplifiedDebts)
                         {
-                            groupDebt.fromUser = db.User.Where(u=>u.id == groupDebt.from).FirstOrDefault();
-                            groupDebt.toUser = db.User.Where(u => u.id == groupDebt.to).FirstOrDefault();
+                            groupDebt.fromUser = getUserDetails(groupDebt.from, dbConn);
+                            groupDebt.toUser = getUserDetails(groupDebt.to, dbConn);
 
-                            //groupsList[x].simplified_debts.Add(groupDebt);
+                            groupsList[x].simplified_debts.Add(groupDebt);
                         }
                     }
                 }
@@ -168,12 +182,13 @@ namespace SplitBook.Controller
 
         public List<Expense> getAllExpensesForGroup(int groupId, int pageNo = 0)
         {
-            using (SplitBookContext db = new SplitBookContext())
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
                 int offset = EXPENSES_ROWS * pageNo;
+                object[] param = { groupId, offset, EXPENSES_ROWS };
 
                 //Only retrieve expenses that have not been deleted
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Include(e => e.receipt).Where(e => e.deleted_by_user_id == 0 && e.group_id == groupId).OrderByDescending(e => e.date).Skip(offset).Take(EXPENSES_ROWS).ToList<Expense>();
+                List<Expense> expensesList = dbConn.Query<Expense>("SELECT * FROM expense WHERE deleted_by_user_id=0 AND group_id=? ORDER BY datetime(date) DESC LIMIT ?,?", param).ToList<Expense>();
 
                 //Get list of repayments for expense.
                 //Get the created by, updated by and deleted by user
@@ -181,26 +196,22 @@ namespace SplitBook.Controller
                 for (var x = 0; x < expensesList.Count; x++)
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
-                    //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    for (var y = 0; y < expensesList[x].repayments.Count; y++)
-                    {
-                        expensesList[x].repayments[y].fromUser = db.User.Where(u => u.id == expensesList[x].repayments[y].from).FirstOrDefault();
-                        expensesList[x].repayments[y].toUser = db.User.Where(u => u.id == expensesList[x].repayments[y].to).FirstOrDefault();
-                    }
-                    expensesList[x].created_by = db.User.Where(u => u.id == expensesList[x].created_by_user_id).FirstOrDefault();
+                    expensesList[x].repayments = getExpenseRepayments(expensesList[x].id, dbConn);
+                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id, dbConn);
 
-                    //if (expensesList[x].updated_by_user_id != 0)
-                    //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
+                    if (expensesList[x].updated_by_user_id != 0)
+                        expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id, dbConn);
 
-                    //if (expensesList[x].deleted_by_user_id != 0)
-                    //    expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id);
+                    if (expensesList[x].deleted_by_user_id != 0)
+                        expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id, dbConn);
 
-                    //expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code);
+                    expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code, dbConn);
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = db.User.Include(u => u.picture).Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
+                        expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id, dbConn);
                     }
+                    expensesList[x].receipt = getReceipt(expensesList[x].id, dbConn);
                 }
 
                 return expensesList;
@@ -209,18 +220,18 @@ namespace SplitBook.Controller
 
         public List<Currency> getSupportedCurrencies()
         {
-            using (SplitBookContext db = new SplitBookContext())
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                List<Currency> currencyList = db.Currency.OrderBy(c => c.currency_code).ToList();
+                List<Currency> currencyList = dbConn.Query<Currency>("SELECT * FROM currency ORDER BY currency_code");
                 return currencyList;
             }
         }
 
         public string getUnitForCurrency(string currencyCode)
         {
-            using (SplitBookContext db = new SplitBookContext())
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                List<Currency> currencyList = db.Currency.Where(c => c.currency_code == currencyCode).ToList();
+                List<Currency> currencyList = dbConn.Query<Currency>("SELECT * FROM currency WHERE currency_code = ?", new Object[] { currencyCode });
                 if (currencyList != null && currencyList.Count != 0)
                 {
                     Currency currency = currencyList.First();
@@ -233,9 +244,14 @@ namespace SplitBook.Controller
 
         public List<Expense> searchForExpense(string searchText)
         {
-            using (SplitBookContext db = new SplitBookContext())
+            //int offset = EXPENSES_ROWS * pageNo;
+            object[] param = { 15 }; //top 15 results only
+
+            //Only retrieve expenses that have not been deleted
+            string query = "SELECT * FROM expense WHERE deleted_by_user_id=0 AND upper(description) LIKE upper('%" + searchText + "%') ORDER BY datetime(date) DESC LIMIT ?";
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                List<Expense> expensesList = db.Expense.Include(e => e.repayments).Include(e => e.users).Include(e => e.receipt).Where(e => e.deleted_by_user_id == 0 && (e.description.ToUpper()).Contains(searchText)).OrderByDescending(e => e.date).Take(15).ToList();
+                List<Expense> expensesList = dbConn.Query<Expense>(query, param).ToList<Expense>();
 
                 //Get list of repayments for expense.
                 //Get the created by, updated by and deleted by user
@@ -243,83 +259,80 @@ namespace SplitBook.Controller
                 for (var x = 0; x < expensesList.Count; x++)
                 {
                     expensesList[x].displayType = Expense.DISPLAY_FOR_ALL_USER;
-                    //expensesList[x].repayments = getExpenseRepayments(expensesList[x].id);
-                    for (var y = 0; y < expensesList[x].repayments.Count; y++)
-                    {
-                        expensesList[x].repayments[y].fromUser = db.User.Where(u => u.id == expensesList[x].repayments[y].from).FirstOrDefault();
-                        expensesList[x].repayments[y].toUser = db.User.Where(u => u.id == expensesList[x].repayments[y].to).FirstOrDefault();
-                    }
-                    expensesList[x].created_by = db.User.Where(u => u.id == expensesList[x].created_by_user_id).FirstOrDefault();
+                    expensesList[x].repayments = getExpenseRepayments(expensesList[x].id, dbConn);
+                    expensesList[x].created_by = getUserDetails(expensesList[x].created_by_user_id, dbConn);
 
-                    //if (expensesList[x].updated_by_user_id != 0)
-                    //    expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id);
+                    if (expensesList[x].updated_by_user_id != 0)
+                        expensesList[x].updated_by = getUserDetails(expensesList[x].updated_by_user_id, dbConn);
 
-                    //if (expensesList[x].deleted_by_user_id != 0)
-                    //    expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id);
+                    if (expensesList[x].deleted_by_user_id != 0)
+                        expensesList[x].deleted_by = getUserDetails(expensesList[x].deleted_by_user_id, dbConn);
 
-                    //expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code);
+                    expensesList[x].users = getExpenseShareUsers(expensesList[x].id, expensesList[x].currency_code, dbConn);
 
                     for (var y = 0; y < expensesList[x].users.Count; y++)
                     {
-                        expensesList[x].users[y].user = db.User.Include(u => u.picture).Where(u => u.id == expensesList[x].users[y].user_id).FirstOrDefault();
+                        expensesList[x].users[y].user = getUserDetails(expensesList[x].users[y].user_id, dbConn);
                     }
+                    expensesList[x].receipt = getReceipt(expensesList[x].id, dbConn);
                 }
 
                 return expensesList;
             }
         }
 
-        //public List<Balance_User> getUserBalance(int userId)
-        //{
-        //    using (SplitBookContext db = new SplitBookContext())
-        //    {
-        //        return db.Balance_User.Where(b => b.user_id == userId && b.amount != "0.0" && b.amount != "-0.0").ToList();
-        //    }
-        //}
+        public List<Balance_User> getUserBalance(int userId)
+        {
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            {
+                object[] param = { userId };
+                return dbConn.Query<Balance_User>("SELECT * FROM balance_user WHERE user_id= ?  AND amount <> '0.0' AND amount <> '-0.0'", param).ToList<Balance_User>();
+            }
+        }
 
-        //private List<Expense_Share> getExpenseShareUsers(int expenseId, string currencyCode)
-        //{
-        //    using (SplitBookContext db = new SplitBookContext())
-        //    {
-        //        List<Expense_Share> expenseShareList = db.Expense_Share.Where(e => e.expense_id == expenseId).ToList();                   
+        private List<Expense_Share> getExpenseShareUsers(int expenseId, string currencyCode, SQLiteConnection dbConn)
+        {
+            List<Expense_Share> expenseShareList = dbConn.Query<Expense_Share>("SELECT * FROM expense_share WHERE expense_id= ?", new object[] { expenseId }).ToList<Expense_Share>();
 
-        //        for (var y = 0; y < expenseShareList.Count; y++)
-        //        {
-        //            expenseShareList[y].currency = currencyCode;
-        //        }
-        //        return expenseShareList;
-        //    }
-        //}
+            for (var y = 0; y < expenseShareList.Count; y++)
+            {
+                expenseShareList[y].currency = currencyCode;
+            }
+            return expenseShareList;
+        }
 
-        //private List<Debt_Expense> getExpenseRepayments(int expenseId)
-        //{
-        //    using (SplitBookContext db = new SplitBookContext())
-        //    {
-        //        List<Debt_Expense> debtExpensesList = db.Debt_Expense.Where(d => d.expense_id == expenseId).ToList();                    
+        private List<Debt_Expense> getExpenseRepayments(int expenseId, SQLiteConnection dbConn)
+        {
+            List<Debt_Expense> debtExpensesList = dbConn.Query<Debt_Expense>("SELECT * FROM debt_expense WHERE expense_id= ?", new object[] { expenseId }).ToList<Debt_Expense>();
 
-        //        for (var y = 0; y < debtExpensesList.Count; y++)
-        //        {
-        //            debtExpensesList[y].fromUser = getUserDetails(debtExpensesList[y].from);
-        //            debtExpensesList[y].toUser = getUserDetails(debtExpensesList[y].to);
-        //        }
-        //        return debtExpensesList;
-        //    }
-        //}
+            for (var y = 0; y < debtExpensesList.Count; y++)
+            {
+                debtExpensesList[y].fromUser = getUserDetails(debtExpensesList[y].from, dbConn);
+                debtExpensesList[y].toUser = getUserDetails(debtExpensesList[y].to, dbConn);
+            }
+            return debtExpensesList;
+        }
 
-        //private User getUserDetails(int userId)
-        //{
-        //    using (SplitBookContext db = new SplitBookContext())
-        //    {
-        //        return db.User.Include(u => u.picture).Where(u => u.id == userId).FirstOrDefault();
-        //    }
-        //}
+        private User getUserDetails(int userId, SQLiteConnection dbConn)
+        {
+            User user = dbConn.Query<User>("SELECT * FROM user WHERE id= ?", new object[] { userId }).FirstOrDefault();
+            if (user != null)
+            {
+                user.picture = getUserPicture(userId, dbConn);
+                return user;
+            }
+            else
+                return null;
+        }
 
-        //private Picture getUserPicture(int userId)
-        //{
-        //    using (SplitBookContext db = new SplitBookContext())
-        //    {
-        //        return db.Picture.Where(p => p.user_id == userId).FirstOrDefault();
-        //    }
-        //}
+        private Picture getUserPicture(int userId, SQLiteConnection dbConn)
+        {
+            return dbConn.Query<Picture>("SELECT * FROM picture WHERE user_id= ?", new object[] { userId }).FirstOrDefault();
+        }
+
+        private Receipt getReceipt(int expenseId, SQLiteConnection dbConn)
+        {
+            return dbConn.Query<Receipt>("SELECT * FROM receipt WHERE expense_id=?", new object[] { expenseId }).FirstOrDefault() ?? new Receipt();
+        }
     }
 }

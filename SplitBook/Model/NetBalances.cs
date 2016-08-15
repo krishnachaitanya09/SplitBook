@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SplitBook.Controller;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -13,30 +14,12 @@ namespace SplitBook.Model
         private string netBalance;
         private string positiveBalance;
         private string negativeBalance;
-        private string currencyCode;
 
-        public void setBalances(string currency_name, double net, double positive, double negative)
+        public void setBalances(double net, double positive, double negative)
         {
-            using (SplitBookContext db = new SplitBookContext())
-            {
-                Currency currency = db.Currency.Where(c => c.currency_code == currency_name.ToUpper()).FirstOrDefault();
-                currencyCode = currency != null ? currency.unit : string.Empty;
-            }
-            if (currencyCode != String.Empty)
-            {
-                var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
-                format.CurrencySymbol = currencyCode;
-                format.CurrencyNegativePattern = 1;
-                NetBalance = String.Format(format, "{0:C}", Convert.ToDouble(net));
-                PositiveBalance = String.Format(format, "{0:C}", Convert.ToDouble(positive));
-                NegativeBalance = String.Format(format, "{0:C}", Convert.ToDouble(negative));
-            }
-            else
-            {
-                NetBalance = Convert.ToDouble(net).ToString();
-                PositiveBalance = Convert.ToDouble(positive).ToString();
-                NegativeBalance =  Convert.ToDouble(negative).ToString();
-            }
+            NetBalance = Convert.ToDouble(net).ToString();
+            PositiveBalance = Convert.ToDouble(positive).ToString();
+            NegativeBalance = Convert.ToDouble(negative).ToString();            
         }
 
 

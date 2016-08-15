@@ -513,7 +513,7 @@
                    DisplayMode="CompactOverlay"
                    OpenPaneLength="200"
                    IsTabStop="False"
-                   IsPaneOpen="True"
+                   IsPaneOpen="False"
                    PaneBackground="#FF5D5D5D" Template="{StaticResource SplitViewControlTemplate}">
             <SplitView.Pane>
                 <Grid>
