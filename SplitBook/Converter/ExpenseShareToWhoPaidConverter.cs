@@ -1,7 +1,9 @@
-﻿using SplitBook.Model;
+﻿using SplitBook.Controller;
+using SplitBook.Model;
 using SplitBook.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,15 +37,28 @@ namespace SplitBook.Converter
                 return null;
 
             string amount = null;
-            amount = String.Format("{0:0.00}", Math.Abs(System.Convert.ToDouble(paidUser.paid_share, System.Globalization.CultureInfo.InvariantCulture)));
+            if (expense.currency_code.Equals(App.currentUser.default_currency))
+            {
+                QueryDatabase obj = new QueryDatabase();
+                string unit = obj.getUnitForCurrency(expense.currency_code);
+                var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
+                format.CurrencySymbol = unit;
+                format.CurrencyNegativePattern = 1;
+                amount = String.Format("{0:C}", Math.Abs(System.Convert.ToDouble(paidUser.paid_share, CultureInfo.InvariantCulture)));
+            }
+            else
+            {
+                amount = expense.currency_code + String.Format("{0:0.00}", Math.Abs(System.Convert.ToDouble(expense.cost, CultureInfo.InvariantCulture)));
+            }
+
             string paid = " paid";
 
-            return getPaidUserName(paidUser.user) + paid + " " + expense.currency_code + amount;
+            return getPaidUserName(paidUser.user) + paid + " " + amount;
         }
 
         private String getPaidUserName(User paidUser)
         {
-            if(paidUser == null)
+            if (paidUser == null)
                 return "Unknown user (not a friend)";
 
             if (paidUser.id == Helpers.getCurrentUserId())

@@ -402,7 +402,7 @@
                 <PivotItem x:Name="receiptPivot" Header="Receipt" Margin="0">
                     <Grid  Background="White">
                         <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" ZoomMode="Enabled" MaxZoomFactor="3" MinZoomFactor="0.5">
-                            <Image Source="{Binding receipt.original}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12" Stretch="None"  MaxWidth="{Binding ActualWidth, ElementName=receiptPivot}" MaxHeight="{Binding ActualHeight, ElementName=receiptPivot}"/>
+                            <Image Source="{Binding receipt.original}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None"  MaxWidth="{Binding ActualWidth, ElementName=receiptPivot}" MaxHeight="{Binding ActualHeight, ElementName=receiptPivot}"/>
                         </ScrollViewer>
                     </Grid>
                 </PivotItem>
