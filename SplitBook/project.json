@@ -5,6 +5,7 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Newtonsoft.Json": "9.0.1",
     "sqlite-net-pcl": "1.1.2",
+    "SQLitePCL.raw": "0.9.3",
     "WinRTXamlToolkit.UWP": "2.0.0"
   },
   "frameworks": {

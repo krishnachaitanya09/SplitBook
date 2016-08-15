@@ -44,18 +44,20 @@ namespace SplitBook.Utilities
 
                     using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
                     {
-                        dbConn.DropTable<Notifications>();
                         dbConn.DropTable<User>();
                         dbConn.DropTable<Expense>();
                         dbConn.DropTable<Model.Group>();
-                        dbConn.DropTable<Picture>();
-                        dbConn.DropTable<Receipt>();
+                        dbConn.DropTable<Picture>();     
                         dbConn.DropTable<Balance_User>();
                         dbConn.DropTable<Debt_Expense>();
                         dbConn.DropTable<Debt_Group>();
                         dbConn.DropTable<Expense_Share>();
                         dbConn.DropTable<Group_Members>();
+                        dbConn.DropTable<AmountSplit>();
+                        dbConn.DropTable<Category>();
                         dbConn.DropTable<Currency>();
+                        dbConn.DropTable<Comment>();
+                        dbConn.DropTable<ExpenseType>();
                         dbConn.DropTable<Notifications>();
 
                         dbConn.CreateTable<Notifications>();
