@@ -18,7 +18,9 @@ namespace SplitBook.Converter
             if (parameter != null && parameter.ToString().Equals("overall"))
             {
                 QueryDatabase query = new QueryDatabase();
-                string currencyCode = query.getUnitForCurrency(App.currentUser.default_currency.ToUpper());
+                string currencyCode = String.Empty;
+                if (App.currentUser != null)
+                    currencyCode = query.getUnitForCurrency(App.currentUser.default_currency.ToUpper());
                 if (currencyCode != String.Empty)
                 {
                     var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();

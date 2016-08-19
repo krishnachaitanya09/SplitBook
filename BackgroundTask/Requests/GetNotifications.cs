@@ -3,10 +3,7 @@ using BackgroundTasks.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 
@@ -30,7 +27,7 @@ namespace BackgroundTasks.Request
         {
             try
             {
-                AsyncOAuth.OAuthUtility.ComputeHash = (key, buffer) =>
+                OAuthUtility.ComputeHash = (key, buffer) =>
                 {
                     var crypt = Windows.Security.Cryptography.Core.MacAlgorithmProvider.OpenAlgorithm("HMAC_SHA1");
                     var keyBuffer = Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(key);

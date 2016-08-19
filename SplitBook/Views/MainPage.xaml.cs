@@ -126,7 +126,7 @@ namespace SplitBook.Views
             {
                 if (task.Value.Name == taskName)
                 {
-                    task.Value.Unregister(true);
+                    return;
                 }
             }
 

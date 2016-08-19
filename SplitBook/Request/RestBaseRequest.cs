@@ -18,7 +18,7 @@ namespace SplitBook.Request
         public RestBaseRequest()
         {
             client = OAuthUtility.CreateOAuthClient(Constants.consumerKey, Constants.consumerSecret, new AccessToken(App.accessToken, App.accessTokenSecret));
-            client.BaseAddress = new Uri(Constants.SPLITWISE_API_URL);            
+            client.BaseAddress = new Uri(Constants.SPLITWISE_API_URL);
         }
-    }   
+    }
 }

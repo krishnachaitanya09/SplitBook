@@ -115,12 +115,11 @@
     <Compile Include="Requests\GetNotifications.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SplitBook.Core\SplitBook.AsyncOAuth.csproj">
+    <ProjectReference Include="..\SplitBook.AsyncOAuth\SplitBook.AsyncOAuth.csproj">
       <Project>{401db452-6c1d-4f11-a0f7-e6742e0b7fab}</Project>
       <Name>SplitBook.AsyncOAuth</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

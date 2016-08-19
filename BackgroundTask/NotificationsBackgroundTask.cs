@@ -50,8 +50,6 @@ namespace BackgroundTasks
             {
                 Content = new TileBindingContentAdaptive()
                 {
-                    TextStacking = TileTextStacking.Center,
-
                     Children =
                     {
                         new AdaptiveGroup()
@@ -93,29 +91,8 @@ namespace BackgroundTasks
                     {
                         Children =
                         {
-                           new AdaptiveGroup()
-                        {
-                            Children =
-                            {
-                                new AdaptiveSubgroup()
-                                 {
-                                    HintWeight = 1,
-                                    Children =
-                                    {
-                                        new AdaptiveImage() { Source = notification.image_url }
-                                    }
-                                 },
-                                new AdaptiveSubgroup()
-                                {
-                                    HintWeight = 7,
-                                    Children =
-                                    {
-                                        new AdaptiveText() { Text = notification.content, HintWrap = true },
-                                        new AdaptiveText() { Text = notification.created_at, HintStyle = AdaptiveTextStyle.CaptionSubtle }
-                                    }
-                                }
-                            }
-                        }
+                            new AdaptiveText() { Text = notification.content, HintWrap = true },
+                            new AdaptiveText() { Text = notification.created_at, HintStyle = AdaptiveTextStyle.CaptionSubtle }
                         }
                     }
                 }

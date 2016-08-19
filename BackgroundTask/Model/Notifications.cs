@@ -19,7 +19,7 @@ namespace BackgroundTasks.Model
             get { return _created_at; }
             set
             {
-                _created_at = Helpers.DateTimeHelper(value);
+                _created_at = DateTime.Parse(value).ToString("dd MMMM hh:mm tt", System.Globalization.CultureInfo.InvariantCulture);
             }
         }
         public int created_by { get; set; }
