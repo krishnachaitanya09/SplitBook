@@ -30,6 +30,7 @@ namespace SplitBook.Controller
 
         public void performSync()
         {
+            Helpers.NotificationsLastUpdated = DateTime.UtcNow.ToString("u");
             if (!Helpers.checkNetworkConnection())
             {
                 CallbackOnSuccess(false, HttpStatusCode.ServiceUnavailable);
@@ -251,7 +252,7 @@ namespace SplitBook.Controller
                 dbConn.DeleteAll<Debt_Expense>();
                 dbConn.DeleteAll<Debt_Group>();
                 dbConn.DeleteAll<Expense_Share>();
-                dbConn.DeleteAll<Group_Members>();                             
+                dbConn.DeleteAll<Group_Members>();
                 dbConn.DeleteAll<Currency>();
                 dbConn.DeleteAll<Notifications>();
             }
