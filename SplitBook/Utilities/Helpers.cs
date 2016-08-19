@@ -1,5 +1,6 @@
 ﻿using SplitBook.Controller;
 using SplitBook.Model;
+using SplitBook.Views;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -37,44 +38,6 @@ namespace SplitBook.Utilities
                         dbConn.CreateTable<Group_Members>();
                         dbConn.CreateTable<Currency>();
                         dbConn.CreateTable<Notifications>();
-                    }
-                }
-                else if (AppVersion != GetAppVersion())
-                {
-
-                    using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
-                    {
-                        dbConn.DropTable<User>();
-                        dbConn.DropTable<Expense>();
-                        dbConn.DropTable<Model.Group>();
-                        dbConn.DropTable<Picture>();     
-                        dbConn.DropTable<Balance_User>();
-                        dbConn.DropTable<Debt_Expense>();
-                        dbConn.DropTable<Debt_Group>();
-                        dbConn.DropTable<Expense_Share>();
-                        dbConn.DropTable<Group_Members>();
-                        dbConn.DropTable<AmountSplit>();
-                        dbConn.DropTable<Category>();
-                        dbConn.DropTable<Currency>();
-                        dbConn.DropTable<Comment>();
-                        dbConn.DropTable<ExpenseType>();
-                        dbConn.DropTable<Notifications>();
-
-                        dbConn.CreateTable<Notifications>();
-                        dbConn.CreateTable<User>();
-                        dbConn.CreateTable<Expense>();
-                        dbConn.CreateTable<Model.Group>();
-                        dbConn.CreateTable<Picture>();
-                        dbConn.CreateTable<Receipt>();
-                        dbConn.CreateTable<Balance_User>();
-                        dbConn.CreateTable<Debt_Expense>();
-                        dbConn.CreateTable<Debt_Group>();
-                        dbConn.CreateTable<Expense_Share>();
-                        dbConn.CreateTable<Group_Members>();
-                        dbConn.CreateTable<Currency>();
-                        dbConn.CreateTable<Notifications>();
-
-                        AppVersion = GetAppVersion();
                     }
                 }
             }
@@ -151,6 +114,12 @@ namespace SplitBook.Utilities
             return (string)ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME] ?? "0";
         }
 
+        public static string NotificationsLastUpdated
+        {
+            get { return (string)ApplicationData.Current.LocalSettings.Values["notifications_last_updated"]; }
+            set { ApplicationData.Current.LocalSettings.Values["notifications_last_updated"] = value; }
+        }
+
         public static void setCurrentUserId(int userId)
         {
             ApplicationData.Current.LocalSettings.Values[Constants.CURRENT_USER_ID] = userId;
@@ -183,29 +152,36 @@ namespace SplitBook.Utilities
 
         public static Balance_User getDefaultBalance(List<Balance_User> balance)
         {
-            //Each balance entry represents a balance in a seperate currency
-            string currency = App.currentUser.default_currency;
-
-            if (balance == null || balance.Count == 0)
+            try
             {
-                Balance_User noBalance = new Balance_User();
-                noBalance.amount = "0";
-                return noBalance;
-            }
+                //Each balance entry represents a balance in a seperate currency
+                string currency = App.currentUser.default_currency;
 
-            if (currency == null)
+                if (balance == null || balance.Count == 0)
+                {
+                    Balance_User noBalance = new Balance_User();
+                    noBalance.amount = "0";
+                    return noBalance;
+                }
+
+                if (currency == null)
+                {
+                    return balance[0];
+                }
+
+                foreach (var userBalance in balance)
+                {
+                    if (userBalance.currency_code.Equals(currency))
+                    {
+                        return userBalance;
+                    }
+                }
+                return balance[0];
+            }
+            catch
             {
                 return balance[0];
             }
-
-            foreach (var userBalance in balance)
-            {
-                if (userBalance.currency_code.Equals(currency))
-                {
-                    return userBalance;
-                }
-            }
-            return balance[0];
         }
 
         public static bool hasMultipleBalances(List<Balance_User> balance)
@@ -250,7 +226,9 @@ namespace SplitBook.Utilities
         public static void logout()
         {
             ApplicationData.Current.LocalSettings.Values.Clear();
-
+            App.currentUser = null;
+            if (MainPage.syncDatabaseBackgroundWorker.IsBusy)
+                MainPage.syncDatabaseBackgroundWorker.CancelAsync();
             SyncDatabase.DeleteAllDataInDB();
         }
 

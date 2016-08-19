@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using Windows.ApplicationModel.Core;
+using Windows.Data.Pdf;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -212,31 +213,52 @@ namespace SplitBook.Add_Expense_Pages
 
         private async void btnReceipt_Click(object sender, RoutedEventArgs e)
         {
-            FileOpenPicker open = new FileOpenPicker();
-            open.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            open.ViewMode = PickerViewMode.Thumbnail;
+            try
+            {
+                FileOpenPicker open = new FileOpenPicker();
+                open.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                open.ViewMode = PickerViewMode.Thumbnail;
 
-            // Filter to include a sample subset of file types
-            open.FileTypeFilter.Clear();
-            open.FileTypeFilter.Add(".bmp");
-            open.FileTypeFilter.Add(".png");
-            open.FileTypeFilter.Add(".jpeg");
-            open.FileTypeFilter.Add(".jpg");
+                // Filter to include a sample subset of file types
+                open.FileTypeFilter.Clear();
+                open.FileTypeFilter.Add(".bmp");
+                open.FileTypeFilter.Add(".png");
+                open.FileTypeFilter.Add(".jpeg");
+                open.FileTypeFilter.Add(".jpg");
+                open.FileTypeFilter.Add(".pdf");
 
-            // Open a stream for the selected file
-            StorageFile file = await open.PickSingleFileAsync();
+                // Open a stream for the selected file
+                StorageFile file = await open.PickSingleFileAsync();
 
-            // Ensure a file was selected
-            if (file != null)
-            {                
-                // Ensure the stream is disposed once the image is loaded
-                using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
+                // Ensure a file was selected
+                if (file != null)
                 {
-                    BitmapImage bitmapImage = new BitmapImage();
-                    await bitmapImage.SetSourceAsync(fileStream);
-                    this.expenseControl.receiptImage.Source = bitmapImage;                
+                    // Ensure the stream is disposed once the image is loaded
+                    using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();
+                        if (file.FileType.Equals(".pdf"))
+                        {
+                            PdfDocument pdfDocument = await PdfDocument.LoadFromStreamAsync(fileStream);
+                            using (PdfPage page = pdfDocument.GetPage(0))
+                            {
+                                var stream = new InMemoryRandomAccessStream();
+                                await page.RenderToStreamAsync(stream);
+                                await bitmapImage.SetSourceAsync(stream);
+                            }
+                        }
+                        else
+                        {
+                            await bitmapImage.SetSourceAsync(fileStream);
+                        }
+                        this.expenseControl.receiptImage.Source = bitmapImage;
+                    }
+                    this.expenseControl.expense.receiptFile = file;
                 }
-                this.expenseControl.expense.receiptFile = file;
+            }
+            catch (Exception ex)
+            {
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
             }
         }
     }

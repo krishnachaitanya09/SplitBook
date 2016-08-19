@@ -1,2 +1,6 @@
-MainPackage=F:\Projects\SplitBook\SplitBook\bin\x64\Release\Upload\SplitBook_2.0.1.0_x64.appx
-SymbolPackage=F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_2.0.1.0\SplitBook_2.0.1.0_x64.appxsym
+MainPackage=F:\Projects\SplitBook\SplitBook\bin\x64\Release\Upload\SplitBook_2.0.2.0_x64.appx
+SymbolPackage=F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_2.0.2.0\SplitBook_2.0.2.0_x64.appxsym
+ResourcePack=F:\Projects\SplitBook\SplitBook\_scale-100.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\_scale-125.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\_scale-150.appx
+ResourcePack=F:\Projects\SplitBook\SplitBook\_scale-400.appx

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="47961KrishnaChaitanya.SplitWisely" Publisher="CN=F3CD9EA9-13DA-4838-9772-ADA1D448B556" Version="2.0.1.0" />
+  <Identity Name="47961KrishnaChaitanya.SplitWisely" Publisher="CN=F3CD9EA9-13DA-4838-9772-ADA1D448B556" Version="2.0.2.0" />
   <mp:PhoneIdentity PhoneProductId="a0151867-c7f9-457f-95ba-120cdb8071b9" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>SplitBook</DisplayName>
@@ -16,7 +16,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="SplitBook.App">
       <uap:VisualElements DisplayName="SplitBook" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="SplitBook" BackgroundColor="transparent">
-        <uap:LockScreen Notification="badge" BadgeLogo="Assets\LockScreenLogo.png" />
+        <uap:LockScreen Notification="badgeAndTileText" BadgeLogo="Assets\LockScreenLogo.png" />
         <uap:DefaultTile ShortName="SplitBook" Square71x71Logo="Assets\Square71x71Logo.png" Square310x310Logo="Assets\Square310x310Logo.png" Wide310x150Logo="Assets\Wide310x150Logo.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
@@ -32,6 +32,14 @@
           <uap:Rotation Preference="landscapeFlipped" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
+      <Extensions>
+        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTasks.NotificationsBackgroundTask">
+          <BackgroundTasks>
+            <Task Type="systemEvent" />
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>

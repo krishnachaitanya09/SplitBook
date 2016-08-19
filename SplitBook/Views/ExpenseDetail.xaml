@@ -399,10 +399,10 @@
                         </ListView>
                     </Grid>
                 </PivotItem>
-                <PivotItem x:Name="receiptPivot" Header="Receipt" Margin="0">
-                    <Grid  Background="White">
+                <PivotItem x:Name="receiptPivot" Header="Receipt" Margin="0" SizeChanged="receiptPivot_SizeChanged">
+                    <Grid Background="White">
                         <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" ZoomMode="Enabled" MaxZoomFactor="3" MinZoomFactor="0.5">
-                            <Image Source="{Binding receipt.original}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None"  MaxWidth="{Binding ActualWidth, ElementName=receiptPivot}" MaxHeight="{Binding ActualHeight, ElementName=receiptPivot}"/>
+                            <Image x:Name="ReceiptImage" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"/>
                         </ScrollViewer>
                     </Grid>
                 </PivotItem>
@@ -471,6 +471,7 @@
             <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}" x:Name="busyIndicator" />
         </Grid>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
+            <AppBarButton Name="save" Icon="Save" Label="Save Receipt" Click="btnSave_Click" Foreground="White" Visibility="Collapsed"/>
             <AppBarButton Name="delete" Icon="Delete" Label="Delete" Click="btnDeleteExpense_Click" Foreground="White"/>
             <AppBarButton Name="edit" Icon="Edit" Label="Edit" Click="btnEdit_Click" Foreground="White"/>
             <AppBarButton Name="refresh" Icon="Refresh" Label="Refresh Comments" Click="btnRefresh_Click" Visibility="Collapsed" Foreground="White"/>

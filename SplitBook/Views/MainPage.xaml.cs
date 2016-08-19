@@ -7,9 +7,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Net;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Core;
+using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -105,7 +107,38 @@ namespace SplitBook.Views
                     buttonEnabler.RefreshButtonEnabled = false;
                 }
             }
+            RegisterBackgroundTask();
+            ClearTile();
+            Helpers.NotificationsLastUpdated = DateTime.UtcNow.ToString("u");
         }
+
+        private void ClearTile()
+        {
+            ToastNotificationManager.History.Clear();
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
+        }
+
+        private async void RegisterBackgroundTask()
+        {
+            var backgroundAccessStatus = await BackgroundExecutionManager.RequestAccessAsync();
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+            {
+                if (task.Value.Name == taskName)
+                {
+                    task.Value.Unregister(true);
+                }
+            }
+
+            BackgroundTaskBuilder taskBuilder = new BackgroundTaskBuilder();
+            taskBuilder.Name = taskName;
+            taskBuilder.TaskEntryPoint = taskEntryPoint;
+            taskBuilder.SetTrigger(new TimeTrigger(15, false));
+            var registration = taskBuilder.Register();
+        }
+
+        private const string taskName = "NotificationsBackgroundTask";
+        private const string taskEntryPoint = "BackgroundTasks.NotificationsBackgroundTask";
 
         private void populateData()
         {

@@ -21,7 +21,7 @@
     <PackageCertificateThumbprint>E39127CCDE102CE84A8D76D5D8F93F0479C2DD94</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -117,13 +117,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AsyncOAuth\Internal\Precondition.cs" />
-    <Compile Include="AsyncOAuth\Internal\Utility.cs" />
-    <Compile Include="AsyncOAuth\OAuthAuthorizer.cs" />
-    <Compile Include="AsyncOAuth\OAuthMessageHandler.cs" />
-    <Compile Include="AsyncOAuth\OAuthUtility.cs" />
-    <Compile Include="AsyncOAuth\Token.cs" />
-    <Compile Include="AsyncOAuth\TokenResponse.cs" />
     <Compile Include="Controller\CommentDatabase.cs" />
     <Compile Include="Controller\ModifyDatabase.cs" />
     <Compile Include="Controller\QueryDatabase.cs" />
@@ -180,10 +173,27 @@
     <Compile Include="Converter\UserDetails\UserDetailsExpenseColorConverter.cs" />
     <Compile Include="Converter\UserDetails\UserDetailsExpensesConverter.cs" />
     <Compile Include="Controls\ExpandPanel.cs" />
+    <Compile Include="Model\AmountSplit.cs" />
+    <Compile Include="Model\Balance_User.cs" />
     <Compile Include="Model\ButtonEnabler.cs" />
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\Comment.cs" />
+    <Compile Include="Model\Currency.cs" />
+    <Compile Include="Model\Debt_Expense.cs" />
+    <Compile Include="Model\Debt_Group.cs" />
+    <Compile Include="Model\Expense.cs" />
+    <Compile Include="Model\ExpenseType.cs" />
+    <Compile Include="Model\Group.cs" />
+    <Compile Include="Model\Group_Members.cs" />
+    <Compile Include="Model\NetBalances.cs" />
+    <Compile Include="Model\Notifications.cs" />
+    <Compile Include="Model\Picture.cs" />
     <Compile Include="Model\Receipt.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="Request\DeleteFriendRequest.cs" />
+    <Compile Include="Request\GetNotifications.cs" />
     <Compile Include="Utilities\Advertisement.cs" />
+    <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\SplitwiseAuthenticationBroker.cs" />
     <Compile Include="Views\AccountSettings.xaml.cs">
       <DependentUpon>AccountSettings.xaml</DependentUpon>
@@ -218,21 +228,6 @@
     <Compile Include="Views\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\AmountSplit.cs" />
-    <Compile Include="Model\Balance_User.cs" />
-    <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\Comment.cs" />
-    <Compile Include="Model\Currency.cs" />
-    <Compile Include="Model\Debt_Expense.cs" />
-    <Compile Include="Model\Debt_Group.cs" />
-    <Compile Include="Model\Expense.cs" />
-    <Compile Include="Model\ExpenseType.cs" />
-    <Compile Include="Model\Group.cs" />
-    <Compile Include="Model\Group_Members.cs" />
-    <Compile Include="Model\NetBalances.cs" />
-    <Compile Include="Model\Notifications.cs" />
-    <Compile Include="Model\Picture.cs" />
-    <Compile Include="Model\User.cs" />
     <Compile Include="Request\AddExpenseRequest.cs" />
     <Compile Include="Request\CreateCommentRequest.cs" />
     <Compile Include="Request\CreateFriendRequest.cs" />
@@ -250,7 +245,6 @@
     <Compile Include="Request\RestBaseRequest.cs" />
     <Compile Include="Request\UpdateExpenseRequest.cs" />
     <Compile Include="Request\UpdateUserRequest.cs" />
-    <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Helpers.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -470,6 +464,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SampleData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BackgroundTask\BackgroundTasks.csproj">
+      <Project>{a4a7649d-dd3c-413b-a598-9d242ab1fc57}</Project>
+      <Name>BackgroundTasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SplitBook.Core\SplitBook.AsyncOAuth.csproj">
+      <Project>{401db452-6c1d-4f11-a0f7-e6742e0b7fab}</Project>
+      <Name>SplitBook.AsyncOAuth</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

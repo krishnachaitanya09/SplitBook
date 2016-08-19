@@ -6,8 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
+using Windows.Data.Pdf;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -34,7 +42,6 @@ namespace SplitBook.Views
             selectedExpense = (Application.Current as App).SELECTED_EXPENSE;
             selectedExpense.displayType = Expense.DISPLAY_FOR_ALL_USER;
             this.DataContext = selectedExpense;
-            //llsRepayments.ItemsSource = selectedExpense.users;
 
             deleteExpenseBackgroundWorker = new BackgroundWorker();
             deleteExpenseBackgroundWorker.WorkerSupportsCancellation = true;
@@ -61,6 +68,8 @@ namespace SplitBook.Views
         {
             base.OnNavigatedTo(e);
             BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
+            save.IsEnabled = selectedExpense.receipt.original != null;
+            LoadReceipt();
             GoogleAnalytics.EasyTracker.GetTracker().SendView("ExpenseDetailsPage");
         }
 
@@ -216,7 +225,7 @@ namespace SplitBook.Views
             if (!addCommentBackgroundWorker.IsBusy)
             {
                 this.Focus(FocusState.Programmatic);
-                busyIndicator.IsActive = true;                
+                busyIndicator.IsActive = true;
                 addCommentBackgroundWorker.RunWorkerAsync(new CustomCommentView(commentBox.Text.Trim(), DateTime.Now, App.currentUser.name));
                 commentBox.Text = "";
             }
@@ -232,13 +241,21 @@ namespace SplitBook.Views
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (pivot.SelectedIndex == 3)
+            switch (pivot.SelectedIndex)
             {
-                refresh.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                refresh.Visibility = Visibility.Collapsed;
+                case 1:
+                    refresh.Visibility = Visibility.Collapsed;
+                    save.Visibility = Visibility.Visible;
+                    break;
+                case 3:
+                    save.Visibility = Visibility.Collapsed;
+                    refresh.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    save.Visibility = Visibility.Collapsed;
+                    refresh.Visibility = Visibility.Collapsed;
+                    break;
+
             }
         }
 
@@ -248,6 +265,92 @@ namespace SplitBook.Views
             BitmapImage pic = new BitmapImage(new Uri("ms-appx:///Assets/Images/profilePhoto.png"));
             profilePic.Source = pic;
         }
+
+        private void receiptPivot_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ReceiptImage.MaxWidth = e.NewSize.Width;
+            ReceiptImage.MaxHeight = e.NewSize.Height;
+        }
+
+        private async void LoadReceipt()
+        {
+            try
+            {
+                BitmapImage image = new BitmapImage();
+                if (selectedExpense.receipt.original != null)
+                {
+                    Uri receiptUri = new Uri(selectedExpense.receipt.original);
+                    if (Path.HasExtension(receiptUri.AbsolutePath))
+                    {
+                        string extension = Path.GetExtension(receiptUri.AbsolutePath);
+                        if (extension.Equals(".pdf"))
+                        {
+                            HttpClient httpClient = new HttpClient();
+                            Stream fileStream = await httpClient.GetStreamAsync(receiptUri);
+                            MemoryStream memStream = new MemoryStream();
+                            await fileStream.CopyToAsync(memStream);
+                            PdfDocument pdfDocument = await PdfDocument.LoadFromStreamAsync(memStream.AsRandomAccessStream());
+                            using (PdfPage page = pdfDocument.GetPage(0))
+                            {
+                                var stream = new InMemoryRandomAccessStream();
+                                await page.RenderToStreamAsync(stream);
+                                await image.SetSourceAsync(stream);
+                            }
+                        }
+                        else
+                        {
+                            image.UriSource = receiptUri;
+                        }
+                    }
+                }
+                ReceiptImage.Source = image;
+            }
+            catch (Exception ex)
+            {
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
+            }
+        }
+
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                FileSavePicker fileSavePicker = new FileSavePicker();
+                fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                string extension = Path.GetExtension(new Uri(selectedExpense.receipt.original).AbsolutePath);
+                string extensionDescription;
+                ExtensionMappings.TryGetValue(extension, out extensionDescription);
+                fileSavePicker.FileTypeChoices.Add(extensionDescription, new List<string>() { extension });
+                fileSavePicker.SuggestedFileName = "Receipt";
+                StorageFile destinationFile = await fileSavePicker.PickSaveFileAsync();
+                if (destinationFile == null)
+                {
+                    // The user cancelled the picking operation
+                    return;
+                }
+
+                using (Stream stream = await destinationFile.OpenStreamForWriteAsync())
+                {
+                    HttpClient httpClient = new HttpClient();
+                    Stream fileStream = await httpClient.GetStreamAsync(selectedExpense.receipt.original);
+                    await fileStream.CopyToAsync(stream);
+                    await stream.FlushAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
+            }
+
+        }
+
+        private static IDictionary<string, string> ExtensionMappings = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase) {
+            {".bmp", "BMP"},
+            {".jpg", "JPG"},
+            {".jpeg", "JPEG"},
+            {".png", "PNG"},
+            {".pdf", "PDF Document"}
+        };
     }
 
     public class CustomCommentView

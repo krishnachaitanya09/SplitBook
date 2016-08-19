@@ -11,7 +11,7 @@ using Windows.Web.Http.Headers;
 
 namespace SplitBook.Request
 {
-    abstract class RestBaseRequest
+    public abstract class RestBaseRequest
     {
         protected HttpClient client;
 

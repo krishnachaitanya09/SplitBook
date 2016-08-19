@@ -30,7 +30,7 @@ namespace SplitBook
         public int PAYMENT_TYPE { get; set; }
         public int PAYMENT_GROUP { get; set; }
         public User NEW_USER { get; set; }
-        public Group NEW_GROUP { get; set; }        
+        public Group NEW_GROUP { get; set; }
 
         public Frame rootFrame { get; set; }
 
@@ -101,7 +101,7 @@ namespace SplitBook
                 {
                     statusBar.BackgroundOpacity = 1;
                     statusBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
-                    statusBar.ForegroundColor = Colors.White;                    
+                    statusBar.ForegroundColor = Colors.White;
                 }
             }
 
@@ -113,7 +113,7 @@ namespace SplitBook
             //                this.DebugSettings.EnableFrameRateCounter = true;
             //            }
             //#endif     
-			Helpers dbHelper = new Helpers();
+            Helpers dbHelper = new Helpers();
             dbHelper.CreateDatabase();
 
             rootFrame = Window.Current.Content as Frame;
@@ -152,6 +152,93 @@ namespace SplitBook
                 else
                 {
                     rootFrame.Navigate(typeof(LoginPage), e.Arguments);
+                }
+
+            }
+            // Ensure the current window is active
+            Window.Current.Activate();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs e)
+        {
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            {
+                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                if (titleBar != null)
+                {
+
+                    titleBar.ButtonBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
+                    titleBar.ButtonHoverBackgroundColor = (Application.Current.Resources["splitwiseGreenHover"] as SolidColorBrush).Color;
+                    titleBar.ButtonPressedBackgroundColor = (Application.Current.Resources["splitwiseGreenPressed"] as SolidColorBrush).Color;
+                    titleBar.ButtonForegroundColor = Colors.White;
+                    titleBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color; ;
+                    titleBar.ForegroundColor = Colors.White;
+                    titleBar.InactiveBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
+                    titleBar.InactiveForegroundColor = Colors.White;
+                    titleBar.ButtonInactiveBackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
+                    titleBar.ButtonInactiveForegroundColor = Colors.White;
+                }
+            }
+
+            //Mobile customization
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {
+                var statusBar = StatusBar.GetForCurrentView();
+                if (statusBar != null)
+                {
+                    statusBar.BackgroundOpacity = 1;
+                    statusBar.BackgroundColor = (Application.Current.Resources["splitwiseGreen"] as SolidColorBrush).Color;
+                    statusBar.ForegroundColor = Colors.White;
+                }
+            }
+
+            Advertisement.UpdateInAppPurchases();
+
+            //#if DEBUG
+            //            if (System.Diagnostics.Debugger.IsAttached)
+            //            {
+            //                this.DebugSettings.EnableFrameRateCounter = true;
+            //            }
+            //#endif     
+            Helpers dbHelper = new Helpers();
+            dbHelper.CreateDatabase();
+
+            rootFrame = Window.Current.Content as Frame;
+
+            // Do not repeat app initialization when the Window already has content,
+            // just ensure that the window is active
+            if (rootFrame == null)
+            {
+                // Create a Frame to act as the navigation context and navigate to the first page
+                rootFrame = new Frame();
+
+                rootFrame.NavigationFailed += OnNavigationFailed;
+
+                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    //TODO: Load state from previously suspended application
+                }
+
+                // Place the frame in the current Window
+                Window.Current.Content = rootFrame;
+            }
+
+            if (rootFrame.Content == null)
+            {
+                App.accessToken = Helpers.AccessToken;
+                App.accessTokenSecret = Helpers.AccessTokenSecret;
+
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
+                if (ApplicationData.Current.LocalSettings.Values[Constants.ACCESS_TOKEN_TAG] != null &&
+                    ApplicationData.Current.LocalSettings.Values[Constants.ACCESS_TOKEN_SECRET_TAG] != null)
+                {
+                    rootFrame.Navigate(typeof(MainPage), false);
+                }
+                else
+                {
+                    rootFrame.Navigate(typeof(LoginPage));
                 }
 
             }
