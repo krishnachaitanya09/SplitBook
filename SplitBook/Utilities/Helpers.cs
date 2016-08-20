@@ -25,7 +25,6 @@ namespace SplitBook.Utilities
                 {
                     using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
                     {
-                        //Delete all the data in the database as first use will also be called after logout.
                         dbConn.CreateTable<User>();
                         dbConn.CreateTable<Expense>();
                         dbConn.CreateTable<Model.Group>();
@@ -43,7 +42,7 @@ namespace SplitBook.Utilities
             }
             catch (Exception ex)
             {
-                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + ":" + ex.StackTrace, false);
             }
         }
 

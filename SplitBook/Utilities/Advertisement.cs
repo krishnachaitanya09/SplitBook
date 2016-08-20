@@ -22,7 +22,7 @@ namespace SplitBook.Utilities
             }
            catch(Exception ex)
             {
-                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + ":" + ex.StackTrace, false);
             }
            
         }
@@ -40,7 +40,7 @@ namespace SplitBook.Utilities
                 }
                 catch (Exception ex)
                 {
-                    GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
+                    GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + ":" + ex.StackTrace, false);
                     // The in-app purchase was not completed because 
                     // an error occurred.
                 }

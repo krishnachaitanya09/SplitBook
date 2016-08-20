@@ -258,7 +258,7 @@ namespace SplitBook.Add_Expense_Pages
             }
             catch (Exception ex)
             {
-                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message, false);
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + ":" + ex.StackTrace, false);
             }
         }
     }

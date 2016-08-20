@@ -64,7 +64,7 @@ namespace SplitBook
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            GoogleAnalytics.EasyTracker.GetTracker().SendException(e.Message, true);
+            GoogleAnalytics.EasyTracker.GetTracker().SendException(e.Message + ":" + e.Exception.StackTrace, true);
         }
 
         /// <summary>
