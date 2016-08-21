@@ -1,1 +1,1 @@
-F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_2.0.2.0\SplitBook_2.0.2.0_x86_x64_arm.appxbundle
+F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_2.0.5.0\SplitBook_2.0.5.0_x86_x64_arm.appxbundle

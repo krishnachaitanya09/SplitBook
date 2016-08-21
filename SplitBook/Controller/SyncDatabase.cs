@@ -241,21 +241,25 @@ namespace SplitBook.Controller
 
         public static void DeleteAllDataInDB()
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            try
             {
-                dbConn.DeleteAll<User>();
-                dbConn.DeleteAll<Expense>();
-                dbConn.DeleteAll<Group>();
-                dbConn.DeleteAll<Picture>();
-                dbConn.DeleteAll<Receipt>();
-                dbConn.DeleteAll<Balance_User>();
-                dbConn.DeleteAll<Debt_Expense>();
-                dbConn.DeleteAll<Debt_Group>();
-                dbConn.DeleteAll<Expense_Share>();
-                dbConn.DeleteAll<Group_Members>();
-                dbConn.DeleteAll<Currency>();
-                dbConn.DeleteAll<Notifications>();
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                {
+                    dbConn.DeleteAll<User>();
+                    dbConn.DeleteAll<Expense>();
+                    dbConn.DeleteAll<Group>();
+                    dbConn.DeleteAll<Picture>();
+                    dbConn.DeleteAll<Receipt>();
+                    dbConn.DeleteAll<Balance_User>();
+                    dbConn.DeleteAll<Debt_Expense>();
+                    dbConn.DeleteAll<Debt_Group>();
+                    dbConn.DeleteAll<Expense_Share>();
+                    dbConn.DeleteAll<Group_Members>();
+                    dbConn.DeleteAll<Currency>();
+                    dbConn.DeleteAll<Notifications>();
+                }
             }
+            catch { }
         }
     }
 }

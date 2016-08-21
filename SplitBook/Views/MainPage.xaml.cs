@@ -107,8 +107,15 @@ namespace SplitBook.Views
                     buttonEnabler.RefreshButtonEnabled = false;
                 }
             }
-            RegisterBackgroundTask();
-            ClearTile();
+            try
+            {
+                RegisterBackgroundTask();
+                ClearTile();
+            }
+            catch(Exception ex)
+            {
+                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + ":" + ex.StackTrace, false);
+            }
             Helpers.NotificationsLastUpdated = DateTime.UtcNow.ToString("u");
         }
 
