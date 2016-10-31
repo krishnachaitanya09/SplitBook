@@ -101,12 +101,13 @@ namespace BackgroundTasks
 
         private void BuildNotifications(IList<Notifications> notifications)
         {
+            List<Notifications> filteredNotifications = notifications.Where(n => !n.content.StartsWith("You")).ToList();
             var badgeUpdater = BadgeUpdateManager.CreateBadgeUpdaterForApplication();
             badgeUpdater.Clear();
             var tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();
             tileUpdater.EnableNotificationQueue(true);
             tileUpdater.Clear();
-            BadgeNumericContent badgeContent = new BadgeNumericContent((uint)notifications.Count);
+            BadgeNumericContent badgeContent = new BadgeNumericContent((uint)filteredNotifications.Count);
             badgeUpdater.Update(new BadgeNotification(badgeContent.GetXml()));
             ToastNotificationManager.ConfigureNotificationMirroring(NotificationMirroring.Allowed);
 
@@ -114,7 +115,7 @@ namespace BackgroundTasks
             int itemCount = 0;
 
             // Create a tile notification for each feed item.
-            foreach (var notification in notifications)
+            foreach (var notification in filteredNotifications)
             {
                 // Create a new tile notification.
                 tileUpdater.Update(new TileNotification(GenerateTileContent(notification).GetXml()));

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace BackgroundTasks.Model
             set
             {
                 value = value.Replace("<br>", "\n");
-                _content = Regex.Replace(value, "<.*?>", String.Empty);
+                _content = WebUtility.HtmlDecode(Regex.Replace(value, "<.*?>", String.Empty));
             }
         }
     }

@@ -278,14 +278,22 @@ namespace SplitBook.Controller
         {
             using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
-                List<Currency> currencyList = dbConn.Query<Currency>("SELECT * FROM currency WHERE currency_code = ?", new Object[] { currencyCode });
-                if (currencyList != null && currencyList.Count != 0)
+                try
                 {
-                    Currency currency = currencyList.First();
-                    return currency.unit;
+                    List<Currency> currencyList = dbConn.Query<Currency>("SELECT * FROM currency WHERE currency_code = ?", new Object[] { currencyCode });
+                    if (currencyList != null && currencyList.Count != 0)
+                    {
+                        Currency currency = currencyList.FirstOrDefault();
+                        return currency.unit;
+                    }
+                    else
+                        return currencyCode;
                 }
-                else
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
                     return currencyCode;
+                }
             }
         }
 
