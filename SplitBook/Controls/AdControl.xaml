@@ -4,15 +4,14 @@
     xmlns:local="using:SplitBook.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Universal="using:Microsoft.AdMediator.Universal"
+    xmlns:UI="using:Microsoft.Advertising.WinRT.UI"
     x:Class="SplitBook.Controls.AdControl"
     mc:Ignorable="d"    
     d:DesignHeight="300"
     d:DesignWidth="400"
     Loaded="UserControl_Loaded">
 
-    <Grid Background="{StaticResource FrameBackground}">
-        <Universal:AdMediatorControl x:Name="AdMediator" x:FieldModifier="public" Background="{StaticResource FrameBackground}" HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderThickness="0" Id="AdMediator-Id-7D1A0663-8223-457B-A8E1-C744474E7445" AdMediatorError="AdMediator_AdMediatorError"/>
+    <Grid x:Name="adGrid" Background="{StaticResource FrameBackground}">
     </Grid>
     
 
