@@ -310,7 +310,7 @@ namespace SplitBook.Controls
         }
 
         private void ShowPopup(ref Popup popup)
-        {
+        {           
             popup.IsOpen = true;
         }
 
