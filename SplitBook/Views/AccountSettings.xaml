@@ -198,6 +198,11 @@
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
         <Grid x:Name="LayoutRoot" Background="White" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <Grid MaxWidth="500" Padding="10,0" Background="White">
                 <StackPanel Orientation="Vertical">
                     <TextBlock

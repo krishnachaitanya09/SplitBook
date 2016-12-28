@@ -154,6 +154,11 @@
         </control:PageHeader>
 
         <Grid x:Name="ContentPanel" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="PageHeader">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <ListView Name="llsExpenses" ItemTemplate="{StaticResource expensesTemplate}" Loaded="OnListViewLoaded" SelectionChanged="llsExpenses_Tap" Style="{StaticResource ListViewStyle}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">

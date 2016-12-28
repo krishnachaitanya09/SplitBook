@@ -49,7 +49,7 @@ namespace SplitBook.Views
             base.OnNavigatedTo(e);
         }
 
-        private void AuthorizeButton_Click(object sender, RoutedEventArgs e)
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             progressRing.IsActive = true;
             authorize.GetRequestToken(RequestTokenReceived, OnError);

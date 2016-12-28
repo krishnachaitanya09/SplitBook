@@ -199,6 +199,11 @@
         </control:PageHeader>
 
         <Grid x:Name="LayoutRoot" Background="{StaticResource FrameBackground}" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <Grid Background="White" MaxWidth="500" Padding="10,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

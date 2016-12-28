@@ -65,6 +65,11 @@
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
         <Grid x:Name="Me" Background="White" RelativePanel.Below="PageHeader" RelativePanel.Above="AdControl" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <Grid MaxWidth="500">
                 <ScrollViewer
                   VerticalScrollBarVisibility="Auto">
