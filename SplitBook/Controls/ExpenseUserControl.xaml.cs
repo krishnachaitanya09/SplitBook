@@ -140,7 +140,7 @@ namespace SplitBook.Controls
                 bool isLast = i == friendList.SelectedItems.Count - 1;
 
                 Expense_Share friend = (Expense_Share)friendList.SelectedItems[i];
-                summary = String.Concat(summary, friend.user.first_name);
+                summary = String.Concat(summary, friend.user.name);
                 summary += isLast ? string.Empty : ", ";
             }
             if (summary == String.Empty)

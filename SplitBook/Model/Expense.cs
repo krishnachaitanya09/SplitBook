@@ -174,7 +174,7 @@ namespace SplitBook.Model
             if (user_id == App.currentUser.id)
                 return "You";
             else
-                return user.first_name;
+                return user.name;
         }
     }
 }

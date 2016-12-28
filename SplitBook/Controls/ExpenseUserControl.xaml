@@ -140,13 +140,13 @@
 						<Run Text="you " FontWeight="Bold"/>
 						<Run Text="and:"/>
                 </TextBlock>
-                <TextBox x:Name="friendListPicker" Loaded="friendListPicker_Loaded" Tapped="friendListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
+                <TextBox x:Name="friendListPicker" TextWrapping="Wrap" AcceptsReturn="True" Loaded="friendListPicker_Loaded" Tapped="friendListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
                 <Popup x:Name="friendListPopup" IsLightDismissEnabled="True">
                     <ListBox x:Name="friendList" MaxHeight="320" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionMode="Multiple" x:FieldModifier="public" SelectionChanged="FriendListPicker_SelectionChanged"/>
                 </Popup>
                 <TextBox x:Name="groupListPicker" x:FieldModifier="public" Loaded="groupListPicker_Loaded" Tapped="groupListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
                 <Popup x:Name="groupListPopup" IsLightDismissEnabled="True" >
-                    <ListBox x:Name="groupList" MaxHeight="320" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionMode="Multiple" x:FieldModifier="public" SelectionChanged="GroupList_SelectionChanged"/>
+                    <ListBox x:Name="groupList" MaxHeight="320" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionMode="Single" x:FieldModifier="public" SelectionChanged="GroupList_SelectionChanged"/>
                 </Popup>
             </StackPanel>
         </Border>
