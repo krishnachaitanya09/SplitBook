@@ -9,7 +9,7 @@
     d:DesignHeight="480"
     d:DesignWidth="480">
 
-    <Grid x:Name="LayoutRoot" Background="White">
+    <Grid x:Name="LayoutRoot" Background="White" BorderThickness="1" BorderBrush="{StaticResource PaneBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -21,7 +21,7 @@
         <StackPanel Background="{StaticResource splitwiseGreen}" Grid.Row="0">
             <TextBlock Foreground="White" 
 				Text="INPUT PAID SHARE" 
-				Margin="15,25" 
+				Margin="15,10" 
 				FontSize="{StaticResource PivotTitleFontSize}"/>
         </StackPanel>
 
@@ -92,7 +92,7 @@
             x:Name="Okay"          
             Tapped="Okay_Tap"
             Foreground="Black" 
-            Margin="10"
+            Margin="5"
             Background="LightGray"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"

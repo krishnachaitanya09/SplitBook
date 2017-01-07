@@ -113,7 +113,7 @@
 
     </UserControl.Resources>
 
-    <Grid x:Name="LayoutRoot" Background="White">
+    <Grid x:Name="LayoutRoot" Background="White" BorderThickness="1" BorderBrush="{StaticResource PaneBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -127,7 +127,7 @@
         <StackPanel Background="{StaticResource splitwiseGreen}" Grid.Row="0">
             <TextBlock Foreground="White" 
 				Text="SPLIT EXPENSE UNEQUALLY" 
-				Margin="15,25" 
+				Margin="15,10"  
 				FontSize="{StaticResource PivotTitleFontSize}"/>
         </StackPanel>
 

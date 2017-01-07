@@ -18,7 +18,7 @@
         <app:GroupDebtConverter x:Key="GroupDebtsConverter"/>
     </Page.Resources>
 
-    <RelativePanel Background="{StaticResource splitwiseGreen}">
+    <RelativePanel Background="{StaticResource FrameBackground}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -49,9 +49,9 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignTopWithPanel="True">
+        <control:PageHeader x:Name="PageHeader" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <control:PageHeader.HeaderContent>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <control:BackButton x:Name="BackButton"/>
                     <TextBlock Text="Friends" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                 </StackPanel>
@@ -90,7 +90,7 @@
                 <Button x:Name="FilterDoneButton" Content="Done" Click="FliterDone_Clicked" RelativePanel.RightOf="filterText" Margin="15,0,0,0"/>
             </RelativePanel>
         </Grid>
-        <ListView x:Name="llsFriends" Grid.Row="2" Background="{StaticResource FrameBackground}" SelectionChanged="llsFriends_Tap" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="balancePanel" RelativePanel.Above="AdControl">
+        <ListView x:Name="llsFriends" Grid.Row="2" SelectionChanged="llsFriends_Tap" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="balancePanel" RelativePanel.Above="AdControl">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -129,7 +129,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <control:AdControl x:Name="AdControl" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
+        <control:AdControl x:Name="AdControl" HorizontalAlignment="Stretch" Background="{StaticResource FrameBackground}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
             <AppBarButton Name="add" Icon="Add" Label="Add" IsEnabled="{Binding AddButtonEnabled}" Foreground="White">
                 <AppBarButton.Flyout>

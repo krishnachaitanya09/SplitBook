@@ -29,8 +29,6 @@ namespace SplitBook.Views
         {
             this.InitializeComponent();
             BackButton.Tapped += BackButton_Tapped;
-            PackageVersion PackageVersion = Package.Current.Id.Version;
-            version.Text = string.Format("{0}.{1}.{2}.{3}", PackageVersion.Major, PackageVersion.Minor, PackageVersion.Build, PackageVersion.Revision);
             if (!Advertisement.ShowAds)
             {
                 removeAds.Visibility = Visibility.Collapsed;
@@ -72,7 +70,7 @@ namespace SplitBook.Views
 
         private void RemoveAds_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Advertisement.PurchaseRemoveAds();
+            this.Frame.Navigate(typeof(AboutPage));            
             GoogleAnalytics.EasyTracker.GetTracker().SendEvent("UI", "RemoveAds_Click", "RemoveAds", 0);
         }
 
@@ -82,7 +80,13 @@ namespace SplitBook.Views
             profilePic.UriSource = new Uri("ms-appx:///Assets/Images/profilePhoto.png");
         }
 
-        private async void Hyperlink_Click(Windows.UI.Xaml.Documents.Hyperlink sender, Windows.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+        private void Logout_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            Helpers.logout();
+            (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
+        }
+
+        private async void Contactus_Tapped(object sender, TappedRoutedEventArgs e)
         {
             ResourceLoader loader = new ResourceLoader();
             EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();

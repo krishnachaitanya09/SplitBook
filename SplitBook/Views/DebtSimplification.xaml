@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
-    <RelativePanel Background="{StaticResource splitwiseGreen}">
+    <RelativePanel Background="{StaticResource FrameBackground}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -40,7 +40,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignTopWithPanel="True">
+        <control:PageHeader x:Name="PageHeader" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <control:PageHeader.HeaderContent>
                 <StackPanel Orientation="Horizontal">
                     <control:BackButton x:Name="BackButton"/>

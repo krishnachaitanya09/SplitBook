@@ -158,7 +158,7 @@
         </Style>
     </Page.Resources>
 
-    <RelativePanel Background="{StaticResource splitwiseGreen}">
+    <RelativePanel Background="{StaticResource FrameBackground}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -189,7 +189,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <control:PageHeader x:Name="PageHeader" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignTopWithPanel="True">
+        <control:PageHeader x:Name="PageHeader" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <control:PageHeader.HeaderContent>
                 <StackPanel Orientation="Horizontal">
                     <control:BackButton x:Name="BackButton"/>
@@ -197,7 +197,7 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <Grid x:Name="LayoutRoot" Background="White" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+        <Grid x:Name="LayoutRoot" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
                     <EntranceThemeTransition/>

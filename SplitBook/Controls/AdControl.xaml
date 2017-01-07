@@ -11,7 +11,7 @@
     d:DesignWidth="400"
     Loaded="UserControl_Loaded">
 
-    <Grid x:Name="adGrid" Background="{StaticResource FrameBackground}">
+    <Grid x:Name="adGrid" HorizontalAlignment="Center">
     </Grid>
     
 

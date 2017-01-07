@@ -484,7 +484,7 @@
         </ControlTemplate>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{StaticResource splitwiseGreen}">
         <!-- Adaptive triggers -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -514,7 +514,7 @@
                    OpenPaneLength="200"
                    IsTabStop="False"
                    IsPaneOpen="False"
-                   PaneBackground="#FF5D5D5D" Template="{StaticResource SplitViewControlTemplate}">
+                   PaneBackground="{StaticResource PaneBackground}" Template="{StaticResource SplitViewControlTemplate}">
             <SplitView.Pane>
                 <Grid>
                     <ListView x:Name="NavMenuList" x:FieldModifier="public"
@@ -570,6 +570,16 @@
                                 <TextBlock Grid.Column="1" Text="{Binding name}" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="White"/>
                             </Grid>
                         </ListViewItem>
+                        <ListViewItem Tapped="About_Tapped">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xE946;" FontSize="16"  HorizontalAlignment="Center" ToolTipService.ToolTip="About" Foreground="White"/>
+                                <TextBlock Grid.Column="1" Text="About" Foreground="White"/>
+                            </Grid>
+                        </ListViewItem>
                         <ListViewItem Tapped="LogOut_Tapped">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -583,7 +593,7 @@
                     </ListView>
                 </Grid>
             </SplitView.Pane>
-            <Frame x:Name="frame"
+            <Frame x:Name="frame" x:FieldModifier="Public"
                    Navigated="OnNavigatedToPage">
                 <!--<Frame.ContentTransitions>
                     <TransitionCollection>

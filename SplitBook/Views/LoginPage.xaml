@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
         <StackPanel  Grid.Column="1" Grid.Row="1">
             <TextBlock Text="S P L I T B O O K" FontFamily="Times New Roman" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Light" FontSize="24" Margin="0,0,0,20"/>
-            <Button Content="Log in" Click="LoginButton_Click" Foreground="White" Background="#FF60BF9F" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button Content="Log in" Click="LoginButton_Click" Foreground="White" Background="{StaticResource splitwiseGreen}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
         <ProgressRing x:Name="progressRing" Height="50" Width="50" Foreground="{StaticResource splitwiseGreen}" Grid.ColumnSpan="3" Grid.RowSpan="3"/>
     </Grid>

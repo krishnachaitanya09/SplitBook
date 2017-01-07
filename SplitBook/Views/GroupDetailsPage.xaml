@@ -342,7 +342,7 @@
         </Style>
     </Page.Resources>
 
-    <RelativePanel Background="{StaticResource splitwiseGreen}">
+    <RelativePanel Background="{StaticResource FrameBackground}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -373,7 +373,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <control:PageHeader x:Name="PageHeader" VerticalAlignment="Stretch" RelativePanel.AlignTopWithPanel="True">
+        <control:PageHeader x:Name="PageHeader" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
             <control:PageHeader.HeaderContent>
                 <StackPanel Orientation="Horizontal">
                     <control:BackButton x:Name="BackButton"/>
@@ -381,14 +381,14 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <ContentDialog x:Name="contentDialog" Grid.RowSpan="2" Background="Transparent"/>
         <Grid x:Name="ContentPanel" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="PageHeader" RelativePanel.Above="AdControl">
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
                     <EntranceThemeTransition/>
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
-            <Pivot Grid.Row="1">
+            <Popup x:Name="popup" IsLightDismissEnabled="True"/>
+            <Pivot>
                 <PivotItem Margin="0,5,0,0" Header="Summary">
                     <ListView x:Name="listBox" SelectionMode="None" Background="{StaticResource FrameBackground}" ItemContainerStyle="{StaticResource ListViewItemExpanded}">
                         <ListView.ItemTemplate>

@@ -1,4 +1,5 @@
 ﻿using SplitBook.Utilities;
+using SplitBook.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System.Profile;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -33,7 +35,7 @@ namespace SplitBook.Controls
         {
             if (Advertisement.ShowAds)
             {
-                AdMediator.Visibility = Visibility.Visible;
+                Visibility = Visibility.Visible;
                 if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
                 {
                     AdMediator.ApplicationId = "39ee0609-be6d-4158-b211-5b83d6ec32c3";
@@ -51,6 +53,23 @@ namespace SplitBook.Controls
                 }
                 AdMediator.IsAutoRefreshEnabled = true;
                 adGrid.Children.Add(AdMediator);
+                Button removeButton = new Button()
+                {
+                    Content = new FontIcon()
+                    {
+                        FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                        Glyph = "\uE8BB",
+                        Foreground = new SolidColorBrush(Colors.White),
+                        FontSize = 12
+                    },
+                    Padding = new Thickness(1),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Background = new SolidColorBrush(Color.FromArgb(100, 0, 0, 0))
+                };
+                removeButton.Click += RemoveButton_Click;
+
+                adGrid.Children.Add(removeButton);
             }
             else
             {
@@ -58,9 +77,14 @@ namespace SplitBook.Controls
             }
         }
 
+        private void RemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage.Current.frame.Navigate(typeof(AboutPage));
+        }
+
         private void AdMediator_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
         {
-            AdMediator.Visibility = Visibility.Collapsed;
+            Visibility = Visibility.Collapsed;
             AdMediator.IsAutoRefreshEnabled = false;
         }
     }

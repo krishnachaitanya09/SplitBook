@@ -39,7 +39,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <control:PageHeader x:Name="pageHeader" Background="{StaticResource splitwiseGreen}" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True">
+        <control:PageHeader x:Name="pageHeader" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True">
             <control:PageHeader.HeaderContent>
                 <StackPanel Orientation="Horizontal">
                     <control:BackButton x:Name="BackButton"/>
@@ -47,15 +47,12 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <ScrollViewer x:Name="ContentPanel" Background="{StaticResource FrameBackground}"
-                      Grid.Row="1" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader"
-                      VerticalScrollBarVisibility="Auto">
-            <Grid Background="Transparent">
-                <control:ExpenseUserControl HorizontalAlignment="Stretch" MaxWidth="500" x:Name="expenseControl"/>
-                <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}"
+        <Grid x:Name="ContentPanel"
+              RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="pageHeader" Background="Transparent">
+            <control:ExpenseUserControl HorizontalAlignment="Stretch" MaxWidth="500" x:Name="expenseControl"/>
+            <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}"
                                             x:Name="busyIndicator"/>
-            </Grid>
-        </ScrollViewer>
+        </Grid>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
             <AppBarButton Name="receipt" Icon="Camera" Label="Add Receipt" Click="btnReceipt_Click" Foreground="White"/>
             <AppBarButton Name="okay" Icon="Accept" Label="okay" Click="btnOkay_Click" Foreground="White"/>

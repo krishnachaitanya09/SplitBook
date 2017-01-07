@@ -14,6 +14,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -135,7 +136,7 @@ namespace SplitBook.Views
         private void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var _scrollViewer = sender as ScrollViewer;
-            // If scrollviewer is scrolled down at least 90%
+            // If scrollviewer is scrolled down at least 80%
             if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.8, _scrollViewer.ScrollableHeight - 200))
             {
                 lock (o)
@@ -169,7 +170,7 @@ namespace SplitBook.Views
             this.Frame.Navigate(typeof(AddExpense));
         }
 
-        private async void btnSettle_Click(object sender, RoutedEventArgs e)
+        private void btnSettle_Click(object sender, RoutedEventArgs e)
         {
             if (currentUserExpanderInfo.debtList.Count == 1)
                 recordPayment(currentUserExpanderInfo.debtList[0]);
@@ -178,9 +179,10 @@ namespace SplitBook.Views
                 GroupSettleUpUserSelector ChoosePayeePopup = new GroupSettleUpUserSelector(currentUserExpanderInfo.debtList, SettleUpSelectorClose);
                 ChoosePayeePopup.MaxWidth = this.ActualWidth;
                 ChoosePayeePopup.MinWidth = this.ActualWidth;
-                ChoosePayeePopup.MaxHeight = this.ActualHeight / 1.3;
-                contentDialog.Content = ChoosePayeePopup;
-                await contentDialog.ShowAsync();
+                ChoosePayeePopup.MaxHeight = Window.Current.Bounds.Height - 160;
+                popup.Child = ChoosePayeePopup;
+                popup.VerticalOffset = 40;
+                popup.IsOpen = true;
             }
         }
 

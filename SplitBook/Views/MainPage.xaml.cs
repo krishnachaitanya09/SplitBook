@@ -446,6 +446,11 @@ namespace SplitBook.Views
             (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
         }
 
+        private void About_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            this.frame.Navigate(typeof(AboutPage));
+        }
+
         /// <summary>
         /// An event to notify listeners when the hamburger button may occlude other content in the app.
         /// The custom "PageHeader" user control is using this.

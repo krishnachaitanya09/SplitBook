@@ -37,7 +37,7 @@
     <SolidColorBrush x:Key="GreyColorText">#FF999999</SolidColorBrush>
     <SolidColorBrush x:Key="BorderColor">#FFDFDFDF</SolidColorBrush>
     <SolidColorBrush x:Key="FrameBackground">#FFF7F8F9</SolidColorBrush>
-
+    <SolidColorBrush x:Key="PaneBackground">#FF5D5D5D</SolidColorBrush>
     <SolidColorBrush x:Key="negativeLight">#FFEBE4</SolidColorBrush>
     <SolidColorBrush x:Key="positiveLight">#E1FFF9</SolidColorBrush>
 

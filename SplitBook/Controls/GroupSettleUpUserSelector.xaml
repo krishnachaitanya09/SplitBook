@@ -12,31 +12,38 @@
         <converter:SpecificDebtAmountConverter x:Key="SpecificDebtAmountConverter"/>
     </UserControl.Resources>
 
-    <Grid x:Name="LayoutRoot" Background="White">
+    <Grid x:Name="LayoutRoot" Background="White" BorderThickness="1" BorderBrush="{StaticResource PaneBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <StackPanel Background="{StaticResource splitwiseGreen}" Grid.Row="0">
             <TextBlock Foreground="White" 
 				Text="SETTLE UP WITH" 
-				Margin="15,25" 
+				Margin="15,10"  
 				FontSize="{StaticResource PivotTitleFontSize}"/>
         </StackPanel>
 
-       <ListView 
+        <ListView 
             Grid.Row="1"
-            MinWidth="450"
             Name="llsFriends"
             SelectionChanged="llsFriends_SelectionChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="0,0,0,2" BorderBrush="{StaticResource splitwiseGreyBG}">
                         <TextBlock
                             Margin="5"
                             Foreground="Black"
-                            VerticalAlignment="Center"
+                            VerticalAlignment="Center" HorizontalAlignment="Stretch"
                             FontSize="{StaticResource nameSize}" 
                             Text="{Binding Converter={StaticResource SpecificDebtAmountConverter}}"/>
                     </Border>

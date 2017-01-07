@@ -217,9 +217,10 @@ namespace SplitBook.Controls
                 SelectPayeePopUpControl ChoosePayeePopup = new SelectPayeePopUpControl(expenseShareUsers, _PayeeClose);
                 ChoosePayeePopup.MaxWidth = this.ActualWidth;
                 ChoosePayeePopup.MinWidth = this.ActualWidth;
-                ChoosePayeePopup.MaxHeight = this.ActualHeight / 1.3;
-                contentDialog.Content = ChoosePayeePopup;
-                await contentDialog.ShowAsync();
+                ChoosePayeePopup.MaxHeight = Window.Current.Bounds.Height - 120;
+                contentDialog.Child = ChoosePayeePopup;
+                contentDialog.VerticalOffset = scrollViewer.VerticalOffset; 
+                contentDialog.IsOpen = true;
             }
         }
 
@@ -228,7 +229,7 @@ namespace SplitBook.Controls
          */
         private void _PayeeClose(Expense_Share SelectedUser, bool isMultiplePayer)
         {
-            contentDialog.Hide();
+            contentDialog.IsOpen = false;
 
             //Set the paid amount of everyone to 0 and the selected user's hasPaid to true.
             //The selected user's cost is set during the setupExpense method.
@@ -253,7 +254,7 @@ namespace SplitBook.Controls
             }
         }
 
-        private async void showMultiplePayeePopUp()
+        private void showMultiplePayeePopUp()
         {
             String cost;
             if (System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(","))
@@ -262,17 +263,18 @@ namespace SplitBook.Controls
                 cost = tbAmount.Text.Replace(",", ".");
             MultiplePayeeInputPopUpControl MultiplePayeeInputPopup = new MultiplePayeeInputPopUpControl
                                                             (ref expenseShareUsers, _MultiplePayeeInputClose, Convert.ToDecimal(cost));
-            MultiplePayeeInputPopup.MaxWidth = this.ActualWidth / 1.2;
-            MultiplePayeeInputPopup.MinWidth = this.ActualWidth / 1.2;
-            MultiplePayeeInputPopup.MaxHeight = this.ActualHeight / 1.3;
-            MultiplePayeeDialog.Content = MultiplePayeeInputPopup;
-            await MultiplePayeeDialog.ShowAsync();
+            MultiplePayeeInputPopup.MaxWidth = this.ActualWidth;
+            MultiplePayeeInputPopup.MinWidth = this.ActualWidth;
+            MultiplePayeeInputPopup.MaxHeight = Window.Current.Bounds.Height - 120;
+            MultiplePayeeDialog.Child = MultiplePayeeInputPopup;
+            MultiplePayeeDialog.VerticalOffset = scrollViewer.VerticalOffset;
+            MultiplePayeeDialog.IsOpen = true;
         }
 
         //This is called after validation has been done and okay has been pressed.
         private void _MultiplePayeeInputClose()
         {
-            MultiplePayeeDialog.Hide();
+            MultiplePayeeDialog.IsOpen = false;
             PaidByUser = null;
             tbPaidBy.Text = "Multiple users";
         }
@@ -291,12 +293,13 @@ namespace SplitBook.Controls
                     else
                         cost = tbAmount.Text.Replace(",", "."); ;
                     UnequallySplit UnequallySplitPopup = new UnequallySplit(expenseShareUsers, Convert.ToDecimal(cost), _UnequallyClose);
-                    UnequallySplitPopup.MaxHeight = this.ActualHeight / 1.3;
-                    UnequallySplitPopup.MaxWidth = this.ActualWidth / 1.15;
-                    UnequallySplitPopup.MinWidth = this.ActualWidth / 1.15;
+                    UnequallySplitPopup.MaxHeight = Window.Current.Bounds.Height - 120;
+                    UnequallySplitPopup.MaxWidth = this.ActualWidth;
+                    UnequallySplitPopup.MinWidth = this.ActualWidth;
 
-                    contentDialog.Content = UnequallySplitPopup;
-                    await contentDialog.ShowAsync();
+                    contentDialog.Child = UnequallySplitPopup;
+                    contentDialog.VerticalOffset = scrollViewer.VerticalOffset;
+                    contentDialog.IsOpen = true;
                 }
                 else
                     SplitTypeListPicker.SelectedItem = AmountSplit.EqualSplit;
@@ -305,12 +308,12 @@ namespace SplitBook.Controls
 
         private void _UnequallyClose(ObservableCollection<Expense_Share> users)
         {
-            contentDialog.Hide();
+            contentDialog.IsOpen = false;
             this.expenseShareUsers = users;
         }
 
         private void ShowPopup(ref Popup popup)
-        {           
+        {
             popup.IsOpen = true;
         }
 
