@@ -26,7 +26,7 @@ namespace SplitBook.Converter
             {
                 foreach (var user in users)
                 {
-                    if (user.user_id == Helpers.getCurrentUserId())
+                    if (user.user_id == Helpers.GetCurrentUserId())
                     {
                         currentUser = user;
                         break;
@@ -36,7 +36,7 @@ namespace SplitBook.Converter
             if (currentUser == null)
                 return "You owe";
 
-            if (Helpers.isEmpty(currentUser.net_balance))
+            if (Helpers.IsEmpty(currentUser.net_balance))
                 return "You owe";
 
             double netBalance = System.Convert.ToDouble(currentUser.net_balance, System.Globalization.CultureInfo.InvariantCulture);
@@ -94,7 +94,7 @@ namespace SplitBook.Converter
 
         private User getUserWhoOwesYou()
         {
-            int currentUserId = Helpers.getCurrentUserId();
+            int currentUserId = Helpers.GetCurrentUserId();
 
             foreach (var repayment in expense.repayments)
             {
@@ -108,7 +108,7 @@ namespace SplitBook.Converter
 
         private User getUserWhoYouOweTo()
         {
-            int currentUserId = Helpers.getCurrentUserId();
+            int currentUserId = Helpers.GetCurrentUserId();
 
             foreach (var repayment in expense.repayments)
             {
@@ -123,7 +123,7 @@ namespace SplitBook.Converter
         private int getNumberofPeopleWhoOweYou()
         {
             int peopleWhoOweYou = 0;
-            int currentUserId = Helpers.getCurrentUserId();
+            int currentUserId = Helpers.GetCurrentUserId();
 
             foreach (var repayment in expense.repayments)
             {
@@ -138,7 +138,7 @@ namespace SplitBook.Converter
         private int getNumberofPeopleYouOweTo()
         {
             int peopleYouOweTo = 0;
-            int currentUserId = Helpers.getCurrentUserId();
+            int currentUserId = Helpers.GetCurrentUserId();
 
             foreach (var repayment in expense.repayments)
             {

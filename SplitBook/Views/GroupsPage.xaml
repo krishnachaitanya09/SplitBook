@@ -57,7 +57,7 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <ListView x:Name="llsGroups" Grid.Row="1" SelectionChanged="llsGroups_Tap" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Above="AdControl">
+        <ListView x:Name="llsGroups" Grid.Row="1" SelectionChanged="LlsGroups_Tap" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Above="AdControl">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

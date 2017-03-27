@@ -53,7 +53,7 @@ namespace SplitBook.Views
             }
         }
 
-        private void llsGroups_Tap(object sender, SelectionChangedEventArgs e)
+        private void LlsGroups_Tap(object sender, SelectionChangedEventArgs e)
         {
             if (llsGroups.SelectedItem == null)
                 return;
@@ -85,9 +85,9 @@ namespace SplitBook.Views
             MainPage.Current.ResetNavMenu();
         }
 
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            MainPage.Current.FetchData();
+            await MainPage.Current.FetchData();
             MainPage.Current.ResetNavMenu();
         }
     }

@@ -22,7 +22,7 @@ namespace SplitBook.Converter.UserDetails
             Balance_User balance = value as Balance_User;
             finalBalance = System.Convert.ToDouble(balance.amount, System.Globalization.CultureInfo.InvariantCulture);
             if (App.currentUser != null)
-                currencyCode = query.getUnitForCurrency(App.currentUser.default_currency.ToUpper());
+                currencyCode = query.GetUnitForCurrency(App.currentUser.default_currency.ToUpper());
             if (currencyCode != String.Empty)
             {
                 var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();

@@ -22,13 +22,13 @@ namespace SplitBook.Request
             expenseId = id;
         }
 
-        public async void deleteExpense(Action<bool> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
+        public async Task DeleteExpense(Action<bool> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
             try
             {
                 HttpResponseMessage response = await client.PostAsync(deleteExpenseURL + expenseId.ToString(), null);
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-                DeleteExpense result = Newtonsoft.Json.JsonConvert.DeserializeObject<DeleteExpense>(await response.Content.ReadAsStringAsync(), settings);
+                DeleteExpenseModel result = Newtonsoft.Json.JsonConvert.DeserializeObject<DeleteExpenseModel>(await response.Content.ReadAsStringAsync(), settings);
                 if (result.success)
                     CallbackOnSuccess(result.success);
                 else
@@ -40,7 +40,7 @@ namespace SplitBook.Request
             }
         }
 
-        private class DeleteExpense
+        private class DeleteExpenseModel
         {
             public Boolean success { get; set; }
             public Object error { get; set; }

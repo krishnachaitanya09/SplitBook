@@ -49,10 +49,10 @@ namespace SplitBook.Views
             base.OnNavigatedTo(e);
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             progressRing.IsActive = true;
-            authorize.GetRequestToken(RequestTokenReceived, OnError);
+            await authorize.GetRequestToken(RequestTokenReceived, OnError);
         }
 
         private async void RequestTokenReceived(Uri uri)
@@ -61,7 +61,7 @@ namespace SplitBook.Views
             string requestToken;
             if ((requestToken = await SplitwiseAuthenticationBroker.AuthenticateAsync(uri)) != null)
             {
-                authorize.GetAccessToken(requestToken, AccessTokenReceived, OnError);
+                await authorize.GetAccessToken(requestToken, AccessTokenReceived, OnError);
             }
         }
 

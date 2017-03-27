@@ -90,7 +90,7 @@
                 <Button x:Name="FilterDoneButton" Content="Done" Click="FliterDone_Clicked" RelativePanel.RightOf="filterText" Margin="15,0,0,0"/>
             </RelativePanel>
         </Grid>
-        <ListView x:Name="llsFriends" Grid.Row="2" SelectionChanged="llsFriends_Tap" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="balancePanel" RelativePanel.Above="AdControl">
+        <ListView x:Name="llsFriends" Grid.Row="2" SelectionChanged="LlsFriends_Tap" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="balancePanel" RelativePanel.Above="AdControl">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

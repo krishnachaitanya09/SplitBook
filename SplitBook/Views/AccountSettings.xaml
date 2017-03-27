@@ -257,12 +257,12 @@
                      Text="Default Currency"
                     />
                     <TextBox x:Name="currencyListPicker" Padding="10" Grid.Row="2" 
-                         Tapped="currencyListPicker_Tapped"
+                         Tapped="CurrencyListPicker_Tapped"
                          Foreground="Black"
 						 FontSize="{StaticResource nameSize}"
                          FontWeight="Bold"  IsReadOnly="True" BorderBrush="{StaticResource splitwiseGreyBG}"/>
                     <Popup x:Name="currencyListPopup" IsLightDismissEnabled="True" Margin="5,0">
-                        <ListBox MaxHeight="200" x:Name="currencyList" SelectionMode="Single" x:FieldModifier="public" SelectionChanged="currencyListPicker_SelectionChanged"/>
+                        <ListBox MaxHeight="200" x:Name="currencyList" SelectionMode="Single" x:FieldModifier="public" SelectionChanged="CurrencyListPicker_SelectionChanged"/>
                     </Popup>
                 </StackPanel>
             </Grid>

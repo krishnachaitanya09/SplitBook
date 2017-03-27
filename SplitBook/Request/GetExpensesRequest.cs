@@ -20,7 +20,7 @@ namespace SplitBook.Request
         {
         }
 
-        public async void getAllExpenses(Action<List<Expense>> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
+        public async Task GetAllExpenses(Action<List<Expense>> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
             //request.AddParameter("updated_after", Helpers.getLastUpdatedTime(), ParameterType.GetOrPost);
             try

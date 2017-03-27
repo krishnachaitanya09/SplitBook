@@ -20,7 +20,7 @@ namespace SplitBook.Request
         {
         }
 
-        public async void getAllGroups(Action<List<Group>> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
+        public async Task GetAllGroups(Action<List<Group>> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
             try
             {

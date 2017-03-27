@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace SplitBook.Request
 {
-    public class GetNotifications : RestBaseRequest
+    public class GetNotificationsRequest : RestBaseRequest
     {
         public static String getNotificationsURL = "get_notifications";
 
-        public GetNotifications()
+        public GetNotificationsRequest()
             : base()
         {
         }
 
-        public async void getNotifications(Action<List<Notifications>> CallbackOnSuccess)
+        public async Task GetNotifications(Action<List<Notifications>> CallbackOnSuccess)
         {
             try
             {

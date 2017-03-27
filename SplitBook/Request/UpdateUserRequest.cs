@@ -22,7 +22,7 @@ namespace SplitBook.Request
             this.updatedUser = user;
         }
 
-        public async void updateUser(Action<User, HttpStatusCode> CallbackOnSuccess)
+        public async Task UpdateUser(Action<User, HttpStatusCode> CallbackOnSuccess)
         {
             List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
 

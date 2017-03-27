@@ -42,12 +42,12 @@ namespace SplitBook.Views
                 this.Frame.GoBack();
         }
 
-        private void browser_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
+        private void Browser_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             busyIndicator.IsActive = true;
         }
 
-        private async void browser_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private async void Browser_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             busyIndicator.IsActive = false;
             if (args.Uri.ToString().Contains("edit"))
@@ -62,14 +62,14 @@ namespace SplitBook.Views
             }
         }
 
-        private void browser_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
+        private void Browser_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
         {
             busyIndicator.IsActive = false;
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Helpers.doNotShowDebtSimplificationBox())
+            if (Helpers.DoNotShowDebtSimplificationBox())
                 return;
 
             string hey = "Hey there!";
@@ -103,7 +103,7 @@ namespace SplitBook.Views
             await dialog.ShowAsync();
             if (doNotShowCheckBox.IsChecked.Value)
             {
-                Helpers.setDonNotShowDebtSimplifationBox();
+                Helpers.SetDonNotShowDebtSimplifationBox();
             }
         }
 

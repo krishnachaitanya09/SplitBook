@@ -21,7 +21,7 @@ namespace SplitBook.Request
             this.groupToAdd = group;
         }
 
-        public async void createGroup(Action<Group> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
+        public async Task CreateGroup(Action<Group> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
             List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
             postContent.Add(new KeyValuePair<string, string>("name", groupToAdd.name));

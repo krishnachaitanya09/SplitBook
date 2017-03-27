@@ -226,7 +226,7 @@
                     Foreground="White"
                     Content="Import contact details"
                     x:Name="btnImport"
-                    Tapped="btnImport_Tapped"/>
+                    Tapped="BtnImport_Tapped"/>
 
                 <TextBox Grid.Row="2" 
 				x:Name="tbEmail"
@@ -235,7 +235,7 @@
 				PlaceholderText="enter email address (compulsory)" 
 				Padding="10"
                 Margin="0,0,0,10"
-                TextChanged="tbEmail_TextChanged"
+                TextChanged="TbEmail_TextChanged"
 				VerticalAlignment="Top"/>
 
                 <TextBox Grid.Row="3" 
@@ -245,7 +245,7 @@
 				PlaceholderText="enter first name (compulsory)"
 				Padding="10"
                          Margin="0,0,0,10"
-                TextChanged="tbFirstName_TextChanged"
+                TextChanged="TbFirstName_TextChanged"
 				VerticalAlignment="Top"/>
 
                 <TextBox Grid.Row="4" 

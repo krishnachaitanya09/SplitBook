@@ -227,7 +227,7 @@
                         <TextBlock Foreground="Black" Text="Paid" FontSize="{StaticResource amountSize}" HorizontalAlignment="Center"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock x:Name="tbCurrency" Text="SGD" Foreground="Black" FontSize="{StaticResource amountSize}" FontWeight="Bold" Padding="0,2,5,0"/>
-                            <TextBox x:Name="tbAmount" VerticalAlignment="Stretch" Text="43.21" Foreground="Black" FontSize="{StaticResource amountSize}" FontWeight="Bold" InputScope="Number" Background="White" KeyDown="tbAmount_KeyDown" Padding="5,0,0,0"/>
+                            <TextBox x:Name="tbAmount" VerticalAlignment="Stretch" Text="43.21" Foreground="Black" FontSize="{StaticResource amountSize}" FontWeight="Bold" InputScope="Number" Background="White" KeyDown="TbAmount_KeyDown" Padding="5,0,0,0"/>
                         </StackPanel>
                         <TextBlock x:Name="tbDate" Foreground="{StaticResource settled}" FontSize="{StaticResource descriptionSize}" HorizontalAlignment="Center"/>
                     </StackPanel>
@@ -257,8 +257,8 @@
             </Grid>
         </ScrollViewer>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
-            <AppBarButton Name="okay" Icon="Accept" Label="okay" Click="btnOkay_Click" Foreground="White"/>
-            <AppBarButton Name="cancel" Icon="Cancel" Label="cancel" Click="btnCancel_Click" Foreground="White"/>
+            <AppBarButton Name="okay" Icon="Accept" Label="okay" Click="BtnOkay_Click" Foreground="White"/>
+            <AppBarButton Name="cancel" Icon="Cancel" Label="cancel" Click="BtnCancel_Click" Foreground="White"/>
         </CommandBar>
     </RelativePanel>
 </Page>

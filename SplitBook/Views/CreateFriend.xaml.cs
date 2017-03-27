@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Contacts;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
@@ -27,7 +28,6 @@ namespace SplitBook.Views
 {
     public sealed partial class CreateFriend : Page
     {
-        BackgroundWorker createFriendBackgroundWorker;
         string email, firstName, lastName;
 
         public CreateFriend()
@@ -35,9 +35,6 @@ namespace SplitBook.Views
             this.InitializeComponent();
             BackButton.Click += BackButton_Click;
             MainPage.Current.ResetNavMenu();
-            createFriendBackgroundWorker = new BackgroundWorker();
-            createFriendBackgroundWorker.WorkerSupportsCancellation = true;
-            createFriendBackgroundWorker.DoWork += new DoWorkEventHandler(createFriendBackgroundWorker_DoWork);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -54,17 +51,14 @@ namespace SplitBook.Views
             }
         }
 
-        private void OkayButton_Click(object sender, RoutedEventArgs e)
+        private async void OkayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!createFriendBackgroundWorker.IsBusy)
-            {
-                busyIndicator.IsActive = true;
-                this.Focus(FocusState.Programmatic);
-                email = tbEmail.Text;
-                firstName = tbFirstName.Text;
-                lastName = tbLastName.Text;
-                createFriendBackgroundWorker.RunWorkerAsync();
-            }
+            busyIndicator.IsActive = true;
+            this.Focus(FocusState.Programmatic);
+            email = tbEmail.Text;
+            firstName = tbFirstName.Text;
+            lastName = tbLastName.Text;
+            await CreateFriendAsync();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -80,18 +74,18 @@ namespace SplitBook.Views
                 okay.IsEnabled = false;
         }
 
-        private void createFriendBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task CreateFriendAsync()
         {
             ModifyDatabase modify = new ModifyDatabase(_addFriendCompleted);
-            modify.createFriend(email, firstName, lastName);
+            await modify.CreateFriend(email, firstName, lastName);
         }
 
-        private void tbEmail_TextChanged(object sender, TextChangedEventArgs e)
+        private void TbEmail_TextChanged(object sender, TextChangedEventArgs e)
         {
             EnableOkButton();
         }
 
-        private async void btnImport_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void BtnImport_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var contactPicker = new ContactPicker();
             contactPicker.DesiredFieldsWithContactFieldType.Add(ContactFieldType.Email);
@@ -121,7 +115,7 @@ namespace SplitBook.Views
                         MessageDialog messageDialog = new MessageDialog("User has successfully been added as friend.", "Success");
                         await messageDialog.ShowAsync();
                     }
-                    MainPage.Current.FetchData();
+                    await MainPage.Current.FetchData();
                 });
             }
             else
@@ -135,7 +129,7 @@ namespace SplitBook.Views
             }
         }
 
-        private void tbFirstName_TextChanged(object sender, TextChangedEventArgs e)
+        private void TbFirstName_TextChanged(object sender, TextChangedEventArgs e)
         {
             EnableOkButton();
         }

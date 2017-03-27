@@ -16,29 +16,22 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WinRTXamlToolkit.Controls.Extensions;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace SplitBook.Views
 {
     public sealed partial class UserDetails : Page
     {
         User selectedUser;
-        BackgroundWorker userExpensesBackgroundWorker;
-        BackgroundWorker deleteFriendBackgroundWorker;
         ObservableCollection<Expense> expensesList = new ObservableCollection<Expense>();
         private int pageNo = 0;
         private bool morePages = true;
-        private object o = new object();
 
         public UserDetails()
         {
             this.InitializeComponent();
             BackButton.Click += BackButton_Click;
-            MainPage.Current.ResetNavMenu();
-
-
-            deleteFriendBackgroundWorker = new BackgroundWorker();
-            deleteFriendBackgroundWorker.WorkerSupportsCancellation = true;
-            deleteFriendBackgroundWorker.DoWork += new DoWorkEventHandler(deleteFriendBackgroundWorker_DoWork);
+            llsExpenses.ItemsSource = expensesList;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -47,21 +40,15 @@ namespace SplitBook.Views
             BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
             selectedUser = e.Parameter as User;
 
-            llsExpenses.ItemsSource = expensesList;
-
-            userExpensesBackgroundWorker = new BackgroundWorker();
-            userExpensesBackgroundWorker.WorkerSupportsCancellation = true;
-            userExpensesBackgroundWorker.DoWork += new DoWorkEventHandler(userExpensesBackgroundWorker_DoWork);
-
-            if (userExpensesBackgroundWorker.IsBusy != true)
+            Task.Run(async () =>
             {
-                userExpensesBackgroundWorker.RunWorkerAsync();
-            }
+                await LoadExpenses();
+            });            
 
-            if (hasOwesYouBalance())
+            if (HasOwesYouBalance())
                 remind.IsEnabled = true;
 
-            if (hasYouOweBalance() || hasOwesYouBalance())
+            if (HasYouOweBalance() || HasOwesYouBalance())
                 settle.IsEnabled = true;
 
             if (selectedUser.balance.Count == 0)
@@ -78,16 +65,17 @@ namespace SplitBook.Views
             }
         }
 
-        private void btnAddExpense_Click(object sender, RoutedEventArgs e)
+        private void BtnAddExpense_Click(object sender, RoutedEventArgs e)
         {
-            Expense expenseToAdd = new Expense();
-            expenseToAdd.specificUserId = selectedUser.id;
-
+            Expense expenseToAdd = new Expense()
+            {
+                specificUserId = selectedUser.id
+            };
             (Application.Current as App).ADD_EXPENSE = expenseToAdd;
             this.Frame.Navigate(typeof(AddExpense));
         }
 
-        private async void btnDeleteFriend_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteFriend_Click(object sender, RoutedEventArgs e)
         {
             MessageDialog messageDialog = new MessageDialog("Are you sure?", "Delete Friend");
             messageDialog.Commands.Add(new UICommand { Label = "yes", Id = 0 });
@@ -97,11 +85,11 @@ namespace SplitBook.Views
             switch ((int)result.Id)
             {
                 case 0:
-                    if (deleteFriendBackgroundWorker.IsBusy != true)
+                    busyIndicator.IsActive = true;
+                    await Task.Run(async () =>
                     {
-                        busyIndicator.IsActive = true;
-                        deleteFriendBackgroundWorker.RunWorkerAsync();
-                    }
+                        await DeleteFriendAsync();
+                    });                    
                     break;
                 case 1:
                     break;
@@ -110,10 +98,10 @@ namespace SplitBook.Views
             }
         }
 
-        private void btnSettle_Click(object sender, RoutedEventArgs e)
+        private void BtnSettle_Click(object sender, RoutedEventArgs e)
         {
             int navParams;
-            if (hasOwesYouBalance())
+            if (HasOwesYouBalance())
                 navParams = Constants.PAYMENT_FROM;
             else
                 navParams = Constants.PAYMENT_TO;
@@ -122,10 +110,10 @@ namespace SplitBook.Views
             (Application.Current as App).PAYMENT_TYPE = navParams;
             (Application.Current as App).PAYMENT_GROUP = 0;
 
-            this.Frame.Navigate(typeof(AddPayment));           
+            this.Frame.Navigate(typeof(AddPayment));
         }
 
-        private async void btnReminder_Click(object sender, RoutedEventArgs e)
+        private async void BtnReminder_Click(object sender, RoutedEventArgs e)
         {
             string appUrl = "";
             string reminderText = "Hey there,\n\nThis is just a note to settle up on Splitwise as soon as you get the chance.\n\n";
@@ -135,15 +123,17 @@ namespace SplitBook.Views
             string appName = "SplitBook! A splitwise client for Windows 10\n\n";
             string downloadApp = "Download app at: " + appUrl;
 
-            EmailMessage emailComposeTask = new EmailMessage();
-            emailComposeTask.Subject = "Settle up on Splitwise";
-            emailComposeTask.Body = reminderText + thanks + userName + sentVia + appName;
+            EmailMessage emailComposeTask = new EmailMessage()
+            {
+                Subject = "Settle up on Splitwise",
+                Body = reminderText + thanks + userName + sentVia + appName
+            };
             emailComposeTask.To.Add(new EmailRecipient(selectedUser.email));
             await EmailManager.ShowComposeNewEmailAsync(emailComposeTask);
         }
 
 
-        private bool hasYouOweBalance()
+        private bool HasYouOweBalance()
         {
             foreach (var balance in selectedUser.balance)
             {
@@ -153,7 +143,7 @@ namespace SplitBook.Views
             return false;
         }
 
-        private bool hasOwesYouBalance()
+        private bool HasOwesYouBalance()
         {
             foreach (var balance in selectedUser.balance)
             {
@@ -164,21 +154,21 @@ namespace SplitBook.Views
             return false;
         }
 
-        private void deleteFriendBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task DeleteFriendAsync()
         {
             ModifyDatabase modify = new ModifyDatabase(_deleteFriendCompleted);
-            modify.deleteFriend(selectedUser.id);
+            await modify.DeleteFriend(selectedUser.id);
         }
 
         private async void _deleteFriendCompleted(bool success, HttpStatusCode errorCode)
         {
             if (success)
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     busyIndicator.IsActive = false;
                     this.Frame.Navigate(typeof(FriendsPage));
-                    MainPage.Current.FetchData();
+                    await MainPage.Current.FetchData();
                 });
             }
             else
@@ -188,7 +178,7 @@ namespace SplitBook.Views
                     busyIndicator.IsActive = false;
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
-                        Helpers.logout();
+                        Helpers.Logout();
                         (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
                         MainPage.Current.Frame.Navigate(typeof(LoginPage));
                     }
@@ -201,16 +191,12 @@ namespace SplitBook.Views
             }
         }
 
-        private void userExpensesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            loadExpenses();
-        }
 
-        private async void loadExpenses()
+        private async Task LoadExpenses()
         {
             //the rest of the work is done in a backgroundworker
             QueryDatabase obj = new QueryDatabase();
-            List<Expense> allExpenses = obj.getExpensesForUser(selectedUser.id, pageNo);
+            List<Expense> allExpenses = obj.GetExpensesForUser(selectedUser.id, pageNo);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (allExpenses == null || allExpenses.Count == 0)
@@ -225,8 +211,7 @@ namespace SplitBook.Views
 
         private void OnListViewLoaded(object sender, RoutedEventArgs e)
         {
-            var listview = sender as ListViewBase;
-            if (listview != null)
+            if (sender is ListViewBase listview)
             {
                 // Attach to the view changed event
                 var _scrollViewer = listview.GetFirstDescendantOfType<ScrollViewer>();
@@ -237,22 +222,21 @@ namespace SplitBook.Views
             }
         }
 
-        private void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private async void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var _scrollViewer = sender as ScrollViewer;
             // If scrollviewer is scrolled down at least 90%
             if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.8, _scrollViewer.ScrollableHeight - 200))
             {
-                if (userExpensesBackgroundWorker.IsBusy != true && morePages)
+                if (morePages)
                 {
                     pageNo++;
-                    userExpensesBackgroundWorker.RunWorkerAsync(false);
+                    await LoadExpenses();
                 }
             }
         }
 
-
-        private void llsExpenses_Tap(object sender, SelectionChangedEventArgs e)
+        private void LlsExpenses_Tap(object sender, SelectionChangedEventArgs e)
         {
             if (llsExpenses.SelectedItem == null)
                 return;

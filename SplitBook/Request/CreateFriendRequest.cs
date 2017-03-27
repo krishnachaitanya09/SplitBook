@@ -23,7 +23,7 @@ namespace SplitBook.Request
             this.lastName = lastName;
         }
 
-        public async void createFriend(Action<User> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
+        public async Task CreateFriend(Action<User> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
             List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
             postContent.Add(new KeyValuePair<string, string>("user_email", email));

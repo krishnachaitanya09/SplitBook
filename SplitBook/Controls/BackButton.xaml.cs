@@ -31,7 +31,7 @@ namespace SplitBook.Controls
         {
             //bubble the event up to the parent
             if (this.Click != null)
-                this.Click(this, e);
+                Click(this, e);
         }
     }
 }

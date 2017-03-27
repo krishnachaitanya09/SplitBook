@@ -402,7 +402,7 @@
                                           Margin="5,15,5,5"
                                           QuerySubmitted="Query_Submitted" Style="{StaticResource SearchBoxStyle}"/>
 
-                <ListView Name="llsExpenses" Grid.Row="1" Margin="0,5,0,0" ItemTemplate="{StaticResource expensesTemplate}" SelectionChanged="llsExpenses_SelectionChanged">
+                <ListView Name="llsExpenses" Grid.Row="1" Margin="0,5,0,0" ItemTemplate="{StaticResource expensesTemplate}" SelectionChanged="LlsExpenses_SelectionChanged">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

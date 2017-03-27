@@ -101,14 +101,14 @@ namespace SplitBook.Utilities
             set { ApplicationData.Current.LocalSettings.Values[Constants.APP_VERSION] = value; }
         }
 
-        public static void setLastUpdatedTime()
+        public static void SetLastUpdatedTime()
         {
             DateTime now = DateTime.UtcNow;
             string lastUpdatedTime = now.ToString("yyyy-MM-ddTHH:mm:ssK");
             ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME] = lastUpdatedTime;
         }
 
-        public static string getLastUpdatedTime()
+        public static string GetLastUpdatedTime()
         {
             return (string)ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME] ?? "0";
         }
@@ -119,27 +119,27 @@ namespace SplitBook.Utilities
             set { ApplicationData.Current.LocalSettings.Values["notifications_last_updated"] = value; }
         }
 
-        public static void setCurrentUserId(int userId)
+        public static void SetCurrentUserId(int userId)
         {
             ApplicationData.Current.LocalSettings.Values[Constants.CURRENT_USER_ID] = userId;
         }
 
-        public static int getCurrentUserId()
+        public static int GetCurrentUserId()
         {
             return Convert.ToInt32(ApplicationData.Current.LocalSettings.Values[Constants.CURRENT_USER_ID]);
         }
 
-        public static void setDonNotShowDebtSimplifationBox()
+        public static void SetDonNotShowDebtSimplifationBox()
         {
             ApplicationData.Current.LocalSettings.Values[Constants.DEBT_SIMPLIFICATION_DO_NOT_SHOW] = true;
         }
 
-        public static bool doNotShowDebtSimplificationBox()
+        public static bool DoNotShowDebtSimplificationBox()
         {
             return Convert.ToBoolean(ApplicationData.Current.LocalSettings.Values[Constants.DEBT_SIMPLIFICATION_DO_NOT_SHOW]);
         }
 
-        public static bool checkNetworkConnection()
+        public static bool CheckNetworkConnection()
         {
             bool IsConnected = false;
             if (NetworkInterface.GetIsNetworkAvailable())
@@ -149,7 +149,7 @@ namespace SplitBook.Utilities
             return IsConnected;
         }
 
-        public static Balance_User getDefaultBalance(List<Balance_User> balance)
+        public static Balance_User GetDefaultBalance(List<Balance_User> balance)
         {
             try
             {
@@ -158,8 +158,10 @@ namespace SplitBook.Utilities
 
                 if (balance == null || balance.Count == 0)
                 {
-                    Balance_User noBalance = new Balance_User();
-                    noBalance.amount = "0";
+                    Balance_User noBalance = new Balance_User()
+                    {
+                        amount = "0"
+                    };
                     return noBalance;
                 }
 
@@ -183,7 +185,7 @@ namespace SplitBook.Utilities
             }
         }
 
-        public static bool hasMultipleBalances(List<Balance_User> balance)
+        public static bool HasMultipleBalances(List<Balance_User> balance)
         {
             if (balance.Count > 1)
                 return true;
@@ -191,7 +193,7 @@ namespace SplitBook.Utilities
                 return false;
         }
 
-        public static List<Debt_Group> getUsersGroupDebtsList(List<Debt_Group> allDebts, int userId)
+        public static List<Debt_Group> GetUsersGroupDebtsList(List<Debt_Group> allDebts, int userId)
         {
             List<Debt_Group> currentUserDebts = new List<Debt_Group>();
             for (int i = 0; i < allDebts.Count; i++)
@@ -206,11 +208,11 @@ namespace SplitBook.Utilities
             return currentUserDebts;
         }
 
-        public static double getUserGroupDebtAmount(List<Debt_Group> allDebts, int userId)
+        public static double GetUserGroupDebtAmount(List<Debt_Group> allDebts, int userId)
         {
             double amount = 0;
             List<Debt_Group> currentUserDebts = new List<Debt_Group>();
-            currentUserDebts = getUsersGroupDebtsList(allDebts, userId);
+            currentUserDebts = GetUsersGroupDebtsList(allDebts, userId);
             foreach (var debt in currentUserDebts)
             {
                 if (debt.from == userId)
@@ -222,12 +224,10 @@ namespace SplitBook.Utilities
             return amount;
         }
 
-        public static void logout()
+        public static void Logout()
         {
             ApplicationData.Current.LocalSettings.Values.Clear();
             App.currentUser = null;
-            if (MainPage.syncDatabaseBackgroundWorker.IsBusy)
-                MainPage.syncDatabaseBackgroundWorker.CancelAsync();
             SyncDatabase.DeleteAllDataInDB();
         }
 
@@ -237,7 +237,7 @@ namespace SplitBook.Utilities
             return Regex.IsMatch(emailAddress, @"^([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$");
         }
 
-        public static bool isEmpty(string value)
+        public static bool IsEmpty(string value)
         {
             if (value == null)
                 return true;

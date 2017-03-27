@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -31,7 +32,6 @@ namespace SplitBook.Views
     public sealed partial class GroupDetailsPage : Page
     {
         Group selectedGroup;
-        BackgroundWorker groupExpensesBackgroundWorker;
         ObservableCollection<Expense> expensesList = new ObservableCollection<Expense>();
         ObservableCollection<ExpandableListModel> expanderList = new ObservableCollection<ExpandableListModel>();
         ExpandableListModel currentUserExpanderInfo;
@@ -47,16 +47,7 @@ namespace SplitBook.Views
             selectedGroup = (Application.Current as App).SELECTED_GROUP as Group;
             llsExpenses.ItemsSource = expensesList;
 
-            groupExpensesBackgroundWorker = new BackgroundWorker();
-            groupExpensesBackgroundWorker.WorkerSupportsCancellation = true;
-            groupExpensesBackgroundWorker.DoWork += new DoWorkEventHandler(groupExpensesBackgroundWorker_DoWork);
-
-            if (groupExpensesBackgroundWorker.IsBusy != true)
-            {
-                groupExpensesBackgroundWorker.RunWorkerAsync();
-            }
-
-            setupExpandableList();
+            SetupExpandableList();
             if (currentUserExpanderInfo != null && !currentUserExpanderInfo.isNonExpandable)
                 settleBtn.IsEnabled = true;
             this.DataContext = selectedGroup;
@@ -65,6 +56,10 @@ namespace SplitBook.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            Task.Run(async () =>
+            {
+                await LoadExpensesAsync();
+            });            
             BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
             GoogleAnalytics.EasyTracker.GetTracker().SendView("GroupDetailsPage");
         }
@@ -77,14 +72,16 @@ namespace SplitBook.Views
             }
         }
 
-        private void setupExpandableList()
+        private void SetupExpandableList()
         {
             foreach (var user in selectedGroup.members)
             {
-                ExpandableListModel expanderItem = new ExpandableListModel();
-                expanderItem.groupUser = user;
-                //if(selectedGroup.simplify_by_default)
-                expanderItem.debtList = Helpers.getUsersGroupDebtsList(selectedGroup.simplified_debts, user.id);
+                ExpandableListModel expanderItem = new ExpandableListModel()
+                {
+                    groupUser = user,
+                    //if(selectedGroup.simplify_by_default)
+                    debtList = Helpers.GetUsersGroupDebtsList(selectedGroup.simplified_debts, user.id)
+                };
                 //else
                 // expanderItem.debtList = Util.getUsersGroupDebtsList(selectedGroup.original_debts, user.id);
 
@@ -97,16 +94,12 @@ namespace SplitBook.Views
                     currentUserExpanderInfo = expanderItem;
             }
         }
-        private void groupExpensesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            loadExpenses();
-        }
 
-        private async void loadExpenses()
+        private async Task LoadExpensesAsync()
         {
             //the rest of the work is done in a backgroundworker
             QueryDatabase obj = new QueryDatabase();
-            List<Expense> allExpenses = obj.getAllExpensesForGroup(selectedGroup.id, pageNo);
+            List<Expense> allExpenses = obj.GetAllExpensesForGroup(selectedGroup.id, pageNo);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (allExpenses == null || allExpenses.Count == 0)
@@ -121,8 +114,7 @@ namespace SplitBook.Views
 
         private void OnListViewLoaded(object sender, RoutedEventArgs e)
         {
-            var listview = sender as ListViewBase;
-            if (listview != null)
+            if (sender is ListViewBase listview)
             {
                 // Attach to the view changed event
                 var _scrollViewer = listview.GetFirstDescendantOfType<ScrollViewer>();
@@ -133,24 +125,21 @@ namespace SplitBook.Views
             }
         }
 
-        private void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private async void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var _scrollViewer = sender as ScrollViewer;
             // If scrollviewer is scrolled down at least 80%
             if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.8, _scrollViewer.ScrollableHeight - 200))
             {
-                lock (o)
+                if (morePages)
                 {
-                    if (groupExpensesBackgroundWorker.IsBusy != true && morePages)
-                    {
-                        pageNo++;
-                        groupExpensesBackgroundWorker.RunWorkerAsync(false);
-                    }
+                    pageNo++;
+                    await LoadExpensesAsync();
                 }
             }
         }
 
-        private void llsExpenses_Tap(object sender, SelectionChangedEventArgs e)
+        private void LlsExpenses_Tap(object sender, SelectionChangedEventArgs e)
         {
             if (llsExpenses.SelectedItem == null)
                 return;
@@ -162,24 +151,28 @@ namespace SplitBook.Views
             llsExpenses.SelectedItem = null;
         }
 
-        private void btnAddExpense_Click(object sender, RoutedEventArgs e)
+        private void BtnAddExpense_Click(object sender, RoutedEventArgs e)
         {
-            Expense expenseToAdd = new Expense();
-            expenseToAdd.group_id = selectedGroup.id;
+            Expense expenseToAdd = new Expense()
+            {
+                group_id = selectedGroup.id
+            };
             (Application.Current as App).ADD_EXPENSE = expenseToAdd;
             this.Frame.Navigate(typeof(AddExpense));
         }
 
-        private void btnSettle_Click(object sender, RoutedEventArgs e)
+        private void BtnSettle_Click(object sender, RoutedEventArgs e)
         {
             if (currentUserExpanderInfo.debtList.Count == 1)
-                recordPayment(currentUserExpanderInfo.debtList[0]);
+                RecordPayment(currentUserExpanderInfo.debtList[0]);
             else
             {
-                GroupSettleUpUserSelector ChoosePayeePopup = new GroupSettleUpUserSelector(currentUserExpanderInfo.debtList, SettleUpSelectorClose);
-                ChoosePayeePopup.MaxWidth = this.ActualWidth;
-                ChoosePayeePopup.MinWidth = this.ActualWidth;
-                ChoosePayeePopup.MaxHeight = Window.Current.Bounds.Height - 160;
+                GroupSettleUpUserSelector ChoosePayeePopup = new GroupSettleUpUserSelector(currentUserExpanderInfo.debtList, SettleUpSelectorClose)
+                {
+                    MaxWidth = this.ActualWidth,
+                    MinWidth = this.ActualWidth,
+                    MaxHeight = Window.Current.Bounds.Height - 160
+                };
                 popup.Child = ChoosePayeePopup;
                 popup.VerticalOffset = 40;
                 popup.IsOpen = true;
@@ -188,10 +181,10 @@ namespace SplitBook.Views
 
         private void SettleUpSelectorClose(Debt_Group debt)
         {
-            recordPayment(debt);
+            RecordPayment(debt);
         }
 
-        private void recordPayment(Debt_Group debt)
+        private void RecordPayment(Debt_Group debt)
         {
             User user;
             String amount;

@@ -81,7 +81,7 @@ namespace SplitBook.Views
             filterPanel.Visibility = Visibility.Collapsed;
         }
 
-        private void llsFriends_Tap(object sender, SelectionChangedEventArgs e)
+        private void LlsFriends_Tap(object sender, SelectionChangedEventArgs e)
         {
             if (llsFriends.SelectedItem == null)
                 return;
@@ -91,9 +91,9 @@ namespace SplitBook.Views
             MainPage.Current.ResetNavMenu();
         }
 
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            MainPage.Current.FetchData();
+            await MainPage.Current.FetchData();
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)

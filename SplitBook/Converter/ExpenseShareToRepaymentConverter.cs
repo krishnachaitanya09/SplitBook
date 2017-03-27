@@ -65,7 +65,7 @@ namespace SplitBook.Converter
             if (currency_code.Equals(App.currentUser.default_currency))
             {
                 QueryDatabase obj = new QueryDatabase();
-                string unit = obj.getUnitForCurrency(currency_code);
+                string unit = obj.GetUnitForCurrency(currency_code);
                 var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
                 format.CurrencySymbol = unit;
                 format.CurrencyNegativePattern = 1;

@@ -24,7 +24,7 @@ namespace SplitBook.Request
             this.content = content;
         }
 
-        public async void postComment(Action<List<Comment>> Callback)
+        public async Task PostComment(Action<List<Comment>> Callback)
         {
             List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
             postContent.Add(new KeyValuePair<string, string>("expense_id", Convert.ToString(expenseId, System.Globalization.CultureInfo.InvariantCulture)));

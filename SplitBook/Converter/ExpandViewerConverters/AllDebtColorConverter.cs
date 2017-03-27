@@ -19,7 +19,7 @@ namespace SplitBook.Converter.ExpandViewerConverters
             SolidColorBrush colorBrush;
             ExpandableListModel expandableModel = value as ExpandableListModel;
             List<Debt_Group> allDebts = expandableModel.debtList;
-            double finalBalance = Helpers.getUserGroupDebtAmount(allDebts, expandableModel.groupUser.id);
+            double finalBalance = Helpers.GetUserGroupDebtAmount(allDebts, expandableModel.groupUser.id);
 
             if (finalBalance > 0)
                 colorBrush = Application.Current.Resources["positive"] as SolidColorBrush;

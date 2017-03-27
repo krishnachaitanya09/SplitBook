@@ -117,7 +117,7 @@ namespace SplitBook.Controls
                         {
                             currentUserIndex = i;
                         }
-                        if (Helpers.isEmpty(expenseShareUsers[i].percentage))
+                        if (Helpers.IsEmpty(expenseShareUsers[i].percentage))
                             expenseShareUsers[i].percentage = "0";
 
                         if (System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(","))
@@ -152,7 +152,7 @@ namespace SplitBook.Controls
 
                     for (int i = 0; i < numberOfExpenseMembers; i++)
                     {
-                        if (Helpers.isEmpty(expenseShareUsers[i].share))
+                        if (Helpers.IsEmpty(expenseShareUsers[i].share))
                             expenseShareUsers[i].share = "0";
 
                         if (System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(","))

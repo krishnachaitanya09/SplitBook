@@ -55,9 +55,9 @@
 
             <!--ContentPanel - place additional content here-->
             <Grid x:Name="ContentPanel" Grid.Row="0" Margin="12,0,12,0">
-                <WebView Name="browser" NavigationStarting="browser_NavigationStarting"
-                              NavigationCompleted="browser_NavigationCompleted" 
-                              NavigationFailed="browser_NavigationFailed"/>
+                <WebView Name="browser" NavigationStarting="Browser_NavigationStarting"
+                              NavigationCompleted="Browser_NavigationCompleted" 
+                              NavigationFailed="Browser_NavigationFailed"/>
 
                 <ProgressRing Height="50" Width="50" Foreground="{StaticResource splitwiseGreen}" IsActive="True"
                                             x:Name="busyIndicator"/>

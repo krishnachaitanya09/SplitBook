@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Net;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
@@ -36,9 +37,7 @@ namespace SplitBook.Views
         public static bool morePages = true, hasDataLoaded = false;
         public static NetBalances netBalance = new NetBalances();
         public static ButtonEnabler buttonEnabler = new ButtonEnabler();
-        public static BackgroundWorker expenseLoadingBackgroundWorker = new BackgroundWorker();
-        public static BackgroundWorker groupLoadingBackgroundWorker = new BackgroundWorker();
-        public static BackgroundWorker syncDatabaseBackgroundWorker = new BackgroundWorker();
+
         SyncDatabase databaseSync;
 
         public Frame AppFrame { get { return this.frame; } }
@@ -61,23 +60,16 @@ namespace SplitBook.Views
                });
 
             SystemNavigationManager.GetForCurrentView().BackRequested += SystemNavigationManager_BackRequested;
-
-            expenseLoadingBackgroundWorker.WorkerSupportsCancellation = true;
-            expenseLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(expenseLoadingBackgroundWorker_DoWork);
-
-            groupLoadingBackgroundWorker.WorkerSupportsCancellation = true;
-            groupLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(groupLoadingBackgroundWorker_DoWork);
-
-            populateData();
-
-            syncDatabaseBackgroundWorker.WorkerSupportsCancellation = true;
-            syncDatabaseBackgroundWorker.DoWork += new DoWorkEventHandler(syncDatabaseBackgroundWorker_DoWork);
-
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            Task.Run(async () =>
+            {
+                await PopulateData();
+            });
+
             me.DataContext = App.currentUser;
             NavMenuList.SelectedIndex = 0;
             this.frame.Navigate(typeof(FriendsPage));
@@ -88,31 +80,35 @@ namespace SplitBook.Views
             else
             {
                 bool firstUse = (bool)e.Parameter;
-                databaseSync = new SyncDatabase(SyncCompleted);
+                databaseSync = new SyncDatabase();
                 //This condition will only be true if the user has launched this page. This paramter (afterLogin) wont be there
                 //if the page has been accessed from the back stack
                 if (firstUse)
                 {
-                    databaseSync.isFirstSync(true);
+                    databaseSync.IsFirstSync(true);
 
                     //disable the add expense and searchtill first sycn is complete
                     buttonEnabler.AddButtonEnabled = false;
                     buttonEnabler.SearchButtonEnabled = false;
                 }
 
-                if (syncDatabaseBackgroundWorker.IsBusy != true)
+                busyIndicator.Visibility = Visibility.Visible;
+                Task.Run(async () =>
                 {
-                    busyIndicator.Visibility = Visibility.Visible;
-                    syncDatabaseBackgroundWorker.RunWorkerAsync();
-                    buttonEnabler.RefreshButtonEnabled = false;
-                }
+                    await databaseSync.PerformSync(SyncCompleted);
+                });
+
+                buttonEnabler.RefreshButtonEnabled = false;
             }
             try
             {
-                RegisterBackgroundTask();
+                Task.Run(async () =>
+                {
+                    await RegisterBackgroundTask();
+                });
                 ClearTile();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + ":" + ex.StackTrace, false);
             }
@@ -126,7 +122,7 @@ namespace SplitBook.Views
             BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
         }
 
-        private async void RegisterBackgroundTask()
+        private async Task RegisterBackgroundTask()
         {
             var backgroundAccessStatus = await BackgroundExecutionManager.RequestAccessAsync();
             foreach (var task in BackgroundTaskRegistration.AllTasks)
@@ -137,9 +133,11 @@ namespace SplitBook.Views
                 }
             }
 
-            BackgroundTaskBuilder taskBuilder = new BackgroundTaskBuilder();
-            taskBuilder.Name = taskName;
-            taskBuilder.TaskEntryPoint = taskEntryPoint;
+            BackgroundTaskBuilder taskBuilder = new BackgroundTaskBuilder()
+            {
+                Name = taskName,
+                TaskEntryPoint = taskEntryPoint
+            };
             taskBuilder.SetTrigger(new TimeTrigger(15, false));
             var registration = taskBuilder.Register();
         }
@@ -147,27 +145,14 @@ namespace SplitBook.Views
         private const string taskName = "NotificationsBackgroundTask";
         private const string taskEntryPoint = "BackgroundTasks.NotificationsBackgroundTask";
 
-        private void populateData()
+        private async Task PopulateData()
         {
-            loadFriends();
-            if (expenseLoadingBackgroundWorker.IsBusy != true)
-            {
-                expenseLoadingBackgroundWorker.RunWorkerAsync();
-            }
-
-            if (groupLoadingBackgroundWorker.IsBusy != true)
-            {
-                groupLoadingBackgroundWorker.RunWorkerAsync();
-            }
+            await LoadFriends();
+            await LoadExpenses();
+            await LoadGroups();
         }
 
-
-        private void expenseLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            loadExpenses();
-        }
-
-        private void loadFriends()
+        private async Task LoadFriends()
         {
             friendsList.Clear();
             youOweFriends.Clear();
@@ -179,51 +164,54 @@ namespace SplitBook.Views
 
             QueryDatabase obj = new QueryDatabase();
 
-            //only show balance below in the user's default currency
-            foreach (var friend in obj.getAllFriends())
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                friendsList.Add(friend);
-                Balance_User defaultBalance = Helpers.getDefaultBalance(friend.balance);
-                double balance = System.Convert.ToDouble(defaultBalance.amount, CultureInfo.InvariantCulture);
-                string currency = App.currentUser.default_currency;
-                if (balance > 0)
+                //only show balance below in the user's default currency
+                foreach (var friend in obj.GetAllFriends())
                 {
-                    if (defaultBalance.currency_code.Equals(currency))
+                    friendsList.Add(friend);
+                    Balance_User defaultBalance = Helpers.GetDefaultBalance(friend.balance);
+                    double balance = System.Convert.ToDouble(defaultBalance.amount, CultureInfo.InvariantCulture);
+                    string currency = App.currentUser.default_currency;
+                    if (balance > 0)
                     {
-                        postiveBalance += balance;
-                        totalBalance += balance;
+                        if (defaultBalance.currency_code.Equals(currency))
+                        {
+                            postiveBalance += balance;
+                            totalBalance += balance;
+                        }
+                        owesYouFriends.Add(friend);
+                        balanceFriends.Add(friend);
                     }
-                    owesYouFriends.Add(friend);
-                    balanceFriends.Add(friend);
+
+                    if (balance < 0)
+                    {
+                        if (defaultBalance.currency_code.Equals(currency))
+                        {
+                            negativeBalance += balance;
+                            totalBalance += balance;
+                        }
+                        youOweFriends.Add(friend);
+                        balanceFriends.Add(friend);
+                    }
                 }
 
-                if (balance < 0)
+                if (App.currentUser == null)
                 {
-                    if (defaultBalance.currency_code.Equals(currency))
-                    {
-                        negativeBalance += balance;
-                        totalBalance += balance;
-                    }
-                    youOweFriends.Add(friend);
-                    balanceFriends.Add(friend);
+                    return;
                 }
-            }
 
-            if (App.currentUser == null)
-            {
-                return;
-            }
-
-            //if default currency is not set then dont display the balances. Only the text is enough.
-            if (App.currentUser.default_currency == null)
-                return;
-            netBalance.setBalances(totalBalance, postiveBalance, negativeBalance);
+                //if default currency is not set then dont display the balances. Only the text is enough.
+                if (App.currentUser.default_currency == null)
+                    return;
+                netBalance.setBalances(totalBalance, postiveBalance, negativeBalance);
+            });
         }
 
-        private async void loadExpenses()
+        public async Task LoadExpenses()
         {
             QueryDatabase obj = new QueryDatabase();
-            List<Expense> allExpenses = obj.getAllExpenses(pageNo);
+            List<Expense> allExpenses = obj.GetAllExpenses(pageNo);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (pageNo == 0)
@@ -244,10 +232,10 @@ namespace SplitBook.Views
             });
         }
 
-        private async void loadGroups()
+        public async Task LoadGroups()
         {
             QueryDatabase obj = new QueryDatabase();
-            List<Group> allGroups = obj.getAllGroups();
+            List<Group> allGroups = obj.GetAllGroups();
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 groupsList.Clear();
@@ -261,16 +249,17 @@ namespace SplitBook.Views
             });
         }
 
-        public void FetchData()
+        public async Task FetchData()
         {
             if (databaseSync == null)
-                databaseSync = new SyncDatabase(SyncCompleted);
+                databaseSync = new SyncDatabase();
 
             busyIndicator.Visibility = Visibility.Visible;
             buttonEnabler.RefreshButtonEnabled = false;
-
-            if (!syncDatabaseBackgroundWorker.IsBusy)
-                syncDatabaseBackgroundWorker.RunWorkerAsync();
+            await Task.Run(async () =>
+            {
+                await databaseSync.PerformSync(SyncCompleted);
+            });            
         }
 
 
@@ -283,26 +272,15 @@ namespace SplitBook.Views
             }
         }
 
-
-        private void syncDatabaseBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            databaseSync.performSync();
-        }
-
-        private void groupLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            loadGroups();
-        }
-
         private async void SyncCompleted(bool success, HttpStatusCode errorCode)
         {
             if (success)
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     busyIndicator.Visibility = Visibility.Collapsed;
                     pageNo = 0;
-                    populateData();
+                    await PopulateData();
                     hasDataLoaded = true;
                     me.DataContext = App.currentUser;
 
@@ -324,7 +302,7 @@ namespace SplitBook.Views
                     busyIndicator.Visibility = Visibility.Collapsed;
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
-                        Helpers.logout();
+                        Helpers.Logout();
                         this.Frame.Navigate(typeof(LoginPage));
                     }
                     else
@@ -442,7 +420,7 @@ namespace SplitBook.Views
 
         private void LogOut_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            Helpers.logout();
+            Helpers.Logout();
             (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
         }
 

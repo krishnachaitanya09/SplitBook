@@ -60,7 +60,7 @@
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
-        <ListView x:Name="llsExpenses" Grid.Row="1" SelectionChanged="llsExpenses_Tap" Loaded="OnListViewLoaded" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Above="AdControl">
+        <ListView x:Name="llsExpenses" Grid.Row="1" SelectionChanged="LlsExpenses_Tap" Loaded="OnListViewLoaded" RelativePanel.Below="PageHeader" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Above="AdControl">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

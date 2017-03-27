@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -28,9 +29,6 @@ namespace SplitBook.Views
 {
     public sealed partial class CreateGroup : Page
     {
-        BackgroundWorker createGroupBackgroundWorker;
-        BackgroundWorker friendLoadingBackgroundWorker;
-
         Group groupToAdd;
 
         ObservableCollection<User> groupMembers = new ObservableCollection<User>();
@@ -42,16 +40,8 @@ namespace SplitBook.Views
 
             groupToAdd = new Group();
 
-            friendListPicker.AddHandler(TappedEvent, new TappedEventHandler(friendListPicker_Tapped), true);
+            friendListPicker.AddHandler(TappedEvent, new TappedEventHandler(FriendListPicker_Tapped), true);
             BackButton.Click += BackButton_Click;
-            createGroupBackgroundWorker = new BackgroundWorker();
-            createGroupBackgroundWorker.WorkerSupportsCancellation = true;
-            createGroupBackgroundWorker.DoWork += new DoWorkEventHandler(createGroupBackgroundWorker_DoWork);
-
-            friendLoadingBackgroundWorker = new BackgroundWorker();
-            friendLoadingBackgroundWorker.WorkerSupportsCancellation = true;
-            friendLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(friendLoadingBackgroundWorker_DoWork);
-            friendLoadingBackgroundWorker.RunWorkerAsync();
 
             this.friendList.ItemsSource = friendsList;
 
@@ -59,8 +49,9 @@ namespace SplitBook.Views
             llsFriends.ItemsSource = groupMembers;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            await FriendLoadingTask();
             GoogleAnalytics.EasyTracker.GetTracker().SendView("CreateGroupPage");
             base.OnNavigatedTo(e);
         }
@@ -73,10 +64,10 @@ namespace SplitBook.Views
             }
         }
 
-        private async void friendLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task FriendLoadingTask()
         {
             QueryDatabase obj = new QueryDatabase();
-            List<User> allFriends = obj.getAllFriends();
+            List<User> allFriends = obj.GetAllFriends();
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (allFriends != null)
@@ -111,10 +102,10 @@ namespace SplitBook.Views
             return summary;
         }
 
-        private void createGroupBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task CreateGroupAsync()
         {
             ModifyDatabase modify = new ModifyDatabase(CreateGroupCompleted);
-            modify.createGroup(groupToAdd);
+            await modify.CreateGroup(groupToAdd);
         }
 
         private async void CreateGroupCompleted(bool success, HttpStatusCode errorCode)
@@ -134,7 +125,7 @@ namespace SplitBook.Views
                         MessageDialog messageDialog = new MessageDialog("Group has been successfully created.", "Success");
                         await messageDialog.ShowAsync();
                     }
-                    MainPage.Current.FetchData();
+                    await MainPage.Current.FetchData();
                 });
             }
             else
@@ -151,23 +142,23 @@ namespace SplitBook.Views
         private void EnableOkButton()
         {
             if (!String.IsNullOrEmpty(tbName.Text))
-            okay.IsEnabled = true;
+                okay.IsEnabled = true;
             else
-            okay.IsEnabled = false;
+                okay.IsEnabled = false;
         }
 
-        private void tbName_TextChanged(object sender, TextChangedEventArgs e)
+        private void TbName_TextChanged(object sender, TextChangedEventArgs e)
         {
             groupToAdd.name = tbName.Text;
             EnableOkButton();
         }
 
-        private void friendListPicker_Loaded(object sender, RoutedEventArgs e)
+        private void FriendListPicker_Loaded(object sender, RoutedEventArgs e)
         {
             friendListPicker.Text = FriendSummary();
         }
 
-        private void friendListPicker_Tapped(object sender, TappedRoutedEventArgs e)
+        private void FriendListPicker_Tapped(object sender, TappedRoutedEventArgs e)
         {
             friendListPopup.IsOpen = true;
         }
@@ -187,15 +178,12 @@ namespace SplitBook.Views
             }
         }
 
-        private void OkayButton_Click(object sender, RoutedEventArgs e)
+        private async void OkayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!createGroupBackgroundWorker.IsBusy)
-            {
-                busyIndicator.IsActive = true;
-                this.Focus(FocusState.Programmatic);
-                groupToAdd.members = groupMembers.ToList();
-                createGroupBackgroundWorker.RunWorkerAsync();
-            }
+            busyIndicator.IsActive = true;
+            this.Focus(FocusState.Programmatic);
+            groupToAdd.members = groupMembers.ToList();
+            await CreateGroupAsync();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

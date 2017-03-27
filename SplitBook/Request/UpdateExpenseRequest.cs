@@ -25,7 +25,7 @@ namespace SplitBook.Request
             this.updatedExpense = expense;
         }
 
-        public async void updateExpense(Action<bool> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
+        public async Task UpdateExpense(Action<bool> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
             List<KeyValuePair<string, string>> postContent = new List<KeyValuePair<string, string>>();
 

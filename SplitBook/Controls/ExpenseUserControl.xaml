@@ -26,11 +26,11 @@
 						<Run Text="you " FontWeight="Bold"/>
 						<Run Text="and:"/>
                     </TextBlock>
-                    <TextBox x:Name="friendListPicker" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="80" Loaded="friendListPicker_Loaded" Tapped="friendListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
+                    <TextBox x:Name="friendListPicker" TextWrapping="Wrap" AcceptsReturn="True" MaxHeight="80" Loaded="FriendListPicker_Loaded" Tapped="FriendListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
                     <Popup x:Name="friendListPopup" IsLightDismissEnabled="True">
                         <ListBox x:Name="friendList" MaxHeight="250" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionMode="Multiple" x:FieldModifier="public" SelectionChanged="FriendListPicker_SelectionChanged"/>
                     </Popup>
-                    <TextBox x:Name="groupListPicker" x:FieldModifier="public" TextWrapping="Wrap" Loaded="groupListPicker_Loaded" Tapped="groupListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
+                    <TextBox x:FieldModifier="Public" x:Name="groupListPicker" TextWrapping="Wrap" Loaded="GroupListPicker_Loaded" Tapped="GroupListPicker_Tapped" Foreground="Black" IsReadOnly="True" Margin="5" BorderBrush="{StaticResource splitwiseGreyBG}"/>
                     <Popup x:Name="groupListPopup" IsLightDismissEnabled="True" >
                         <ListBox x:Name="groupList" MaxHeight="250" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionMode="Single" x:FieldModifier="public" SelectionChanged="GroupList_SelectionChanged"/>
                     </Popup>
@@ -52,7 +52,7 @@
 						x:Name="expenseTypeListPicker"
                         HorizontalAlignment="Stretch"
                         Margin="20,0"
-                        HorizontalContentAlignment="Center" SelectionChanged="expenseTypeListPicker_SelectionChanged"/>
+                        HorizontalContentAlignment="Center" SelectionChanged="ExpenseTypeListPicker_SelectionChanged"/>
 
                     <Grid Grid.Row="0" Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
@@ -134,7 +134,7 @@
                                 BorderBrush="{StaticResource splitwiseGreyBG}">
 
                             <TextBlock Foreground="Black"
-                                       Tapped="tbPaidBy_Tap"                                       
+                                       Tapped="TbPaidBy_Tap"                                       
                                        Padding="10,0"
                                        FontSize="{StaticResource nameSize}"
                                        x:Name="tbPaidBy" x:FieldModifier="public"

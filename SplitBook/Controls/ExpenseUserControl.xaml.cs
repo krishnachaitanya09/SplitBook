@@ -45,21 +45,25 @@ namespace SplitBook.Controls
 
             if (expense == null)
             {
-                expense = new Expense();
-                expense.group_id = 0; //by default the expense is in no group
+                expense = new Expense()
+                {
+                    group_id = 0 //by default the expense is in no group
+                };
             }
 
-            friendListPicker.AddHandler(TappedEvent, new TappedEventHandler(friendListPicker_Tapped), true);
-            groupListPicker.AddHandler(TappedEvent, new TappedEventHandler(groupListPicker_Tapped), true);
+            friendListPicker.AddHandler(TappedEvent, new TappedEventHandler(FriendListPicker_Tapped), true);
+            groupListPicker.AddHandler(TappedEvent, new TappedEventHandler(GroupListPicker_Tapped), true);
 
-            loadFriendsAndGroups();
+            LoadFriendsAndGroups();
 
             if ((Application.Current as App).ADD_EXPENSE != null)
                 expense = (Application.Current as App).ADD_EXPENSE;
 
-            getSupportedCurrenciesBackgroundWorker = new BackgroundWorker();
-            getSupportedCurrenciesBackgroundWorker.WorkerSupportsCancellation = true;
-            getSupportedCurrenciesBackgroundWorker.DoWork += new DoWorkEventHandler(getSupportedCurrenciesBackgroundWorker_DoWork);
+            getSupportedCurrenciesBackgroundWorker = new BackgroundWorker()
+            {
+                WorkerSupportsCancellation = true
+            };
+            getSupportedCurrenciesBackgroundWorker.DoWork += new DoWorkEventHandler(GetSupportedCurrenciesBackgroundWorker_DoWork);
 
             if (!getSupportedCurrenciesBackgroundWorker.IsBusy)
                 getSupportedCurrenciesBackgroundWorker.RunWorkerAsync();
@@ -77,8 +81,8 @@ namespace SplitBook.Controls
             this.SplitTypeListPicker.SelectedIndex = 0;
 
             //add current user
-            expenseShareUsers.Add(getCurrentUser());
-            PaidByUser = getCurrentUser();
+            expenseShareUsers.Add(GetCurrentUser());
+            PaidByUser = GetCurrentUser();
             tbPaidBy.Text = PaidByUser.ToString();
         }
 
@@ -90,21 +94,21 @@ namespace SplitBook.Controls
         //    this.expenseTypeListPicker.SelectionChanged += expenseTypeListPicker_SelectionChanged;
         //}
 
-        private Expense_Share getCurrentUser()
+        private Expense_Share GetCurrentUser()
         {
             return new Expense_Share() { user = App.currentUser, user_id = App.currentUser.id };
         }
 
-        private void loadFriendsAndGroups()
+        private void LoadFriendsAndGroups()
         {
-            loadGroups();
-            loadFriends();
+            LoadGroups();
+            LoadFriends();
         }
 
-        private void loadGroups()
+        private void LoadGroups()
         {
             QueryDatabase obj = new QueryDatabase();
-            List<Group> allGroups = obj.getAllGroups();
+            List<Group> allGroups = obj.GetAllGroups();
 
             if (allGroups != null && allGroups.Count != 0)
             {
@@ -116,10 +120,10 @@ namespace SplitBook.Controls
             }
         }
 
-        private void loadFriends()
+        private void LoadFriends()
         {
             QueryDatabase obj = new QueryDatabase();
-            List<User> allFriends = obj.getAllFriends();
+            List<User> allFriends = obj.GetAllFriends();
             if (allFriends != null)
             {
                 foreach (var friend in allFriends)
@@ -169,11 +173,11 @@ namespace SplitBook.Controls
             return summary;
         }
 
-        private async void getSupportedCurrenciesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async void GetSupportedCurrenciesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Currency defaultCurrency = null;
             QueryDatabase query = new QueryDatabase();
-            foreach (var item in query.getSupportedCurrencies())
+            foreach (var item in query.GetSupportedCurrencies())
             {
                 if (item.currency_code == App.currentUser.default_currency && String.IsNullOrEmpty(expense.currency_code))
                     defaultCurrency = item;
@@ -195,29 +199,31 @@ namespace SplitBook.Controls
             });
         }
 
-        private void friendListPicker_Tapped(object sender, TappedRoutedEventArgs e)
+        private void FriendListPicker_Tapped(object sender, TappedRoutedEventArgs e)
         {
 
             ShowPopup(ref friendListPopup);
         }
 
-        private void groupListPicker_Tapped(object sender, TappedRoutedEventArgs e)
+        private void GroupListPicker_Tapped(object sender, TappedRoutedEventArgs e)
         {
             ShowPopup(ref groupListPopup);
         }
 
-        private async void tbPaidBy_Tap(object sender, TappedRoutedEventArgs e)
+        private async void TbPaidBy_Tap(object sender, TappedRoutedEventArgs e)
         {
             if (expenseShareUsers.Count <= 1)
                 return;
 
             //need can proceed as user can select multiple payee and we need cost for that.
-            if (await canProceed())
+            if (await CanProceed())
             {
-                SelectPayeePopUpControl ChoosePayeePopup = new SelectPayeePopUpControl(expenseShareUsers, _PayeeClose);
-                ChoosePayeePopup.MaxWidth = this.ActualWidth;
-                ChoosePayeePopup.MinWidth = this.ActualWidth;
-                ChoosePayeePopup.MaxHeight = Window.Current.Bounds.Height - 120;
+                SelectPayeePopUpControl ChoosePayeePopup = new SelectPayeePopUpControl(expenseShareUsers, _PayeeClose)
+                {
+                    MaxWidth = this.ActualWidth,
+                    MinWidth = this.ActualWidth,
+                    MaxHeight = Window.Current.Bounds.Height - 120
+                };
                 contentDialog.Child = ChoosePayeePopup;
                 contentDialog.VerticalOffset = scrollViewer.VerticalOffset; 
                 contentDialog.IsOpen = true;
@@ -236,7 +242,7 @@ namespace SplitBook.Controls
             if (isMultiplePayer)
             {
                 //Show the multiple payer popup
-                showMultiplePayeePopUp();
+                ShowMultiplePayeePopUp();
             }
             else
             {
@@ -254,7 +260,7 @@ namespace SplitBook.Controls
             }
         }
 
-        private void showMultiplePayeePopUp()
+        private void ShowMultiplePayeePopUp()
         {
             String cost;
             if (System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(","))
@@ -262,10 +268,12 @@ namespace SplitBook.Controls
             else
                 cost = tbAmount.Text.Replace(",", ".");
             MultiplePayeeInputPopUpControl MultiplePayeeInputPopup = new MultiplePayeeInputPopUpControl
-                                                            (ref expenseShareUsers, _MultiplePayeeInputClose, Convert.ToDecimal(cost));
-            MultiplePayeeInputPopup.MaxWidth = this.ActualWidth;
-            MultiplePayeeInputPopup.MinWidth = this.ActualWidth;
-            MultiplePayeeInputPopup.MaxHeight = Window.Current.Bounds.Height - 120;
+                                                            (ref expenseShareUsers, _MultiplePayeeInputClose, Convert.ToDecimal(cost))
+            {
+                MaxWidth = this.ActualWidth,
+                MinWidth = this.ActualWidth,
+                MaxHeight = Window.Current.Bounds.Height - 120
+            };
             MultiplePayeeDialog.Child = MultiplePayeeInputPopup;
             MultiplePayeeDialog.VerticalOffset = scrollViewer.VerticalOffset;
             MultiplePayeeDialog.IsOpen = true;
@@ -284,7 +292,7 @@ namespace SplitBook.Controls
             amountSplit = (AmountSplit)this.SplitTypeListPicker.SelectedItem;
             if (amountSplit.id == AmountSplit.TYPE_SPLIT_UNEQUALLY)
             {
-                if (await canProceed())
+                if (await CanProceed())
                 {
                     //show unequall split pop up;
                     String cost;
@@ -292,11 +300,12 @@ namespace SplitBook.Controls
                         cost = tbAmount.Text.Replace(".", ",");
                     else
                         cost = tbAmount.Text.Replace(",", "."); ;
-                    UnequallySplit UnequallySplitPopup = new UnequallySplit(expenseShareUsers, Convert.ToDecimal(cost), _UnequallyClose);
-                    UnequallySplitPopup.MaxHeight = Window.Current.Bounds.Height - 120;
-                    UnequallySplitPopup.MaxWidth = this.ActualWidth;
-                    UnequallySplitPopup.MinWidth = this.ActualWidth;
-
+                    UnequallySplit UnequallySplitPopup = new UnequallySplit(expenseShareUsers, Convert.ToDecimal(cost), _UnequallyClose)
+                    {
+                        MaxHeight = Window.Current.Bounds.Height - 120,
+                        MaxWidth = this.ActualWidth,
+                        MinWidth = this.ActualWidth
+                    };
                     contentDialog.Child = UnequallySplitPopup;
                     contentDialog.VerticalOffset = scrollViewer.VerticalOffset;
                     contentDialog.IsOpen = true;
@@ -350,7 +359,7 @@ namespace SplitBook.Controls
                 expenseShareUsers.Remove(item as Expense_Share);
                 if (item == PaidByUser)
                 {
-                    PaidByUser = getCurrentUser();
+                    PaidByUser = GetCurrentUser();
                     tbPaidBy.Text = PaidByUser.ToString();
                 }
             }
@@ -362,7 +371,7 @@ namespace SplitBook.Controls
         }
 
 
-        void expenseTypeListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void ExpenseTypeListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.expenseTypeListPicker.SelectedItem != null)
             {
@@ -374,7 +383,7 @@ namespace SplitBook.Controls
             }
         }
 
-        private async Task<bool> canProceed()
+        private async Task<bool> CanProceed()
         {
             if (String.IsNullOrEmpty(tbAmount.Text) || friendList.SelectedItems == null || friendList.SelectedItems.Count == 0)
             {
@@ -389,7 +398,7 @@ namespace SplitBook.Controls
         }
         #endregion
 
-        public async Task<bool> setupExpense()
+        public async Task<bool> SetupExpense()
         {
             try
             {
@@ -401,7 +410,7 @@ namespace SplitBook.Controls
                 //Check if description and amount are present.
                 expense.description = tbDescription.Text;
 
-                if (!Helpers.isEmpty(tbAmount.Text))
+                if (!Helpers.IsEmpty(tbAmount.Text))
                 {
                     if (System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(","))
                         expense.cost = tbAmount.Text.Replace(".", ",");
@@ -438,12 +447,12 @@ namespace SplitBook.Controls
                     switch (type.id)
                     {
                         case ExpenseType.TYPE_FRIEND_OWES:
-                            PaidByUser = getCurrentUser();
-                            fullExpenseSplit();
+                            PaidByUser = GetCurrentUser();
+                            FullExpenseSplit();
                             break;
                         case ExpenseType.TYPE_YOU_OWE:
                             PaidByUser = friendList.SelectedItem as Expense_Share;
-                            fullExpenseSplit();
+                            FullExpenseSplit();
                             break;
                         case ExpenseType.TYPE_SPLIT_BILL:
                             proceed = await SplitBillType();
@@ -479,10 +488,10 @@ namespace SplitBook.Controls
             switch (amountSplit.id)
             {
                 case AmountSplit.TYPE_SPLIT_EQUALLY:
-                    proceed = await divideExpenseEqually();
+                    proceed = await DivideExpenseEqually();
                     break;
                 case AmountSplit.TYPE_SPLIT_UNEQUALLY:
-                    proceed = await divideExpenseUnequally();
+                    proceed = await DivideExpenseUnequally();
                     break;
                 default:
                     break;
@@ -491,7 +500,7 @@ namespace SplitBook.Controls
             return proceed;
         }
 
-        private async Task<bool> divideExpenseEqually()
+        private async Task<bool> DivideExpenseEqually()
         {
             double totalPaidBy = 0;
 
@@ -545,7 +554,7 @@ namespace SplitBook.Controls
         //The unequallySplit popup has already taken care of owed_share. here we only need to handle the paidshare
         //the paid share is handled with the help of PaidByUser. If this is null, then it means we have a Multiple Payee scenario
         //and in that case, even the paid share is already handled for us by the MultiplePayeeInputPopUpControl
-        private async Task<bool> divideExpenseUnequally()
+        private async Task<bool> DivideExpenseUnequally()
         {
             decimal totalPaidBy = 0;
             decimal totalOwed = 0;
@@ -590,7 +599,7 @@ namespace SplitBook.Controls
             }
         }
 
-        private void fullExpenseSplit()
+        private void FullExpenseSplit()
         {
             //only you and one more user should be there to access this feature
             if (expenseShareUsers.Count != 2)
@@ -614,9 +623,8 @@ namespace SplitBook.Controls
         public static void FocusedTextBoxUpdateSource()
         {
             var focusedElement = FocusManager.GetFocusedElement();
-            var focusedTextBox = focusedElement as TextBox;
 
-            if (focusedTextBox != null)
+            if (focusedElement is TextBox focusedTextBox)
             {
                 var binding = focusedTextBox.GetBindingExpression(TextBox.TextProperty);
 
@@ -627,9 +635,8 @@ namespace SplitBook.Controls
             }
             else
             {
-                var focusedPasswordBox = focusedElement as PasswordBox;
 
-                if (focusedPasswordBox != null)
+                if (focusedElement is PasswordBox focusedPasswordBox)
                 {
                     var binding = focusedPasswordBox.GetBindingExpression(PasswordBox.PasswordProperty);
 
@@ -641,12 +648,12 @@ namespace SplitBook.Controls
             }
         }
 
-        private void friendListPicker_Loaded(object sender, RoutedEventArgs e)
+        private void FriendListPicker_Loaded(object sender, RoutedEventArgs e)
         {
             friendListPicker.Text = FriendSummary();
         }
 
-        private void groupListPicker_Loaded(object sender, RoutedEventArgs e)
+        private void GroupListPicker_Loaded(object sender, RoutedEventArgs e)
         {
             groupListPicker.Text = GroupSummary();
         }

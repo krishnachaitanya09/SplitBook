@@ -21,7 +21,7 @@ namespace SplitBook.Request
             this.expenseId = expenseId;
         }
 
-        public async void getComments(Action<List<Comment>> Callback)
+        public async Task GetComments(Action<List<Comment>> Callback)
         {
             try
             {

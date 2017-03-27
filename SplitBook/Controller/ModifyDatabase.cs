@@ -20,40 +20,40 @@ namespace SplitBook.Controller
             this.callback = callback;
         }
 
-        public void deleteExpense(int expenseId)
+        public async Task DeleteExpense(int expenseId)
         {
             DeleteExpenseRequest request = new DeleteExpenseRequest(expenseId);
-            request.deleteExpense(_OperationSucceded, _OperationFailed);
+            await request.DeleteExpense(_OperationSucceded, _OperationFailed);
         }
 
-        public void editExpense(Expense editedExpenseDetail)
+        public async Task EditExpense(Expense editedExpenseDetail)
         {
             UpdateExpenseRequest request = new UpdateExpenseRequest(editedExpenseDetail);
-            request.updateExpense(_OperationSucceded, _OperationFailed);
+            await request.UpdateExpense(_OperationSucceded, _OperationFailed);
         }
 
-        public void addExpense(Expense expense)
+        public async Task AddExpense(Expense expense)
         {
             AddExpenseRequest request = new AddExpenseRequest(expense);
-            request.addExpense(_OperationSucceded, _OperationFailed);
+            await request.AddExpense(_OperationSucceded, _OperationFailed);
         }
 
-        public void createFriend(string email, string firstName, string lastName)
+        public async Task CreateFriend(string email, string firstName, string lastName)
         {
             CreateFriendRequest request = new CreateFriendRequest(email, firstName, lastName);
-            request.createFriend(_FriendAdded, _OperationFailed);
+            await request.CreateFriend(_FriendAdded, _OperationFailed);
         }
 
-        public void deleteFriend(int friendId)
+        public async Task DeleteFriend(int friendId)
         {
             DeleteFriendRequest request = new DeleteFriendRequest(friendId);
-            request.deleteFriend(_OperationSucceded, _OperationFailed);
+            await request.DeleteFriend(_OperationSucceded, _OperationFailed);
         }
 
-        public void createGroup(Group group)
+        public async Task CreateGroup(Group group)
         {
             CreateGroupRequest request = new CreateGroupRequest(group);
-            request.createGroup(_GroupAdded, _OperationFailed);
+            await request.CreateGroup(_GroupAdded, _OperationFailed);
         }
 
         private void _FriendAdded(User friend)

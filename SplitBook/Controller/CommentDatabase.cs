@@ -19,16 +19,16 @@ namespace SplitBook.Controller
             this.callback = callback;
         }
 
-        public void getComments(int expenseId)
+        public async Task GetComments(int expenseId)
         {
             GetCommentsRequest request = new GetCommentsRequest(expenseId);
-            request.getComments(callback);
+            await request.GetComments(callback);
         }
 
-        public void addComment(int expenseId, string content)
+        public async Task AddComment(int expenseId, string content)
         {
             CreateCommentRequest request = new CreateCommentRequest(expenseId, content);
-            request.postComment(callback);
+            await request.PostComment(callback);
         }
     }
 }

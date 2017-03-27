@@ -28,14 +28,14 @@ namespace SplitBook.Views
         public MePage()
         {
             this.InitializeComponent();
-            BackButton.Tapped += BackButton_Tapped;
+            BackButton.Click += BackButton_Click;
             if (!Advertisement.ShowAds)
             {
                 removeAds.Visibility = Visibility.Collapsed;
             }
         }
 
-        private void BackButton_Tapped(object sender, TappedRoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.Frame.CanGoBack)
             {
@@ -49,6 +49,12 @@ namespace SplitBook.Views
             MainPage.Current.SecondaryNavMenuList.SelectedIndex = 0;
             Me.DataContext = App.currentUser;
             GoogleAnalytics.EasyTracker.GetTracker().SendView("MePage");
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            BackButton.Click -= BackButton_Click;
         }
 
         private void Account_Settings_Tapped(object sender, TappedRoutedEventArgs e)
@@ -82,7 +88,7 @@ namespace SplitBook.Views
 
         private void Logout_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Helpers.logout();
+            Helpers.Logout();
             (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
         }
 

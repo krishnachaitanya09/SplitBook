@@ -16,7 +16,7 @@ namespace SplitBook.Converter.ExpandViewerConverters
             string text = "";
             ExpandableListModel expandableModel = value as ExpandableListModel;
             List<Debt_Group> allDebts = expandableModel.debtList;
-            double finalBalance = Helpers.getUserGroupDebtAmount(allDebts, expandableModel.groupUser.id);
+            double finalBalance = Helpers.GetUserGroupDebtAmount(allDebts, expandableModel.groupUser.id);
 
             //if final balance is 0, then anyways we are not shwoing the balance.
             if (finalBalance == 0)

@@ -221,7 +221,7 @@
                 BorderBrush="{StaticResource splitwiseGreyBG}"                
 				PlaceholderText="enter name of group" 
 				Padding="10"
-                TextChanged="tbName_TextChanged"
+                TextChanged="TbName_TextChanged"
 				VerticalAlignment="Top"/>
 
                 <TextBlock Grid.Row="1"
@@ -230,7 +230,7 @@
                      TextWrapping="Wrap"
                      Text="Add friends to this group:"
                      FontSize="22"/>
-                <TextBox x:Name="friendListPicker" Margin="5,0" Padding="10" Grid.Row="2" Loaded="friendListPicker_Loaded" Tapped="friendListPicker_Tapped" Foreground="Black" IsReadOnly="True" BorderBrush="{StaticResource splitwiseGreyBG}"/>
+                <TextBox x:Name="friendListPicker" Margin="5,0" Padding="10" Grid.Row="2" Loaded="FriendListPicker_Loaded" Tapped="FriendListPicker_Tapped" Foreground="Black" IsReadOnly="True" BorderBrush="{StaticResource splitwiseGreyBG}"/>
                 <Popup x:Name="friendListPopup" IsLightDismissEnabled="True" Margin="5,0">
                     <ListBox MaxHeight="200" x:Name="friendList" SelectionMode="Multiple" x:FieldModifier="public" SelectionChanged="FriendListPicker_SelectionChanged">
                         <ListBox.ItemContainerStyle>

@@ -20,7 +20,7 @@ namespace SplitBook.Converter
                 QueryDatabase query = new QueryDatabase();
                 string currencyCode = String.Empty;
                 if (App.currentUser != null)
-                    currencyCode = query.getUnitForCurrency(App.currentUser.default_currency.ToUpper());
+                    currencyCode = query.GetUnitForCurrency(App.currentUser.default_currency.ToUpper());
                 if (currencyCode != String.Empty)
                 {
                     var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
@@ -37,9 +37,9 @@ namespace SplitBook.Converter
             else
             {
                 List<Balance_User> balanceList = value as List<Balance_User>;
-                bool hasMultipleBalances = Helpers.hasMultipleBalances(balanceList);
+                bool hasMultipleBalances = Helpers.HasMultipleBalances(balanceList);
 
-                Balance_User defaultBalance = Helpers.getDefaultBalance(balanceList);
+                Balance_User defaultBalance = Helpers.GetDefaultBalance(balanceList);
                 double finalBalance = System.Convert.ToDouble(defaultBalance.amount, System.Globalization.CultureInfo.InvariantCulture);
                 if (finalBalance == 0)
                     return null;
@@ -50,7 +50,7 @@ namespace SplitBook.Converter
                     if (currency.Equals(App.currentUser.default_currency))
                     {
                         QueryDatabase obj = new QueryDatabase();
-                        string unit = obj.getUnitForCurrency(currency);
+                        string unit = obj.GetUnitForCurrency(currency);
                         var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
                         format.CurrencySymbol = unit;
                         format.CurrencyNegativePattern = 1;

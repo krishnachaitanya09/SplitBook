@@ -5,6 +5,7 @@ using SplitBook.Views;
 using System;
 using System.ComponentModel;
 using System.Net;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Data.Pdf;
 using Windows.Storage;
@@ -22,8 +23,6 @@ namespace SplitBook.Add_Expense_Pages
 {
     public sealed partial class EditExpense : Page
     {
-        BackgroundWorker editExpenseBackgroundWorker;
-
         bool groupSelectionFirstTime = true;
 
         public EditExpense()
@@ -43,9 +42,6 @@ namespace SplitBook.Add_Expense_Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            editExpenseBackgroundWorker = new BackgroundWorker();
-            editExpenseBackgroundWorker.WorkerSupportsCancellation = true;
-            editExpenseBackgroundWorker.DoWork += new DoWorkEventHandler(editExpenseBackgroundWorker_DoWork);
 
             this.expenseControl.Loaded += ExpenseControl_Loaded;
             this.expenseControl.groupListPicker.SelectionChanged += GroupListPicker_SelectionChanged;
@@ -61,10 +57,10 @@ namespace SplitBook.Add_Expense_Pages
 
         private void ExpenseControl_Loaded(object sender, RoutedEventArgs e)
         {
-            setupViews();
+            SetupViews();
         }
 
-        private void setupViews()
+        private void SetupViews()
         {
             this.expenseControl.tbDescription.Text = this.expenseControl.expense.description;
             this.expenseControl.tbAmount.Text = this.expenseControl.expense.cost;
@@ -74,12 +70,12 @@ namespace SplitBook.Add_Expense_Pages
                 this.expenseControl.tbDetails.Text = this.expenseControl.expense.details;
             }
             this.expenseControl.expenseDate.Date = DateTime.Parse(this.expenseControl.expense.date, System.Globalization.CultureInfo.InvariantCulture);
-            this.expenseControl.groupList.SelectedItem = getSelectedGroup();
+            this.expenseControl.groupList.SelectedItem = GetSelectedGroup();
             if (!String.IsNullOrEmpty(this.expenseControl.expense.receipt.large))
             {
                 this.expenseControl.receiptImage.Source = new BitmapImage(new Uri(this.expenseControl.expense.receipt.large));
             }
-            setupSelectedUsers();
+            SetupSelectedUsers();
 
             //setup the payee
             int payeeCount = 0;
@@ -108,7 +104,7 @@ namespace SplitBook.Add_Expense_Pages
             this.expenseControl.SplitTypeListPicker.SelectedItem = AmountSplit.UnequalSplit;
         }
 
-        private Group getSelectedGroup()
+        private Group GetSelectedGroup()
         {
             //not assocated to any expense. therefore the groupSelectionChanged will not be fired.
             if (this.expenseControl.expense.group_id == 0)
@@ -128,7 +124,7 @@ namespace SplitBook.Add_Expense_Pages
             return null;
         }
 
-        private void setupSelectedUsers()
+        private void SetupSelectedUsers()
         {
             if (this.expenseControl.expense.users.Count == 0)
                 return;
@@ -143,28 +139,24 @@ namespace SplitBook.Add_Expense_Pages
             }
         }
 
-        private async void btnOk_Click(object sender, EventArgs e)
+        private async void BtnOk_Click(object sender, EventArgs e)
         {
-            bool proceed = await this.expenseControl.setupExpense();
-            if (editExpenseBackgroundWorker.IsBusy != true)
-            {
-                busyIndicator.IsActive = true;
-
-                if (proceed)
-                    editExpenseBackgroundWorker.RunWorkerAsync();
-                else
-                    busyIndicator.IsActive = false;
-            }
+            bool proceed = await this.expenseControl.SetupExpense();
+            busyIndicator.IsActive = true;
+            if (proceed)
+                await EditExistingExpense();
+            else
+                busyIndicator.IsActive = false;
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
             (Application.Current as App).ADD_EXPENSE = null;
             this.Frame.GoBack();
         }
 
         //returns true only if one or less group is selected
-        private bool validGroupSelected()
+        private bool ValidGroupSelected()
         {
             if (this.expenseControl.groupList.SelectedItems.Count > 1)
                 return false;
@@ -184,7 +176,7 @@ namespace SplitBook.Add_Expense_Pages
             if (this.expenseControl.groupList.SelectedItem == null)
                 return;
 
-            if (validGroupSelected())
+            if (ValidGroupSelected())
             {
                 Group selectedGroup = this.expenseControl.groupList.SelectedItem as Group;
                 this.expenseControl.expense.group_id = selectedGroup.id;
@@ -210,22 +202,22 @@ namespace SplitBook.Add_Expense_Pages
             }
         }
 
-        private void editExpenseBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task EditExistingExpense()
         {
             ModifyDatabase modify = new ModifyDatabase(_editExpenseCompleted);
-            modify.editExpense(this.expenseControl.expense);
+            await modify.EditExpense(this.expenseControl.expense);
         }
 
         private async void _editExpenseCompleted(bool success, HttpStatusCode errorCode)
         {
             if (success)
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     (Application.Current as App).ADD_EXPENSE = null;
                     busyIndicator.IsActive = false;
                     this.Frame.Navigate(typeof(FriendsPage));
-                    MainPage.Current.FetchData();
+                    await MainPage.Current.FetchData();
                 });
             }
             else
@@ -236,7 +228,7 @@ namespace SplitBook.Add_Expense_Pages
 
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
-                        Helpers.logout();
+                        Helpers.Logout();
                         (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
                     }
                     else
@@ -248,33 +240,31 @@ namespace SplitBook.Add_Expense_Pages
             }
         }
 
-        private async void btnOkay_Click(object sender, RoutedEventArgs e)
+        private async void BtnOkay_Click(object sender, RoutedEventArgs e)
         {
-            bool proceed = await this.expenseControl.setupExpense();
-            if (editExpenseBackgroundWorker.IsBusy != true)
-            {
-                busyIndicator.IsActive = true;
-
-                if (proceed)
-                    editExpenseBackgroundWorker.RunWorkerAsync();
-                else
-                    busyIndicator.IsActive = false;
-            }
+            bool proceed = await this.expenseControl.SetupExpense();
+            busyIndicator.IsActive = true;
+            if (proceed)
+                await EditExistingExpense();
+            else
+                busyIndicator.IsActive = false;
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             (Application.Current as App).ADD_EXPENSE = null;
             this.Frame.GoBack();
         }
 
-        private async void btnReceipt_Click(object sender, RoutedEventArgs e)
+        private async void BtnReceipt_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                FileOpenPicker open = new FileOpenPicker();
-                open.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-                open.ViewMode = PickerViewMode.Thumbnail;
+                FileOpenPicker open = new FileOpenPicker()
+                {
+                    SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                    ViewMode = PickerViewMode.Thumbnail
+                };
 
                 // Filter to include a sample subset of file types
                 open.FileTypeFilter.Clear();

@@ -27,7 +27,7 @@ namespace SplitBook.Request
             this.paymentExpense = expense;
         }
 
-        public async void addExpense(Action<bool> CallbackOnSuccess, Action<System.Net.HttpStatusCode> CallbackOnFailure)
+        public async Task AddExpense(Action<bool> CallbackOnSuccess, Action<System.Net.HttpStatusCode> CallbackOnFailure)
         {
             List<KeyValuePair<string, string>> content = new List<KeyValuePair<string, string>>();
             if (paymentExpense.payment)

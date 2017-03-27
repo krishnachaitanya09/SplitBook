@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -27,8 +28,6 @@ namespace SplitBook.Views
 {
     public sealed partial class AccountSettings : Page
     {
-        BackgroundWorker getSupportedCurrenciesBackgroundWorker;
-        BackgroundWorker editUserBackgroundWorker;
         private ObservableCollection<Currency> currenciesList = new ObservableCollection<Currency>();
         User currentUser;
         bool currencyModified = false;
@@ -38,31 +37,24 @@ namespace SplitBook.Views
             this.InitializeComponent();
             BackButton.Click += BackButton_Click;
 
-            currencyListPicker.AddHandler(TappedEvent, new TappedEventHandler(currencyListPicker_Tapped), true);
+            currencyListPicker.AddHandler(TappedEvent, new TappedEventHandler(CurrencyListPicker_Tapped), true);
 
-            getSupportedCurrenciesBackgroundWorker = new BackgroundWorker();
-            getSupportedCurrenciesBackgroundWorker.WorkerSupportsCancellation = true;
-            getSupportedCurrenciesBackgroundWorker.DoWork += new DoWorkEventHandler(getSupportedCurrenciesBackgroundWorker_DoWork);
-            getSupportedCurrenciesBackgroundWorker.RunWorkerAsync();
-
-            editUserBackgroundWorker = new BackgroundWorker();
-            editUserBackgroundWorker.WorkerSupportsCancellation = true;
-            editUserBackgroundWorker.DoWork += new DoWorkEventHandler(editUserBackgroundWorker_DoWork);
-
-            currentUser = new User();
-            currentUser.id = App.currentUser.id;
-            currentUser.first_name = App.currentUser.first_name;
-            currentUser.last_name = App.currentUser.last_name;
-            currentUser.email = App.currentUser.email;
-            currentUser.default_currency = App.currentUser.default_currency;
-
+            currentUser = new User()
+            {
+                id = App.currentUser.id,
+                first_name = App.currentUser.first_name,
+                last_name = App.currentUser.last_name,
+                email = App.currentUser.email,
+                default_currency = App.currentUser.default_currency
+            };
             this.DataContext = currentUser;
 
             this.currencyList.ItemsSource = currenciesList;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            await GetSupportedCurrencies();
             GoogleAnalytics.EasyTracker.GetTracker().SendView("AccountSettingsPage");
             base.OnNavigatedTo(e);
         }
@@ -73,15 +65,15 @@ namespace SplitBook.Views
                 this.Frame.GoBack();
         }
 
-        private bool canProceed()
+        private bool CanProceed()
         {
             return !(String.IsNullOrEmpty(tbEmail.Text) || String.IsNullOrEmpty(tbFirstName.Text));
         }
 
-        private void editUserBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task EditUser()
         {
             Request.UpdateUserRequest request = new Request.UpdateUserRequest(currentUser);
-            request.updateUser(EditUserCompleted);
+            await request.UpdateUser(EditUserCompleted);
         }
 
         private async void EditUserCompleted(User updatedUserDetails, HttpStatusCode statusCode)
@@ -92,7 +84,7 @@ namespace SplitBook.Views
                 {
                     App.currentUser = updatedUserDetails;
                     busyIndicator.IsActive = false;
-                    showPromptAndGoBack();
+                    ShowPromptAndGoBack();
                 });
             }
             else
@@ -114,7 +106,7 @@ namespace SplitBook.Views
             }
         }
 
-        private async void showPromptAndGoBack()
+        private async void ShowPromptAndGoBack()
         {
             if (currencyModified)
             {
@@ -125,11 +117,11 @@ namespace SplitBook.Views
                 this.Frame.GoBack();
         }
 
-        private async void getSupportedCurrenciesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task GetSupportedCurrencies()
         {
             Currency defaultCurrency = null;
             QueryDatabase query = new QueryDatabase();
-            foreach (var item in query.getSupportedCurrencies())
+            foreach (var item in query.GetSupportedCurrencies())
             {
                 if (item.currency_code == App.currentUser.default_currency)
                     defaultCurrency = item;
@@ -145,7 +137,7 @@ namespace SplitBook.Views
             });
         }
 
-        private void currencyListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CurrencyListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             currencyListPicker.Text = CurrencyListSummary();
         }
@@ -158,14 +150,14 @@ namespace SplitBook.Views
             return summary;
         }
 
-        private void currencyListPicker_Tapped(object sender, TappedRoutedEventArgs e)
-        {                        
+        private void CurrencyListPicker_Tapped(object sender, TappedRoutedEventArgs e)
+        {
             this.currencyListPopup.IsOpen = true;
         }
 
         private async void OkayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (canProceed())
+            if (CanProceed())
             {
                 busyIndicator.IsActive = true;
                 currentUser.first_name = tbFirstName.Text;
@@ -178,8 +170,10 @@ namespace SplitBook.Views
 
                 if (App.currentUser != null && !currentUser.default_currency.Equals(App.currentUser.default_currency))
                     currencyModified = true;
-
-                editUserBackgroundWorker.RunWorkerAsync();
+                await Task.Run(async () =>
+                {
+                    await EditUser();
+                });                
             }
             else
             {

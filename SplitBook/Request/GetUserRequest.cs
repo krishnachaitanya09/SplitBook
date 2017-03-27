@@ -19,7 +19,7 @@ namespace SplitBook.Request
         {
         }
 
-        public async void getCurrentUser(int userId)
+        public async Task GetCurrentUser(int userId)
         {
             try
             {

@@ -10,6 +10,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Data.Pdf;
 using Windows.Graphics.Imaging;
@@ -28,9 +29,6 @@ namespace SplitBook.Views
     public sealed partial class ExpenseDetail : Page
     {
         Expense selectedExpense;
-        BackgroundWorker deleteExpenseBackgroundWorker;
-        BackgroundWorker commentLoadingBackgroundWorker;
-        BackgroundWorker addCommentBackgroundWorker;
 
         ObservableCollection<CustomCommentView> comments = new ObservableCollection<CustomCommentView>();
 
@@ -43,33 +41,21 @@ namespace SplitBook.Views
             selectedExpense.displayType = Expense.DISPLAY_FOR_ALL_USER;
             this.DataContext = selectedExpense;
 
-            deleteExpenseBackgroundWorker = new BackgroundWorker();
-            deleteExpenseBackgroundWorker.WorkerSupportsCancellation = true;
-            deleteExpenseBackgroundWorker.DoWork += new DoWorkEventHandler(deleteExpenseBackgroundWorker_DoWork);
-
-            commentLoadingBackgroundWorker = new BackgroundWorker();
-            commentLoadingBackgroundWorker.WorkerSupportsCancellation = true;
-            commentLoadingBackgroundWorker.DoWork += new DoWorkEventHandler(commentLoadingBackgroundWorker_DoWork);
-
-            if (!commentLoadingBackgroundWorker.IsBusy)
-            {
-                commentLoadingBackgroundWorker.RunWorkerAsync();
-            }
-
-            addCommentBackgroundWorker = new BackgroundWorker();
-            addCommentBackgroundWorker.WorkerSupportsCancellation = true;
-            addCommentBackgroundWorker.DoWork += new DoWorkEventHandler(addCommentBackgroundWorker_DoWork);
-
             this.conversationView.ItemsSource = this.comments;
             this.conversationView.Loaded += (o, e) => ScrollToBottom();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            await Task.Run(async () =>
+            {
+                await LoadCommentsAsync();
+            });
+
             BackButton.Visibility = this.Frame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
             save.IsEnabled = selectedExpense.receipt.original != null;
-            LoadReceipt();
+            await LoadReceipt();
             GoogleAnalytics.EasyTracker.GetTracker().SendView("ExpenseDetailsPage");
         }
 
@@ -81,7 +67,7 @@ namespace SplitBook.Views
             }
         }
 
-        private async void btnDeleteExpense_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteExpense_Click(object sender, RoutedEventArgs e)
         {
             MessageDialog messageDialog = new MessageDialog("Are you sure?", "Delete Expense");
             messageDialog.Commands.Add(new UICommand { Label = "yes", Id = 0 });
@@ -91,11 +77,8 @@ namespace SplitBook.Views
             switch ((int)result.Id)
             {
                 case 0:
-                    if (deleteExpenseBackgroundWorker.IsBusy != true)
-                    {
-                        busyIndicator.IsActive = true;
-                        deleteExpenseBackgroundWorker.RunWorkerAsync();
-                    }
+                    busyIndicator.IsActive = true;
+                    await DeleteExpenseAsync();
                     break;
                 case 1:
                     break;
@@ -104,21 +87,21 @@ namespace SplitBook.Views
             }
         }
 
-        private void deleteExpenseBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task DeleteExpenseAsync()
         {
             ModifyDatabase modify = new ModifyDatabase(_deleteExpenseCompleted);
-            modify.deleteExpense(selectedExpense.id);
+            await modify.DeleteExpense(selectedExpense.id);
         }
 
         private async void _deleteExpenseCompleted(bool success, HttpStatusCode errorCode)
         {
             if (success)
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     busyIndicator.IsActive = false;
                     this.Frame.Navigate(typeof(FriendsPage));
-                    MainPage.Current.FetchData();
+                    await MainPage.Current.FetchData();
                 });
             }
             else
@@ -128,7 +111,7 @@ namespace SplitBook.Views
                     busyIndicator.IsActive = false;
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
-                        Helpers.logout();
+                        Helpers.Logout();
                         (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
                         MainPage.Current.Frame.Navigate(typeof(LoginPage));
                     }
@@ -141,10 +124,10 @@ namespace SplitBook.Views
             }
         }
 
-        private async void btnEdit_Click(object sender, RoutedEventArgs e)
+        private async void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
             //currently you cannot edit all expenses.
-            if (canEditExpense())
+            if (CanEditExpense())
             {
                 (Application.Current as App).ADD_EXPENSE = selectedExpense;
                 this.Frame.Navigate(typeof(EditExpense));
@@ -156,7 +139,7 @@ namespace SplitBook.Views
             }
         }
 
-        private bool canEditExpense()
+        private bool CanEditExpense()
         {
             foreach (var item in selectedExpense.users)
             {
@@ -167,10 +150,10 @@ namespace SplitBook.Views
             return true;
         }
 
-        private void commentLoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task LoadCommentsAsync()
         {
             CommentDatabase commentsObj = new CommentDatabase(_CommentsReceived);
-            commentsObj.getComments(selectedExpense.id);
+            await commentsObj.GetComments(selectedExpense.id);
         }
 
         private async void _CommentsReceived(List<Comment> commentList)
@@ -207,14 +190,14 @@ namespace SplitBook.Views
             conversationView.ScrollIntoView(conversationView.SelectedItem);
         }
 
-        private void addCommentBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task AddCommentAsync(CustomCommentView e)
         {
-            string content = (e.Argument as CustomCommentView).Text;
+            string content = e.Text;
             CommentDatabase commentsObj = new CommentDatabase(_CommentsReceived);
-            commentsObj.addComment(selectedExpense.id, content);
+            await commentsObj.AddComment(selectedExpense.id, content);
         }
 
-        private void SendButton_Clicked(object sender, RoutedEventArgs e)
+        private async void SendButton_Clicked(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(commentBox.Text))
             {
@@ -222,21 +205,15 @@ namespace SplitBook.Views
             }
 
             //send this message to the api via the add comment background worker
-            if (!addCommentBackgroundWorker.IsBusy)
-            {
-                this.Focus(FocusState.Programmatic);
-                busyIndicator.IsActive = true;
-                addCommentBackgroundWorker.RunWorkerAsync(new CustomCommentView(commentBox.Text.Trim(), DateTime.Now, App.currentUser.name));
-                commentBox.Text = "";
-            }
+            this.Focus(FocusState.Programmatic);
+            busyIndicator.IsActive = true;
+            await AddCommentAsync(new CustomCommentView(commentBox.Text.Trim(), DateTime.Now, App.currentUser.name));
+            commentBox.Text = "";
         }
 
-        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            if (!commentLoadingBackgroundWorker.IsBusy)
-            {
-                commentLoadingBackgroundWorker.RunWorkerAsync();
-            }
+            await LoadCommentsAsync();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -266,13 +243,13 @@ namespace SplitBook.Views
             profilePic.Source = pic;
         }
 
-        private void receiptPivot_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void ReceiptPivot_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             ReceiptImage.MaxWidth = e.NewSize.Width;
             ReceiptImage.MaxHeight = e.NewSize.Height;
         }
 
-        private async void LoadReceipt()
+        private async Task LoadReceipt()
         {
             try
             {
@@ -311,15 +288,16 @@ namespace SplitBook.Views
             }
         }
 
-        private async void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                FileSavePicker fileSavePicker = new FileSavePicker();
-                fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                FileSavePicker fileSavePicker = new FileSavePicker()
+                {
+                    SuggestedStartLocation = PickerLocationId.PicturesLibrary
+                };
                 string extension = Path.GetExtension(new Uri(selectedExpense.receipt.original).AbsolutePath);
-                string extensionDescription;
-                ExtensionMappings.TryGetValue(extension, out extensionDescription);
+                ExtensionMappings.TryGetValue(extension, out string extensionDescription);
                 fileSavePicker.FileTypeChoices.Add(extensionDescription, new List<string>() { extension });
                 fileSavePicker.SuggestedFileName = "Receipt";
                 StorageFile destinationFile = await fileSavePicker.PickSaveFileAsync();

@@ -20,7 +20,7 @@ namespace SplitBook.Request
         {
         }
 
-        public async void getCurrentUser(Action<User> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
+        public async Task GetCurrentUser(Action<User> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
             try
             {

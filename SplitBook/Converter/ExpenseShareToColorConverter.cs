@@ -27,7 +27,7 @@ namespace SplitBook.Converter
             Expense_Share currentUser = null;
             foreach (var user in users)
             {
-                if (user.user_id == Helpers.getCurrentUserId())
+                if (user.user_id == Helpers.GetCurrentUserId())
                 {
                     currentUser = user;
                     break;

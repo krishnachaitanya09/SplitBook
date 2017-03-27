@@ -40,7 +40,7 @@ namespace SplitBook.Converter
             if (expense.currency_code.Equals(App.currentUser.default_currency))
             {
                 QueryDatabase obj = new QueryDatabase();
-                string unit = obj.getUnitForCurrency(expense.currency_code);
+                string unit = obj.GetUnitForCurrency(expense.currency_code);
                 var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
                 format.CurrencySymbol = unit;
                 format.CurrencyNegativePattern = 1;
@@ -61,7 +61,7 @@ namespace SplitBook.Converter
             if (paidUser == null)
                 return "Unknown user (not a friend)";
 
-            if (paidUser.id == Helpers.getCurrentUserId())
+            if (paidUser.id == Helpers.GetCurrentUserId())
                 return "You";
             else
             {
@@ -76,7 +76,7 @@ namespace SplitBook.Converter
         {
             foreach (var user in users)
             {
-                if (user.user_id == Helpers.getCurrentUserId())
+                if (user.user_id == Helpers.GetCurrentUserId())
                 {
                     return false;
                 }

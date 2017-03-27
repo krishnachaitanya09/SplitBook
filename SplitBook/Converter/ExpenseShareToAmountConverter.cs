@@ -21,7 +21,7 @@ namespace SplitBook.Converter
             Expense_Share currentUser = null;
             foreach (var user in users)
             {
-                if (user.user_id == Helpers.getCurrentUserId())
+                if (user.user_id == Helpers.GetCurrentUserId())
                 {
                     currentUser = user;
                     break;
@@ -30,7 +30,7 @@ namespace SplitBook.Converter
 
             double amount = System.Convert.ToDouble("0.00", System.Globalization.CultureInfo.InvariantCulture);
             QueryDatabase obj = new QueryDatabase();
-            string unit = obj.getUnitForCurrency(expense.currency_code);
+            string unit = obj.GetUnitForCurrency(expense.currency_code);
             var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
             format.CurrencySymbol = unit;
             format.CurrencyNegativePattern = 1;
@@ -44,7 +44,7 @@ namespace SplitBook.Converter
             else
             {
                 List<Debt_Expense> repayments = expense.repayments;
-                int currentUserId = Helpers.getCurrentUserId();
+                int currentUserId = Helpers.GetCurrentUserId();
                 int specificUserId = expense.specificUserId;
                 foreach (var repayment in repayments)
                 {

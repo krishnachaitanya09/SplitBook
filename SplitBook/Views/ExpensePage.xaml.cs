@@ -38,7 +38,7 @@ namespace SplitBook.Views
             GoogleAnalytics.EasyTracker.GetTracker().SendView("ExpensePage");
         }
 
-        private void llsExpenses_Tap(object sender, SelectionChangedEventArgs e)
+        private void LlsExpenses_Tap(object sender, SelectionChangedEventArgs e)
         {
             if (llsExpenses.SelectedItem == null)
                 return;
@@ -53,8 +53,7 @@ namespace SplitBook.Views
 
         private void OnListViewLoaded(object sender, RoutedEventArgs e)
         {
-            var listview = sender as ListViewBase;
-            if (listview != null)
+            if (sender is ListViewBase listview)
             {
                 // Attach to the view changed event
                 var _scrollViewer = listview.GetFirstDescendantOfType<ScrollViewer>();
@@ -65,16 +64,16 @@ namespace SplitBook.Views
             }
         }
 
-        private void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private async void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var _scrollViewer = sender as ScrollViewer;
             // If scrollviewer is scrolled down at least 90%
             if (_scrollViewer.VerticalOffset > Math.Max(_scrollViewer.ScrollableHeight * 0.6, _scrollViewer.ScrollableHeight - 200))
             {
-                if (MainPage.expenseLoadingBackgroundWorker.IsBusy != true && MainPage.morePages)
+                if (MainPage.morePages)
                 {
                     MainPage.pageNo++;
-                    MainPage.expenseLoadingBackgroundWorker.RunWorkerAsync(false);
+                    await MainPage.Current.LoadExpenses();
                 }
             }
         }
@@ -86,9 +85,9 @@ namespace SplitBook.Views
             MainPage.Current.ResetNavMenu();
         }
 
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            MainPage.Current.FetchData();
+            await MainPage.Current.FetchData();
             MainPage.Current.ResetNavMenu();
         }
 

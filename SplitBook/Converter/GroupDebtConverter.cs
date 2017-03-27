@@ -17,7 +17,7 @@ namespace SplitBook.Converter
         {
             string amount = "";
             List<Debt_Group> allDebts = value as List<Debt_Group>;
-            double finalBalance = Helpers.getUserGroupDebtAmount(allDebts, App.currentUser.id);
+            double finalBalance = Helpers.GetUserGroupDebtAmount(allDebts, App.currentUser.id);
 
             //if final balance is 0, then anyways we are not shwoing the balance.
             if (finalBalance != 0)
@@ -26,7 +26,7 @@ namespace SplitBook.Converter
                 if (currency.Equals(App.currentUser.default_currency))
                 {
                     QueryDatabase obj = new QueryDatabase();
-                    string unit = obj.getUnitForCurrency(currency);
+                    string unit = obj.GetUnitForCurrency(currency);
                     var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
                     format.CurrencySymbol = unit;
                     format.CurrencyNegativePattern = 1;

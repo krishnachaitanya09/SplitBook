@@ -20,12 +20,12 @@ namespace SplitBook.Converter
             if (parameter != null && parameter.ToString().Equals("group"))
             {
                 List<Debt_Group> allDebts = value as List<Debt_Group>;
-                finalBalance = Helpers.getUserGroupDebtAmount(allDebts, App.currentUser.id);
+                finalBalance = Helpers.GetUserGroupDebtAmount(allDebts, App.currentUser.id);
             }
             else
             {
                 List<Balance_User> balance = value as List<Balance_User>;
-                Balance_User defaultBalance = Helpers.getDefaultBalance(balance);
+                Balance_User defaultBalance = Helpers.GetDefaultBalance(balance);
                 finalBalance = System.Convert.ToDouble(defaultBalance.amount, System.Globalization.CultureInfo.InvariantCulture);
             }
 

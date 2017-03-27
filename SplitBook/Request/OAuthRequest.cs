@@ -31,7 +31,7 @@ namespace SplitBook.Request
             authorizer = new OAuthAuthorizer(Constants.consumerKey, Constants.consumerSecret);
         }
 
-        public async void GetRequestToken(Action<Uri> CallbackOnSuccess, Action<Exception> CallbackOnFailure)
+        public async Task GetRequestToken(Action<Uri> CallbackOnSuccess, Action<Exception> CallbackOnFailure)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace SplitBook.Request
             }
         }
 
-        public async void GetAccessToken(string uri, Action<String, String> CallbackOnSuccess, Action<Exception> CallbackOnFailure)
+        public async Task GetAccessToken(string uri, Action<String, String> CallbackOnSuccess, Action<Exception> CallbackOnFailure)
         {
             try
             {

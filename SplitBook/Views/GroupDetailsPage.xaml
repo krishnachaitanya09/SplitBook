@@ -435,7 +435,7 @@
                 <PivotItem Margin="0,5,0,0" Header="Expenses">
                     <Grid Background="{StaticResource FrameBackground}">
                         <ListView Name="llsExpenses" Loaded="OnListViewLoaded" ItemTemplate="{StaticResource expensesTemplate}"   
-                                                       SelectionChanged="llsExpenses_Tap">
+                                                       SelectionChanged="LlsExpenses_Tap">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -449,8 +449,8 @@
         </Grid>
         <control:AdControl x:Name="AdControl" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
-            <AppBarButton Name="addBtn" Icon="Add" Label="Add" Click="btnAddExpense_Click" Foreground="White"/>
-            <AppBarButton Name="settleBtn" Label="Settle" IsEnabled="False" Click="btnSettle_Click" Foreground="White">
+            <AppBarButton Name="addBtn" Icon="Add" Label="Add" Click="BtnAddExpense_Click" Foreground="White"/>
+            <AppBarButton Name="settleBtn" Label="Settle" IsEnabled="False" Click="BtnSettle_Click" Foreground="White">
                 <AppBarButton.Icon>
                     <BitmapIcon UriSource="ms-appx:///Assets/Icons/settle.png"/>
                 </AppBarButton.Icon>

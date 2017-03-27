@@ -22,13 +22,13 @@ namespace SplitBook.Request
             friendId = id;
         }
 
-        public async void deleteFriend(Action<bool> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
+        public async Task DeleteFriend(Action<bool> CallbackOnSuccess, Action<HttpStatusCode> CallbackOnFailure)
         {
             try
             {
                 HttpResponseMessage response = await client.PostAsync(deleteFriendURL + friendId.ToString(), null);
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-                DeleteFriend result = Newtonsoft.Json.JsonConvert.DeserializeObject<DeleteFriend>(await response.Content.ReadAsStringAsync(), settings);
+                DeleteFriendModel result = Newtonsoft.Json.JsonConvert.DeserializeObject<DeleteFriendModel>(await response.Content.ReadAsStringAsync(), settings);
                 if (result.success)
                     CallbackOnSuccess(result.success);
                 else
@@ -40,7 +40,7 @@ namespace SplitBook.Request
             }
         }
 
-        private class DeleteFriend
+        private class DeleteFriendModel
         {
             public Boolean success { get; set; }
             public Object error { get; set; }

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -29,17 +30,11 @@ namespace SplitBook.Views
     public sealed partial class ExpenseSearch : Page
     {
         ObservableCollection<Expense> expenseSearchResult = new ObservableCollection<Expense>();
-        BackgroundWorker searchExpenseBackgroundWorker;
 
         public ExpenseSearch()
         {
             this.InitializeComponent();
-            BackButton.Click += BackButton_Click;
-
-            searchExpenseBackgroundWorker = new BackgroundWorker();
-            searchExpenseBackgroundWorker.WorkerSupportsCancellation = true;
-            searchExpenseBackgroundWorker.DoWork += new DoWorkEventHandler(searchExpenseBackgroundWorker_DoWork);
-
+            BackButton.Click += BackButton_Click;        
             llsExpenses.ItemsSource = expenseSearchResult;
         }
 
@@ -57,7 +52,7 @@ namespace SplitBook.Views
             }
         }
 
-        private void llsExpenses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LlsExpenses_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (llsExpenses.SelectedItem == null)
                 return;
@@ -69,26 +64,25 @@ namespace SplitBook.Views
             llsExpenses.SelectedItem = null;
         }
 
-        private void Query_Submitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
+        private async void Query_Submitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
         {
             string searchText = sender.QueryText;
             if (!String.IsNullOrEmpty(searchText))
-                search(searchText);
+                await Search(searchText);
         }
 
-        private void search(string text)
+        private  async Task Search(string text)
         {
             this.Focus(FocusState.Programmatic);
             busyIndicator.IsActive = true;
             expenseSearchResult.Clear();
-            if (!searchExpenseBackgroundWorker.IsBusy)
-                searchExpenseBackgroundWorker.RunWorkerAsync(text);
+            await SearchExpenseAsync(text);
         }
 
-        private async void searchExpenseBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private async Task SearchExpenseAsync(string text)
         {
             QueryDatabase obj = new QueryDatabase();
-            List<Expense> allExpenses = obj.searchForExpense(e.Argument.ToString());
+            List<Expense> allExpenses = obj.SearchForExpense(text);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (allExpenses != null)

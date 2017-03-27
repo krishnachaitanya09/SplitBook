@@ -120,11 +120,13 @@ namespace SplitBook.Views
 
             PackageVersion PackageVersion = Package.Current.Id.Version;
 
-            EmailMessage emailComposeTask = new EmailMessage();
-            emailComposeTask.Subject = "SplitBook Feedback";
-            emailComposeTask.Body = String.Format(loader.GetString("FeedbackBody"), deviceInfo.SystemProductName, deviceInfo.FriendlyName,
+            EmailMessage emailComposeTask = new EmailMessage()
+            {
+                Subject = "SplitBook Feedback",
+                Body = String.Format(loader.GetString("FeedbackBody"), deviceInfo.SystemProductName, deviceInfo.FriendlyName,
                 deviceInfo.OperatingSystem, deviceInfo.SystemManufacturer, deviceInfo.SystemFirmwareVersion, deviceInfo.SystemHardwareVersion,
-                 string.Format("{0}.{1}.{2}.{3}", PackageVersion.Major, PackageVersion.Minor, PackageVersion.Build, PackageVersion.Revision));
+                 string.Format("{0}.{1}.{2}.{3}", PackageVersion.Major, PackageVersion.Minor, PackageVersion.Build, PackageVersion.Revision))
+            };
             emailComposeTask.To.Add(new EmailRecipient("contact@techcryptic.com"));
             await EmailManager.ShowComposeNewEmailAsync(emailComposeTask);
             GoogleAnalytics.EasyTracker.GetTracker().SendEvent("UI", "Contact_Click", "Contact", 0);

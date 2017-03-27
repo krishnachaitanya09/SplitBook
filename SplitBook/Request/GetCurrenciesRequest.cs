@@ -19,7 +19,7 @@ namespace SplitBook.Request
         {
         }
 
-        public async void getSupportedCurrencies(Action<List<Currency>> CallbackOnSuccess)
+        public async Task GetSupportedCurrencies(Action<List<Currency>> CallbackOnSuccess)
         {
             try
             {

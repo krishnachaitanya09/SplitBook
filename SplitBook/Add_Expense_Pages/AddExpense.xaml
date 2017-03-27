@@ -53,9 +53,9 @@
             <ProgressRing Width="50" Height="50" Foreground="{StaticResource splitwiseGreen}" x:Name="busyIndicator"/>
         </Grid>
         <CommandBar x:Name="commandBar" Background="{StaticResource splitwiseGreen}" Foreground="White">
-            <AppBarButton Name="receipt" Icon="Camera" Label="Add Receipt" Click="btnReceipt_Click" Foreground="White"/>
-            <AppBarButton Name="okay" Icon="Accept" Label="Okay" Click="btnOkay_Click" Foreground="White"/>
-            <AppBarButton Name="cancel" Icon="Cancel" Label="Cancel" Click="btnCancel_Click" Foreground="White"/>
+            <AppBarButton Name="receipt" Icon="Camera" Label="Add Receipt" Click="BtnReceipt_Click" Foreground="White"/>
+            <AppBarButton Name="okay" Icon="Accept" Label="Okay" Click="BtnOkay_Click" Foreground="White"/>
+            <AppBarButton Name="cancel" Icon="Cancel" Label="Cancel" Click="BtnCancel_Click" Foreground="White"/>
         </CommandBar>
     </RelativePanel>
 </Page>

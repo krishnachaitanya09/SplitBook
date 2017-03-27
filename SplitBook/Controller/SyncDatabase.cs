@@ -17,21 +17,21 @@ namespace SplitBook.Controller
         bool firstSync;
         Action<bool, HttpStatusCode> CallbackOnSuccess;
 
-        public SyncDatabase(Action<bool, HttpStatusCode> callback)
-        {
-            this.CallbackOnSuccess = callback;
+        public SyncDatabase()
+        {           
             firstSync = false;
         }
 
-        public void isFirstSync(bool firstSync)
+        public void IsFirstSync(bool firstSync)
         {
             this.firstSync = firstSync;
         }
 
-        public void performSync()
+        public async Task PerformSync(Action<bool, HttpStatusCode> callback)
         {
+            this.CallbackOnSuccess = callback;
             Helpers.NotificationsLastUpdated = DateTime.UtcNow.ToString("u");
-            if (!Helpers.checkNetworkConnection())
+            if (!Helpers.CheckNetworkConnection())
             {
                 CallbackOnSuccess(false, HttpStatusCode.ServiceUnavailable);
                 return;
@@ -42,11 +42,11 @@ namespace SplitBook.Controller
             }
             //Fetch current user details everytime to sync possible changes made on the website
             CurrentUserRequest request = new CurrentUserRequest();
-            request.getCurrentUser(_CurrentUserDetailsReceived, _OnErrorReceived);
+            await request.GetCurrentUser(_CurrentUserDetailsReceived, _OnErrorReceived);
 
         }
 
-        private void _CurrentUserDetailsReceived(User currentUser)
+        private async void _CurrentUserDetailsReceived(User currentUser)
         {
             using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
@@ -59,15 +59,15 @@ namespace SplitBook.Controller
             }
 
             //Save current user id in isolated storage
-            Helpers.setCurrentUserId(currentUser.id);
+            Helpers.SetCurrentUserId(currentUser.id);
 
             //Fire next request, i.e. get list of friends
             GetFriendsRequest request = new GetFriendsRequest();
-            request.getAllFriends(_FriendsDetailsRecevied, _OnErrorReceived);
+            await request.GetAllFriends(_FriendsDetailsRecevied, _OnErrorReceived);
         }
 
 
-        private void _FriendsDetailsRecevied(List<User> friendsList)
+        private async void _FriendsDetailsRecevied(List<User> friendsList)
         {
             using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
@@ -96,11 +96,11 @@ namespace SplitBook.Controller
             }
             //fetch expenses
             GetExpensesRequest request = new GetExpensesRequest();
-            request.getAllExpenses(_ExpensesDetailsReceived, _OnErrorReceived);
+            await request.GetAllExpenses(_ExpensesDetailsReceived, _OnErrorReceived);
         }
 
 
-        private void _ExpensesDetailsReceived(List<Expense> expensesList)
+        private async void _ExpensesDetailsReceived(List<Expense> expensesList)
         {
             if (expensesList == null || expensesList.Count == 0)
             {
@@ -158,15 +158,15 @@ namespace SplitBook.Controller
                 dbConn.Commit();
             }
 
-            Helpers.setLastUpdatedTime();
+            Helpers.SetLastUpdatedTime();
 
             //Fetch groups
             GetGroupsRequest request = new GetGroupsRequest();
-            request.getAllGroups(_GroupsDetailsReceived, _OnErrorReceived);
+            await request.GetAllGroups(_GroupsDetailsReceived, _OnErrorReceived);
         }
 
 
-        private void _GroupsDetailsReceived(List<Group> groupsList)
+        private async void _GroupsDetailsReceived(List<Group> groupsList)
         {
             using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
             {
@@ -210,7 +210,7 @@ namespace SplitBook.Controller
                 dbConn.Commit();
             }
             GetCurrenciesRequest request = new GetCurrenciesRequest();
-            request.getSupportedCurrencies(_CurrenciesReceived);
+            await request.GetSupportedCurrencies(_CurrenciesReceived);
         }
 
         private void _CurrenciesReceived(List<Currency> currencyList)
