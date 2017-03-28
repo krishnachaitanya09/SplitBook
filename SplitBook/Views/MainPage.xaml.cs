@@ -25,25 +25,43 @@ namespace SplitBook.Views
     public sealed partial class MainPage : Page
     {
         public static MainPage Current;
-        public static ObservableCollection<User> balanceFriends = new ObservableCollection<User>();
-        public static ObservableCollection<User> youOweFriends = new ObservableCollection<User>();
-        public static ObservableCollection<User> owesYouFriends = new ObservableCollection<User>();
-        public static ObservableCollection<Expense> expensesList = new ObservableCollection<Expense>();
-        public static ObservableCollection<Group> groupsList = new ObservableCollection<Group>();
-        public static ObservableCollection<User> friendsList = new ObservableCollection<User>();
+        public static ObservableCollection<User> balanceFriends;
+        public static ObservableCollection<User> youOweFriends;
+        public static ObservableCollection<User> owesYouFriends;
+        public static ObservableCollection<Expense> expensesList;
+        public static ObservableCollection<Group> groupsList;
+        public static ObservableCollection<User> friendsList;
 
-        private double postiveBalance = 0, negativeBalance = 0, totalBalance = 0;
-        public static int pageNo = 0;
-        public static bool morePages = true, hasDataLoaded = false;
-        public static NetBalances netBalance = new NetBalances();
-        public static ButtonEnabler buttonEnabler = new ButtonEnabler();
+        private double postiveBalance, negativeBalance, totalBalance;
+        public static int pageNo;
+        public static bool morePages, hasDataLoaded;
+        public static NetBalances netBalance;
+        public static ButtonEnabler buttonEnabler;
 
-        SyncDatabase databaseSync;
+        private SyncDatabase databaseSync;
 
         public Frame AppFrame { get { return this.frame; } }
         public MainPage()
         {
             this.InitializeComponent();
+            balanceFriends = new ObservableCollection<User>();
+            youOweFriends = new ObservableCollection<User>();
+            owesYouFriends = new ObservableCollection<User>();
+            expensesList = new ObservableCollection<Expense>();
+            groupsList = new ObservableCollection<Group>();
+            friendsList = new ObservableCollection<User>();
+
+            postiveBalance = 0;
+            negativeBalance = 0;
+            totalBalance = 0;
+
+            pageNo = 0;
+            morePages = true;
+            hasDataLoaded = false;
+
+            netBalance = new NetBalances();
+            buttonEnabler = new ButtonEnabler();
+
             this.Loaded += (sender, args) =>
             {
                 Current = this;
@@ -259,7 +277,7 @@ namespace SplitBook.Views
             await Task.Run(async () =>
             {
                 await databaseSync.PerformSync(SyncCompleted);
-            });            
+            });
         }
 
 
@@ -303,7 +321,8 @@ namespace SplitBook.Views
                     if (errorCode == HttpStatusCode.Unauthorized)
                     {
                         Helpers.Logout();
-                        this.Frame.Navigate(typeof(LoginPage));
+                        (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
+                        (Application.Current as App).rootFrame.BackStack.Clear();
                     }
                     else
                     {
@@ -422,6 +441,7 @@ namespace SplitBook.Views
         {
             Helpers.Logout();
             (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
+            (Application.Current as App).rootFrame.BackStack.Clear();
         }
 
         private void About_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)

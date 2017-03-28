@@ -101,16 +101,11 @@ namespace SplitBook.Utilities
             set { ApplicationData.Current.LocalSettings.Values[Constants.APP_VERSION] = value; }
         }
 
-        public static void SetLastUpdatedTime()
-        {
-            DateTime now = DateTime.UtcNow;
-            string lastUpdatedTime = now.ToString("yyyy-MM-ddTHH:mm:ssK");
-            ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME] = lastUpdatedTime;
-        }
 
-        public static string GetLastUpdatedTime()
+        public static string LastUpdatedTime
         {
-            return (string)ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME] ?? "0";
+            get { return (string)ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME]; }
+            set { ApplicationData.Current.LocalSettings.Values[Constants.LAST_UPDATED_TIME] = value; }
         }
 
         public static string NotificationsLastUpdated
@@ -228,7 +223,18 @@ namespace SplitBook.Utilities
         {
             ApplicationData.Current.LocalSettings.Values.Clear();
             App.currentUser = null;
-            SyncDatabase.DeleteAllDataInDB();
+            MainPage.balanceFriends = null;
+            MainPage.youOweFriends = null;
+            MainPage.owesYouFriends = null;
+            MainPage.expensesList = null;
+            MainPage.groupsList = null;
+            MainPage.friendsList = null;
+            MainPage.pageNo = 0;
+            MainPage.morePages = true;
+            MainPage.hasDataLoaded = false;
+            MainPage.netBalance = null;
+            MainPage.buttonEnabler = null;
+            SyncDatabase.DeleteAllDataInDB();            
         }
 
         public static bool IsValidEmail(string emailAddress)

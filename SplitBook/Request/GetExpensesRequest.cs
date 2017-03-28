@@ -25,7 +25,11 @@ namespace SplitBook.Request
             //request.AddParameter("updated_after", Helpers.getLastUpdatedTime(), ParameterType.GetOrPost);
             try
             {
-                HttpResponseMessage response = await client.GetAsync(getExpensesURL + "?limit=0");
+                string lastUpdated = Helpers.LastUpdatedTime;
+                string url = getExpensesURL + "?limit=0";
+                if (lastUpdated != null)
+                    url += "&updated_after=" + lastUpdated;
+                HttpResponseMessage response = await client.GetAsync(url);
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NotModified)
                 {
                     CallbackOnFailure(response.StatusCode);

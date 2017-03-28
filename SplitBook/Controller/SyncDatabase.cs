@@ -18,13 +18,14 @@ namespace SplitBook.Controller
         Action<bool, HttpStatusCode> CallbackOnSuccess;
 
         public SyncDatabase()
-        {           
+        {
             firstSync = false;
         }
 
         public void IsFirstSync(bool firstSync)
         {
             this.firstSync = firstSync;
+            Helpers.LastUpdatedTime = null;
         }
 
         public async Task PerformSync(Action<bool, HttpStatusCode> callback)
@@ -102,64 +103,59 @@ namespace SplitBook.Controller
 
         private async void _ExpensesDetailsReceived(List<Expense> expensesList)
         {
-            if (expensesList == null || expensesList.Count == 0)
+            if (expensesList != null && expensesList.Count != 0)
             {
-                CallbackOnSuccess(true, HttpStatusCode.OK);
-                return;
-            }
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
-            {
-                dbConn.BeginTransaction();
-                //Insert expenses
-                foreach (var expense in expensesList)
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
                 {
-                    //The api returns the entire user details of the created by, updated by and deleted by users.
-                    //But we only need to store their id's into the database
-                    if (expense.created_by != null)
-                        expense.created_by_user_id = expense.created_by.id;
-
-                    if (expense.updated_by != null)
-                        expense.updated_by_user_id = expense.updated_by.id;
-
-                    if (expense.deleted_by != null)
-                        expense.deleted_by_user_id = expense.deleted_by.id;
-
-                    dbConn.InsertOrReplace(expense);
-
-                    if (expense.receipt.original != null || expense.receipt.large != null)
+                    dbConn.BeginTransaction();
+                    //Insert expenses
+                    foreach (var expense in expensesList)
                     {
-                        expense.receipt.expense_id = expense.id;
-                        dbConn.InsertOrReplace(expense.receipt);
+                        //The api returns the entire user details of the created by, updated by and deleted by users.
+                        //But we only need to store their id's into the database
+                        if (expense.created_by != null)
+                            expense.created_by_user_id = expense.created_by.id;
+
+                        if (expense.updated_by != null)
+                            expense.updated_by_user_id = expense.updated_by.id;
+
+                        if (expense.deleted_by != null)
+                            expense.deleted_by_user_id = expense.deleted_by.id;
+
+                        dbConn.InsertOrReplace(expense);
+
+                        if (expense.receipt.original != null || expense.receipt.large != null)
+                        {
+                            expense.receipt.expense_id = expense.id;
+                            dbConn.InsertOrReplace(expense.receipt);
+                        }
                     }
+
+                    //Insert debt of each expense (repayments)
+                    //Insert expense share users
+                    foreach (var expense in expensesList)
+                    {
+                        //delete users and repayments for this specific expense id as they might have been edited since the last update
+                        object[] param = { expense.id };
+                        dbConn.Query<Debt_Expense>("Delete FROM debt_expense WHERE expense_id= ?", param);
+                        dbConn.Query<Expense_Share>("Delete FROM expense_share WHERE expense_id= ?", param);
+
+                        foreach (var repayment in expense.repayments)
+                        {
+                            repayment.expense_id = expense.id;
+                            dbConn.InsertOrReplace(repayment);
+                        }
+
+                        foreach (var expenseUser in expense.users)
+                        {
+                            expenseUser.expense_id = expense.id;
+                            expenseUser.user_id = expenseUser.user.id;
+                            dbConn.InsertOrReplace(expenseUser);
+                        }
+                    }
+                    dbConn.Commit();
                 }
-
-                //Insert debt of each expense (repayments)
-                //Insert expense share users
-                foreach (var expense in expensesList)
-                {
-                    //delete users and repayments for this specific expense id as they might have been edited since the last update
-                    object[] param = { expense.id };
-                    dbConn.Query<Debt_Expense>("Delete FROM debt_expense WHERE expense_id= ?", param);
-                    dbConn.Query<Expense_Share>("Delete FROM expense_share WHERE expense_id= ?", param);
-
-                    foreach (var repayment in expense.repayments)
-                    {
-                        repayment.expense_id = expense.id;
-                        dbConn.InsertOrReplace(repayment);
-                    }
-
-                    foreach (var expenseUser in expense.users)
-                    {
-                        expenseUser.expense_id = expense.id;
-                        expenseUser.user_id = expenseUser.user.id;
-                        dbConn.InsertOrReplace(expenseUser);
-                    }
-                }
-                dbConn.Commit();
             }
-
-            Helpers.SetLastUpdatedTime();
-
             //Fetch groups
             GetGroupsRequest request = new GetGroupsRequest();
             await request.GetAllGroups(_GroupsDetailsReceived, _OnErrorReceived);
@@ -223,6 +219,7 @@ namespace SplitBook.Controller
                     dbConn.InsertAll(currencyList);
                 }
             }
+            Helpers.LastUpdatedTime = DateTime.UtcNow.ToString("u");
             CallbackOnSuccess(true, HttpStatusCode.OK);
         }
 
