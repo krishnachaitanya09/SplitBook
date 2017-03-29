@@ -16,10 +16,11 @@ namespace SplitBook.Converter
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             Expense expense = value as Expense;
-            if (expense.currency_code.Equals(App.currentUser.default_currency))
+            string currency = expense.currency_code;
+            QueryDatabase obj = new QueryDatabase();
+            string unit = obj.GetUnitForCurrency(currency);
+            if (!String.IsNullOrEmpty(unit))
             {
-                QueryDatabase obj = new QueryDatabase();
-                string unit = obj.GetUnitForCurrency(expense.currency_code);
                 var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
                 format.CurrencySymbol = unit;
                 format.CurrencyNegativePattern = 1;

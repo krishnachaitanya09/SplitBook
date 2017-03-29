@@ -18,7 +18,7 @@ namespace SplitBook.Converter
             Expense_Share shareUser = value as Expense_Share;
             string currency = shareUser.currency;
             double paidShare = 0, owedShare = 0;
-            
+
             try
             {
                 paidShare = System.Convert.ToDouble(shareUser.paid_share, System.Globalization.CultureInfo.InvariantCulture);
@@ -28,7 +28,7 @@ namespace SplitBook.Converter
             {
 
             }
-            
+
             string username;
 
             if (shareUser.user == null)
@@ -62,10 +62,10 @@ namespace SplitBook.Converter
 
         private string FormatCurrency(string currency_code, double value)
         {
-            if (currency_code.Equals(App.currentUser.default_currency))
+            QueryDatabase obj = new QueryDatabase();
+            string unit = obj.GetUnitForCurrency(currency_code);
+            if (!String.IsNullOrEmpty(unit))
             {
-                QueryDatabase obj = new QueryDatabase();
-                string unit = obj.GetUnitForCurrency(currency_code);
                 var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
                 format.CurrencySymbol = unit;
                 format.CurrencyNegativePattern = 1;
