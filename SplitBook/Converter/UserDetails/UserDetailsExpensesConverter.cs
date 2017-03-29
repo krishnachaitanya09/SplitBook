@@ -16,26 +16,26 @@ namespace SplitBook.Converter.UserDetails
         {
             string description = "settled up";
             double finalBalance = 0;
-            string currencyCode = String.Empty;
             string amount = String.Empty;
             QueryDatabase query = new QueryDatabase();
             Balance_User balance = value as Balance_User;
             finalBalance = System.Convert.ToDouble(balance.amount, System.Globalization.CultureInfo.InvariantCulture);
-            if (App.currentUser != null)
-                currencyCode = query.GetUnitForCurrency(App.currentUser.default_currency.ToUpper());
-            if (currencyCode != String.Empty)
+            string currency = balance.currency_code;
+            QueryDatabase obj = new QueryDatabase();
+            string unit = obj.GetUnitForCurrency(currency);
+            if (!String.IsNullOrEmpty(unit))
             {
                 var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
-                format.CurrencySymbol = currencyCode;
+                format.CurrencySymbol = unit;
                 format.CurrencyNegativePattern = 1;
                 amount = String.Format(format, "{0:C}", Math.Abs(finalBalance));
 
             }
             else
             {
-                amount = balance.currency_code + String.Format("{0:0.00}", Math.Abs(finalBalance));
+                amount = currency + String.Format("{0:0.00}", Math.Abs(finalBalance));
             }
-            
+
             if (finalBalance > 0)
                 description = "owes you " + amount;
             else if (finalBalance < 0)

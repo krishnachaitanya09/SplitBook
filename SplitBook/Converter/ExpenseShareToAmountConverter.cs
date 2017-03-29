@@ -56,7 +56,7 @@ namespace SplitBook.Converter
                 }
             }
 
-            if (expense.currency_code.Equals(App.currentUser.default_currency))
+            if (!String.IsNullOrEmpty(unit))
             {
                 return String.Format(format, "{0:C}", amount);
             }

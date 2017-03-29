@@ -23,10 +23,10 @@ namespace SplitBook.Converter
             if (finalBalance != 0)
             {
                 string currency = allDebts[0].currency_code;
-                if (currency.Equals(App.currentUser.default_currency))
+                QueryDatabase obj = new QueryDatabase();
+                string unit = obj.GetUnitForCurrency(currency);
+                if (!String.IsNullOrEmpty(unit))
                 {
-                    QueryDatabase obj = new QueryDatabase();
-                    string unit = obj.GetUnitForCurrency(currency);
                     var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
                     format.CurrencySymbol = unit;
                     format.CurrencyNegativePattern = 1;
