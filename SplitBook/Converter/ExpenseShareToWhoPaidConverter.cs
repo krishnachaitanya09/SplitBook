@@ -37,14 +37,16 @@ namespace SplitBook.Converter
                 return null;
 
             string amount = null;
-            if (expense.currency_code.Equals(App.currentUser.default_currency))
+            string currency = expense.currency_code;
+            QueryDatabase obj = new QueryDatabase();
+            string unit = obj.GetUnitForCurrency(currency);
+
+            if (!String.IsNullOrEmpty(unit))
             {
-                QueryDatabase obj = new QueryDatabase();
-                string unit = obj.GetUnitForCurrency(expense.currency_code);
                 var format = (NumberFormatInfo)NumberFormatInfo.CurrentInfo.Clone();
                 format.CurrencySymbol = unit;
                 format.CurrencyNegativePattern = 1;
-                amount = String.Format("{0:C}", Math.Abs(System.Convert.ToDouble(paidUser.paid_share, CultureInfo.InvariantCulture)));
+                amount = String.Format(format, "{0:C}", Math.Abs(System.Convert.ToDouble(paidUser.paid_share, CultureInfo.InvariantCulture)));
             }
             else
             {
