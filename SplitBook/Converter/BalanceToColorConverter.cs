@@ -20,7 +20,13 @@ namespace SplitBook.Converter
             double finalBalance = 0;
             if (parameter != null && parameter.ToString().Equals("overall"))
             {
-                finalBalance += value != null ? Double.Parse(value.ToString(), System.Globalization.NumberStyles.Currency) : 0;
+                if (value == null)
+                    finalBalance += 0;
+                else
+                {
+                    string[] valueSplit = value.ToString().Split('*');                    
+                    finalBalance += Double.Parse(valueSplit[0], System.Globalization.NumberStyles.Currency);
+                }               
             }
             else if (parameter != null && parameter.ToString().Equals("group"))
             {

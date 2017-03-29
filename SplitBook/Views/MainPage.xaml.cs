@@ -184,10 +184,15 @@ namespace SplitBook.Views
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                bool hasMultipleBalances = false;
                 //only show balance below in the user's default currency
                 foreach (var friend in obj.GetAllFriends())
                 {
                     friendsList.Add(friend);
+
+                    if (hasMultipleBalances == false && Helpers.HasMultipleBalances(friend.balance))
+                        hasMultipleBalances = true;
+
                     Balance_User defaultBalance = Helpers.GetDefaultBalance(friend.balance);
                     double balance = System.Convert.ToDouble(defaultBalance.amount, CultureInfo.InvariantCulture);
                     string currency = App.currentUser.default_currency;
@@ -222,7 +227,7 @@ namespace SplitBook.Views
                 //if default currency is not set then dont display the balances. Only the text is enough.
                 if (App.currentUser.default_currency == null)
                     return;
-                netBalance.setBalances(totalBalance, postiveBalance, negativeBalance);
+                netBalance.SetBalances(totalBalance, postiveBalance, negativeBalance, hasMultipleBalances);
             });
         }
 

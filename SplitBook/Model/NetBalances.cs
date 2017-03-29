@@ -14,11 +14,13 @@ namespace SplitBook.Model
         private string positiveBalance;
         private string negativeBalance;
 
-        public void setBalances(double net, double positive, double negative)
+        public void SetBalances(double net, double positive, double negative, bool hasMultipleBalances)
         {
             NetBalance = Convert.ToDouble(net).ToString();
+            if (hasMultipleBalances)
+                NetBalance += "*";
             PositiveBalance = Convert.ToDouble(positive).ToString();
-            NegativeBalance = Convert.ToDouble(negative).ToString();            
+            NegativeBalance = Convert.ToDouble(negative).ToString();
         }
 
 
