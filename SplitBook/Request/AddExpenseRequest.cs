@@ -121,7 +121,7 @@ namespace SplitBook.Request
                 else
                     CallbackOnFailure(response.StatusCode);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CallbackOnFailure(HttpStatusCode.ServiceUnavailable);
             }

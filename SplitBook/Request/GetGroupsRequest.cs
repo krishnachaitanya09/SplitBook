@@ -32,7 +32,7 @@ namespace SplitBook.Request
                 List<Group> groups = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Group>>(testToken.ToString(), settings);
                 CallbackOnSuccess(groups);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CallbackOnFailure(HttpStatusCode.ServiceUnavailable);
             }

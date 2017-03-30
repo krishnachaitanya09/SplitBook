@@ -36,7 +36,7 @@ namespace SplitBook.Request
                 List<Notifications> notifications = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Notifications>>(testToken.ToString(), settings);
                 CallbackOnSuccess(notifications);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CallbackOnSuccess(null);
             }

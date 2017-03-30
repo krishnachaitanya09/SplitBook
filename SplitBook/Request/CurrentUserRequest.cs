@@ -37,7 +37,7 @@ namespace SplitBook.Request
                 User currentUser = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(testToken.ToString(), settings);
                 CallbackOnSuccess(currentUser);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CallbackOnFailure(HttpStatusCode.ServiceUnavailable);
             }

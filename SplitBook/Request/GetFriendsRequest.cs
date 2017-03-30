@@ -31,7 +31,7 @@ namespace SplitBook.Request
                 List<User> friends = Newtonsoft.Json.JsonConvert.DeserializeObject<List<User>>(testToken.ToString(), settings);
                 CallbackOnSuccess(friends);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CallbackOnFailure(HttpStatusCode.ServiceUnavailable);
             }

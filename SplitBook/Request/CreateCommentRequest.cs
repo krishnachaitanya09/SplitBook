@@ -46,7 +46,7 @@ namespace SplitBook.Request
                 comments.Add(comment);
                 Callback(comments);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Callback(null);
             }

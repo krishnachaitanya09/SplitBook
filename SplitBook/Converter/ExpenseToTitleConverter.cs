@@ -26,7 +26,7 @@ namespace SplitBook.Converter
                     return getPaidByUser(users, language).user.first_name + paid + " " + getPaidToUser(users, language).user.first_name + " " + expense.currency_code + System.Convert.ToDouble(amount, System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return "Unable to get description";
             }

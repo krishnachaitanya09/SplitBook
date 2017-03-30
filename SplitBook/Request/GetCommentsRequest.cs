@@ -37,7 +37,7 @@ namespace SplitBook.Request
                 List<Comment> comments = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Comment>>(testToken.ToString(), settings);
                 Callback(comments);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Callback(null);
             }

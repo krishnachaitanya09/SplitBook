@@ -30,7 +30,7 @@ namespace SplitBook.Request
                 List<Currency> supportedCurrencies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Currency>>(testToken.ToString(), settings);
                 CallbackOnSuccess(supportedCurrencies);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CallbackOnSuccess(null);
             }
