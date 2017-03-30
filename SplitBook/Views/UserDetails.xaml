@@ -56,12 +56,12 @@
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid x:Name="userDetailsPanel" VerticalAlignment="Stretch" Background="{StaticResource splitwiseGreen}">
-                                        <Grid Grid.Row="1" Margin="12" HorizontalAlignment="Center">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid Margin="0,0,5,0">
+                                        <Grid Grid.Row="1" Margin="10" HorizontalAlignment="Center">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
@@ -79,8 +79,8 @@
                                                 <TextBlock x:Name="tbName" Text="{Binding name}" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="White" Grid.Row="1" FontSize="20" />
                                                 <TextBlock x:Name="tbEmail" Text="{Binding email}" TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="White" Grid.Row="2" FontSize="12" />
                                             </Grid>
-                                            <Grid Grid.Column="1" Margin="5,0,0,0">
-                                                <ListView x:Name="balanceList" Margin="0,6" ItemsSource="{Binding balance}" IsMultiSelectCheckBoxEnabled="False" ShowsScrollingPlaceholders="False" SelectionMode="None">
+                                            <Grid Grid.Row="1">
+                                                <ListView x:Name="balanceList" ItemsSource="{Binding balance}" IsMultiSelectCheckBoxEnabled="False" ShowsScrollingPlaceholders="False" SelectionMode="None">
                                                     <ListView.ItemContainerStyle>
                                                         <Style TargetType="ListViewItem">
                                                             <Setter Property="Padding" Value="0"/>
@@ -88,7 +88,7 @@
                                                             <Setter Property="Template">
                                                                 <Setter.Value>
                                                                     <ControlTemplate TargetType="ListViewItem">
-                                                                        <ListViewItemPresenter HorizontalContentAlignment="Left" FocusSecondaryBorderBrush="{x:Null}" PointerOverForeground="{x:Null}" PressedBackground="{x:Null}" PlaceholderBackground="{x:Null}" PointerOverBackground="{x:Null}" SelectedPressedBackground="{x:Null}" SelectedForeground="{x:Null}" SelectedPointerOverBackground="{x:Null}" SelectedBackground="{x:Null}" Foreground="{x:Null}"/>
+                                                                        <ListViewItemPresenter HorizontalContentAlignment="Center" FocusSecondaryBorderBrush="{x:Null}" PointerOverForeground="{x:Null}" PressedBackground="{x:Null}" PlaceholderBackground="{x:Null}" PointerOverBackground="{x:Null}" SelectedPressedBackground="{x:Null}" SelectedForeground="{x:Null}" SelectedPointerOverBackground="{x:Null}" SelectedBackground="{x:Null}" Foreground="{x:Null}"/>
                                                                     </ControlTemplate>
                                                                 </Setter.Value>
                                                             </Setter>
