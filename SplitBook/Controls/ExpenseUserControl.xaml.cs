@@ -292,12 +292,11 @@ namespace SplitBook.Controls
             tbPaidBy.Text = "Multiple users";
         }
 
-        async void SplitTypeListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        private async void SplitTypeListPicker_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (splitTypePopup.IsOpen)
-                splitTypePopup.IsOpen = false;
+            splitTypePopup.IsOpen = false;
             amountSplit = (AmountSplit)this.SplitTypeListPicker.SelectedItem;
-            this.splitType.Text = amountSplit.typeString;
             if (amountSplit.id == AmountSplit.TYPE_SPLIT_UNEQUALLY)
             {
                 if (await CanProceed())
@@ -321,6 +320,12 @@ namespace SplitBook.Controls
                 else
                     SplitTypeListPicker.SelectedItem = AmountSplit.EqualSplit;
             }
+        }
+
+        private void SplitTypeListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            amountSplit = (AmountSplit)this.SplitTypeListPicker.SelectedItem;
+            this.splitType.Text = amountSplit.typeString;
         }
 
         private void _UnequallyClose(ObservableCollection<Expense_Share> users)
