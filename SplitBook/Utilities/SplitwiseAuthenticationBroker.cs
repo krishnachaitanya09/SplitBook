@@ -108,12 +108,12 @@ namespace SplitBook.Utilities
                         var arguments = args.Uri.AbsoluteUri.Split('?');
                         if (arguments.Length < 1)
                             return;
-                        tcs.SetResult(arguments[1]);
+                        tcs.TrySetResult(arguments[1]);
                         p.IsOpen = false;                     
                     }
                     if (args.Uri.OriginalString.Contains("error=access_denied"))
                     {
-                        tcs.SetResult(null);
+                        tcs.TrySetResult(null);
                         p.IsOpen = false;
                     }
                 }

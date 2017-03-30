@@ -165,9 +165,13 @@ namespace SplitBook.Views
 
         private async Task PopulateData()
         {
-            await LoadFriends();
-            await LoadExpenses();
-            await LoadGroups();
+            try
+            {
+                await LoadFriends();
+                await LoadExpenses();
+                await LoadGroups();
+            }
+            catch (Exception) { }
         }
 
         private async Task LoadFriends()
