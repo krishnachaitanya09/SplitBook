@@ -149,7 +149,7 @@
             <control:PageHeader.HeaderContent>
                 <StackPanel Orientation="Horizontal">
                     <control:BackButton x:Name="BackButton"/>
-                    <TextBlock Text="Friends" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="pageTitle" Text="{Binding name, FallbackValue=Friends}" FontSize="20" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="White" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                 </StackPanel>
             </control:PageHeader.HeaderContent>
         </control:PageHeader>
