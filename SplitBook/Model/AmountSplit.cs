@@ -8,8 +8,8 @@ namespace SplitBook.Model
 {
     public class AmountSplit
     {
-        const String EQUALLY = "equally";
-        const String UNEQUALLY = "unequally";
+        const String EQUALLY = "Equally";
+        const String UNEQUALLY = "Unequally";
 
         public const int TYPE_SPLIT_EQUALLY = 0;
         public const int TYPE_SPLIT_UNEQUALLY = 1;

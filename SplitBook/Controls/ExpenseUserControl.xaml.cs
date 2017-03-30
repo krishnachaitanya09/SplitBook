@@ -210,6 +210,11 @@ namespace SplitBook.Controls
             ShowPopup(ref groupListPopup);
         }
 
+        private void SplitType_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ShowPopup(ref splitTypePopup);
+        }
+
         private async void TbPaidBy_Tap(object sender, TappedRoutedEventArgs e)
         {
             if (expenseShareUsers.Count <= 1)
@@ -225,7 +230,7 @@ namespace SplitBook.Controls
                     MaxHeight = Window.Current.Bounds.Height - 120
                 };
                 contentDialog.Child = ChoosePayeePopup;
-                contentDialog.VerticalOffset = scrollViewer.VerticalOffset; 
+                contentDialog.VerticalOffset = scrollViewer.VerticalOffset;
                 contentDialog.IsOpen = true;
             }
         }
@@ -289,7 +294,10 @@ namespace SplitBook.Controls
 
         async void SplitTypeListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (splitTypePopup.IsOpen)
+                splitTypePopup.IsOpen = false;
             amountSplit = (AmountSplit)this.SplitTypeListPicker.SelectedItem;
+            this.splitType.Text = amountSplit.typeString;
             if (amountSplit.id == AmountSplit.TYPE_SPLIT_UNEQUALLY)
             {
                 if (await CanProceed())
