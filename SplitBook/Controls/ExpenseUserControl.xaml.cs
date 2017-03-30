@@ -201,8 +201,8 @@ namespace SplitBook.Controls
 
         private void FriendListPicker_Tapped(object sender, TappedRoutedEventArgs e)
         {
-
-            ShowPopup(ref friendListPopup);
+            if ((groupList.SelectedItem as Group).id == 0)
+                ShowPopup(ref friendListPopup);
         }
 
         private void GroupListPicker_Tapped(object sender, TappedRoutedEventArgs e)
