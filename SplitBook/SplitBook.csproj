@@ -17,11 +17,12 @@
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>SplitBook_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>8D0B2AC433D55C91242F24DBAE6BACEE0A4FCDB2</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>SplitBook_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>78D19EAB322B2EA0BAD3994AF5660DD971BAAA8D</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <HockeyAppResourceId>fb96ef4556074ddf938c1ddda49d6ec5</HockeyAppResourceId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -99,6 +100,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="app.config" />
+    <None Include="Connected Services\HockeyApp\ConnectedService.json" />
     <None Include="project.json" />
     <None Include="SplitBook_StoreKey.pfx" />
     <None Include="SplitBook_TemporaryKey.pfx" />
@@ -468,7 +470,9 @@
       <Name>Windows Mobile Extensions for the UWP %28WindowsMobile, Version=10.0.14393.0%29</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BackgroundTask\BackgroundTasks.csproj">
       <Project>{a4a7649d-dd3c-413b-a598-9d242ab1fc57}</Project>

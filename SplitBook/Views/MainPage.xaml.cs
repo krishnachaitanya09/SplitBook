@@ -1,4 +1,5 @@
-﻿using SplitBook.Controller;
+﻿using Microsoft.HockeyApp;
+using SplitBook.Controller;
 using SplitBook.Model;
 using SplitBook.Utilities;
 using System;
@@ -89,6 +90,7 @@ namespace SplitBook.Views
             });
 
             me.DataContext = App.currentUser;
+            HockeyClient.Current.UpdateContactInfo(App.currentUser.name, App.currentUser.email);
             NavMenuList.SelectedIndex = 0;
             this.frame.Navigate(typeof(FriendsPage));
             if (e.NavigationMode == NavigationMode.Back)
@@ -232,7 +234,7 @@ namespace SplitBook.Views
                 if (App.currentUser.default_currency == null)
                     return;
                 netBalance.SetBalances(totalBalance, postiveBalance, negativeBalance, hasMultipleBalances);
-            });
+            });            
         }
 
         public async Task LoadExpenses()
@@ -278,15 +280,19 @@ namespace SplitBook.Views
 
         public async Task FetchData()
         {
-            if (databaseSync == null)
-                databaseSync = new SyncDatabase();
-
-            busyIndicator.Visibility = Visibility.Visible;
-            buttonEnabler.RefreshButtonEnabled = false;
-            await Task.Run(async () =>
+            try
             {
-                await databaseSync.PerformSync(SyncCompleted);
-            });
+                if (databaseSync == null)
+                    databaseSync = new SyncDatabase();
+
+                busyIndicator.Visibility = Visibility.Visible;
+                buttonEnabler.RefreshButtonEnabled = false;
+                await Task.Run(async () =>
+                {
+                    await databaseSync.PerformSync(SyncCompleted);
+                });
+            }
+            catch (Exception) { }
         }
 
 
