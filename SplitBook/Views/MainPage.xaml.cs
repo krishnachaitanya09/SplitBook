@@ -1,5 +1,4 @@
-﻿using Microsoft.HockeyApp;
-using SplitBook.Controller;
+﻿using SplitBook.Controller;
 using SplitBook.Model;
 using SplitBook.Utilities;
 using System;
@@ -90,7 +89,6 @@ namespace SplitBook.Views
             });
 
             me.DataContext = App.currentUser;
-            HockeyClient.Current.UpdateContactInfo(App.currentUser.name, App.currentUser.email);
             NavMenuList.SelectedIndex = 0;
             this.frame.Navigate(typeof(FriendsPage));
             if (e.NavigationMode == NavigationMode.Back)
@@ -171,7 +169,7 @@ namespace SplitBook.Views
             {
                 await LoadFriends();
                 await LoadExpenses();
-                await LoadGroups();
+                await LoadGroups();                
             }
             catch (Exception) { }
         }
@@ -234,7 +232,7 @@ namespace SplitBook.Views
                 if (App.currentUser.default_currency == null)
                     return;
                 netBalance.SetBalances(totalBalance, postiveBalance, negativeBalance, hasMultipleBalances);
-            });            
+            });
         }
 
         public async Task LoadExpenses()
@@ -311,39 +309,47 @@ namespace SplitBook.Views
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    busyIndicator.Visibility = Visibility.Collapsed;
-                    pageNo = 0;
-                    await PopulateData();
-                    hasDataLoaded = true;
-                    me.DataContext = App.currentUser;
+                    try
+                    {
+                        busyIndicator.Visibility = Visibility.Collapsed;
+                        pageNo = 0;
+                        await PopulateData();
+                        hasDataLoaded = true;
+                        me.DataContext = App.currentUser;
 
-                    buttonEnabler.AddButtonEnabled = true;
-                    buttonEnabler.SearchButtonEnabled = true;
-                    buttonEnabler.RefreshButtonEnabled = true;
+                        buttonEnabler.AddButtonEnabled = true;
+                        buttonEnabler.SearchButtonEnabled = true;
+                        buttonEnabler.RefreshButtonEnabled = true;
+                    }
+                    catch (Exception) { }
                 });
             }
             else
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    buttonEnabler.RefreshButtonEnabled = true;
-
-                    //    // don't need to handle the below two as there two are only disabled on first launch. If first launch sync fails, then these two buttons cannot be activated.
-                    buttonEnabler.AddButtonEnabled = true;
-                    buttonEnabler.SearchButtonEnabled = true;
-
-                    busyIndicator.Visibility = Visibility.Collapsed;
-                    if (errorCode == HttpStatusCode.Unauthorized)
+                    try
                     {
-                        Helpers.Logout();
-                        (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
-                        (Application.Current as App).rootFrame.BackStack.Clear();
+                        buttonEnabler.RefreshButtonEnabled = true;
+
+                            //    // don't need to handle the below two as there two are only disabled on first launch. If first launch sync fails, then these two buttons cannot be activated.
+                            buttonEnabler.AddButtonEnabled = true;
+                        buttonEnabler.SearchButtonEnabled = true;
+
+                        busyIndicator.Visibility = Visibility.Collapsed;
+                        if (errorCode == HttpStatusCode.Unauthorized)
+                        {
+                            Helpers.Logout();
+                            (Application.Current as App).rootFrame.Navigate(typeof(LoginPage));
+                            (Application.Current as App).rootFrame.BackStack.Clear();
+                        }
+                        else
+                        {
+                            MessageDialog dialog = new MessageDialog("Unable to sync with splitwise. You can continue to browse cached data", "Error");
+                            await dialog.ShowAsync();
+                        }
                     }
-                    else
-                    {
-                        MessageDialog dialog = new MessageDialog("Unable to sync with splitwise. You can continue to browse cached data", "Error");
-                        await dialog.ShowAsync();
-                    }
+                    catch (Exception) { }
                 });
             }
         }

@@ -1,4 +1,5 @@
-﻿using SplitBook.Model;
+﻿using Microsoft.HockeyApp;
+using SplitBook.Model;
 using SplitBook.Utilities;
 using SQLite;
 using System;
@@ -31,6 +32,7 @@ namespace SplitBook.Controller
                             if (App.currentUser == null)
                             {
                                 App.currentUser = friendsList[x];
+                                HockeyClient.Current.UpdateContactInfo(App.currentUser.name, App.currentUser.email);
                                 App.currentUser.picture = GetUserPicture(friendsList[x].id, dbConn);
                             }
                             friendsList.Remove(friendsList[x]);
