@@ -1,4 +1,5 @@
-﻿using SplitBook.Model;
+﻿using Microsoft.Services.Store.Engagement;
+using SplitBook.Model;
 using SplitBook.Utilities;
 using SplitBook.Views;
 using System;
@@ -72,7 +73,7 @@ namespace SplitBook
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
             {
@@ -157,6 +158,8 @@ namespace SplitBook
             }
             // Ensure the current window is active
             Window.Current.Activate();
+            StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+            await engagementManager.RegisterNotificationChannelAsync();
         }
 
         protected override void OnActivated(IActivatedEventArgs e)
@@ -244,6 +247,12 @@ namespace SplitBook
             }
             // Ensure the current window is active
             Window.Current.Activate();
+            if (e is ToastNotificationActivatedEventArgs)
+            {
+                var toastActivationArgs = e as ToastNotificationActivatedEventArgs;
+                StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+                engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
+            }
         }
 
         /// <summary>
