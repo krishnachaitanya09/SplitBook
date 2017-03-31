@@ -1,2 +1,0 @@
-MainPackage=F:\Projects\SplitBook\SplitBook\bin\x86\Release\SplitBook_2.0.6.0_x86.appx
-SymbolPackage=F:\Projects\SplitBook\SplitBook\AppPackages\SplitBook_2.0.6.0_Test\SplitBook_2.0.6.0_x86.appxsym
