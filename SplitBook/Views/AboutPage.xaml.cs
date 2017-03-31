@@ -52,10 +52,6 @@ namespace SplitBook.Views
             MainPage.Current.SecondaryNavMenuList.SelectedIndex = 1;
             await LoadListingInformation();
             LoadPurchaseOptions();
-            if (!Advertisement.ShowAds)
-            {
-                //removeAds.Visibility = Visibility.Collapsed;
-            }
             PackageVersion PackageVersion = Package.Current.Id.Version;
             version.Text = string.Format("{0}.{1}.{2}.{3}", PackageVersion.Major, PackageVersion.Minor, PackageVersion.Build, PackageVersion.Revision);
             GoogleAnalytics.EasyTracker.GetTracker().SendView("AboutPage");
