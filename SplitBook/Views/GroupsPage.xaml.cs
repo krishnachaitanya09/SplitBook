@@ -85,9 +85,9 @@ namespace SplitBook.Views
             MainPage.Current.ResetNavMenu();
         }
 
-        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            await MainPage.Current.FetchData();
+            MainPage.Current.FetchData();
             MainPage.Current.ResetNavMenu();
         }
     }

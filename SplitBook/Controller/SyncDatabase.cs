@@ -28,7 +28,7 @@ namespace SplitBook.Controller
             Helpers.LastUpdatedTime = null;
         }
 
-        public async Task PerformSync(Action<bool, HttpStatusCode> callback)
+        public async void PerformSync(Action<bool, HttpStatusCode> callback)
         {
             this.CallbackOnSuccess = callback;
             Helpers.NotificationsLastUpdated = DateTime.UtcNow.ToString("u");
@@ -49,7 +49,7 @@ namespace SplitBook.Controller
 
         private async void _CurrentUserDetailsReceived(User currentUser)
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
             {
                 //Insert user details to database
                 dbConn.InsertOrReplace(currentUser);
@@ -70,7 +70,7 @@ namespace SplitBook.Controller
 
         private async void _FriendsDetailsRecevied(List<User> friendsList)
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
             {
                 List<Balance_User> userBalanceList = new List<Balance_User>();
 
@@ -105,7 +105,7 @@ namespace SplitBook.Controller
         {
             if (expensesList != null && expensesList.Count != 0)
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     dbConn.BeginTransaction();
                     //Insert expenses
@@ -164,7 +164,7 @@ namespace SplitBook.Controller
 
         private async void _GroupsDetailsReceived(List<Group> groupsList)
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
             {
                 dbConn.BeginTransaction();
                 //handle the case where some groups might have been deleted.
@@ -196,9 +196,11 @@ namespace SplitBook.Controller
 
                         foreach (var member in group.members)
                         {
-                            Group_Members group_member = new Group_Members();
-                            group_member.group_id = group.id;
-                            group_member.user_id = member.id;
+                            Group_Members group_member = new Group_Members()
+                            {
+                                group_id = group.id,
+                                user_id = member.id
+                            };
                             dbConn.InsertOrReplace(group_member);
                         }
                     }
@@ -213,7 +215,7 @@ namespace SplitBook.Controller
         {
             if (currencyList != null && currencyList.Count != 0)
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     dbConn.DeleteAll<Currency>();
                     dbConn.InsertAll(currencyList);
@@ -240,7 +242,7 @@ namespace SplitBook.Controller
         {
             try
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     dbConn.DeleteAll<User>();
                     dbConn.DeleteAll<Expense>();

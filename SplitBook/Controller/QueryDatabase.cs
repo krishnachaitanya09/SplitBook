@@ -21,7 +21,7 @@ namespace SplitBook.Controller
             List<User> friendsList = new List<User>();
             try
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     friendsList = dbConn.Query<User>("SELECT * FROM user ORDER BY first_name").ToList<User>();
                     //remove the current user from the list as the user table also contains his details.
@@ -78,7 +78,7 @@ namespace SplitBook.Controller
             List<Expense> expensesList = new List<Expense>();
             try
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     //Only retrieve expenses that have not been deleted
                     expensesList = dbConn.Query<Expense>("SELECT * FROM expense WHERE deleted_by_user_id=0 ORDER BY datetime(date) DESC LIMIT ?,?", param).ToList<Expense>();
@@ -130,7 +130,7 @@ namespace SplitBook.Controller
             List<Expense> expensesList = new List<Expense>();
             try
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     expensesList = dbConn.Query<Expense>("SELECT expense.id, expense.group_id, expense.description, expense.details, expense.payment, expense.transaction_confirmed, expense.creation_method, expense.cost, expense.currency_code, expense.date, expense.created_by_user_id, expense.created_at, expense.updated_by_user_id, expense.updated_at, expense.deleted_at, expense.deleted_by_user_id FROM expense INNER JOIN debt_expense ON expense.id = debt_expense.expense_id WHERE expense.deleted_by_user_id=0 AND ((debt_expense.\"from\" = ? AND debt_expense.\"to\" = ?) OR (debt_expense.\"from\" = ? AND debt_expense.\"to\" = ?)) ORDER BY datetime(date) DESC LIMIT ?,?", param).ToList<Expense>();
 
@@ -178,7 +178,7 @@ namespace SplitBook.Controller
             List<Group> groupsList = new List<Group>();
             try
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     groupsList = dbConn.Query<Group>("SELECT * FROM [group] ORDER BY name").ToList<Group>();
                     if (groupsList != null)
@@ -219,7 +219,7 @@ namespace SplitBook.Controller
             List<Expense> expensesList = new List<Expense>();
             try
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     int offset = EXPENSES_ROWS * pageNo;
                     object[] param = { groupId, offset, EXPENSES_ROWS };
@@ -264,7 +264,7 @@ namespace SplitBook.Controller
             List<Currency> currencyList = new List<Currency>();
             try
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     currencyList = dbConn.Query<Currency>("SELECT * FROM currency ORDER BY currency_code");
                 }
@@ -278,7 +278,7 @@ namespace SplitBook.Controller
 
         public string GetUnitForCurrency(string currencyCode)
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
             {
                 try
                 {
@@ -309,7 +309,7 @@ namespace SplitBook.Controller
             List<Expense> expensesList = new List<Expense>();
             try
             {
-                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                 {
                     expensesList = dbConn.Query<Expense>(query, param).ToList<Expense>();
 
@@ -347,7 +347,7 @@ namespace SplitBook.Controller
 
         public List<Balance_User> GetUserBalance(int userId)
         {
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
             {
                 object[] param = { userId };
                 return dbConn.Query<Balance_User>("SELECT * FROM balance_user WHERE user_id= ?  AND amount <> '0.0' AND amount <> '-0.0'", param).ToList<Balance_User>();

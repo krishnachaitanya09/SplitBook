@@ -83,10 +83,7 @@ namespace SplitBook.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Task.Run(async () =>
-            {
-                await PopulateData();
-            });
+            PopulateData();
 
             me.DataContext = App.currentUser;
             NavMenuList.SelectedIndex = 0;
@@ -111,10 +108,7 @@ namespace SplitBook.Views
                 }
 
                 busyIndicator.Visibility = Visibility.Visible;
-                Task.Run(async () =>
-                {
-                    await databaseSync.PerformSync(SyncCompleted);
-                });
+                databaseSync.PerformSync(SyncCompleted);
 
                 buttonEnabler.RefreshButtonEnabled = false;
             }
@@ -163,13 +157,13 @@ namespace SplitBook.Views
         private const string taskName = "NotificationsBackgroundTask";
         private const string taskEntryPoint = "BackgroundTasks.NotificationsBackgroundTask";
 
-        private async Task PopulateData()
+        private async void PopulateData()
         {
             try
             {
                 await LoadFriends();
                 await LoadExpenses();
-                await LoadGroups();                
+                await LoadGroups();
             }
             catch (Exception) { }
         }
@@ -276,7 +270,7 @@ namespace SplitBook.Views
             });
         }
 
-        public async Task FetchData()
+        public void FetchData()
         {
             try
             {
@@ -285,10 +279,7 @@ namespace SplitBook.Views
 
                 busyIndicator.Visibility = Visibility.Visible;
                 buttonEnabler.RefreshButtonEnabled = false;
-                await Task.Run(async () =>
-                {
-                    await databaseSync.PerformSync(SyncCompleted);
-                });
+                databaseSync.PerformSync(SyncCompleted);
             }
             catch (Exception) { }
         }
@@ -307,13 +298,13 @@ namespace SplitBook.Views
         {
             if (success)
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     try
                     {
                         busyIndicator.Visibility = Visibility.Collapsed;
                         pageNo = 0;
-                        await PopulateData();
+                        PopulateData();
                         hasDataLoaded = true;
                         me.DataContext = App.currentUser;
 
@@ -332,8 +323,8 @@ namespace SplitBook.Views
                     {
                         buttonEnabler.RefreshButtonEnabled = true;
 
-                            //    // don't need to handle the below two as there two are only disabled on first launch. If first launch sync fails, then these two buttons cannot be activated.
-                            buttonEnabler.AddButtonEnabled = true;
+                        //    // don't need to handle the below two as there two are only disabled on first launch. If first launch sync fails, then these two buttons cannot be activated.
+                        buttonEnabler.AddButtonEnabled = true;
                         buttonEnabler.SearchButtonEnabled = true;
 
                         busyIndicator.Visibility = Visibility.Collapsed;

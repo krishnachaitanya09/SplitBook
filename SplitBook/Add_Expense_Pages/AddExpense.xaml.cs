@@ -171,12 +171,12 @@ namespace SplitBook.Add_Expense_Pages
         {
             if (success)
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     (Application.Current as App).ADD_EXPENSE = null;
                     busyIndicator.IsActive = false;
                     this.Frame.Navigate(typeof(FriendsPage));
-                    await MainPage.Current.FetchData();
+                    MainPage.Current.FetchData();
                 });
             }
             else

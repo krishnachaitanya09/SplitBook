@@ -61,7 +61,7 @@ namespace SplitBook.Controller
             //add user to database and to friends list in App.xaml
             //PhoneApplicationService.Current.State[Constants.NEW_USER] = friend;
 
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
             {
                 dbConn.Insert(friend);
                 friend.picture.user_id = friend.id;
@@ -76,7 +76,7 @@ namespace SplitBook.Controller
             //add user to database and to friends list in App.xaml
             //PhoneApplicationService.Current.State[Constants.NEW_GROUP] = group;
 
-            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+            using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
             {
                 dbConn.BeginTransaction();
                 dbConn.InsertOrReplace(group);

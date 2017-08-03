@@ -23,7 +23,7 @@ namespace SplitBook.Utilities
             {
                 if (!await CheckFileExists(Constants.DATABASE_NAME))
                 {
-                    using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache, true))
+                    using (SQLiteConnection dbConn = new SQLiteConnection(Constants.DB_PATH))
                     {
                         dbConn.CreateTable<User>();
                         dbConn.CreateTable<Expense>();

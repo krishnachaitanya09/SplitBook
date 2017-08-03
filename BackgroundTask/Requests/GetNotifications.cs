@@ -50,6 +50,7 @@ namespace BackgroundTasks.Request
                 JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                 List<Notifications> notifications = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Notifications>>(testToken.ToString(), settings);
                 Helpers.NotificationsLastUpdated = DateTime.UtcNow.ToString("u");
+                notifications.Reverse();
                 return notifications;
             }
             catch (Exception)
